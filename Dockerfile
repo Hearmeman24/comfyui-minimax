@@ -110,6 +110,19 @@ ENV PATH="/opt/venv/bin:$PATH"
 # Without it they all land as IMPORT FAILED.
 RUN pip install opencv-python
 
+# cupy, installed before the custom nodes so Frame-Interpolation's install.py
+# finds it already satisfied. Left to itself it pulls the `cupy-wheel` meta
+# package, which picks a build by dlopen'ing libnvrtc.so.<N> — and its candidate
+# list stops at .12. On the CUDA 13 base there is only libnvrtc.so.13, so
+# detection always fails with AutoDetectionFailed and the pack ships without its
+# cupy-backed interpolation methods. Naming the wheel per variant skips the
+# broken probe entirely.
+RUN if [ "$CUDA_VARIANT" = "cu130" ]; then \
+        pip install cupy-cuda13x; \
+    else \
+        pip install cupy-cuda12x; \
+    fi
+
 # Custom nodes. None of these are needed by the three bundled MiniMax-H3
 # workflows — every node type in those resolves to ComfyUI core — so this is a
 # deliberately curated general-purpose toolkit for people building their own
