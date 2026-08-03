@@ -1,0 +1,20 @@
+.idea/*
+assets/*
+test_resources/*
+tests/*
+.env
+
+# macOS system files
+.DS_Store
+
+# Ignore zip files in workflows folder
+workflows/**/*.zip
+
+# AI IDE configuration directories
+.claude/*
+.cursor/*
+AGENTS.md
+CLAUDE.md
+CHANGELOG.md
+.history/
+./claude/hooks/*

@@ -1,0 +1,134 @@
+# .circleci/config.yml  (CircleCI 2.1)
+version: 2.1
+
+executors:
+  docker-dind:
+    # machine executor gives you full Docker daemon + BuildKit.
+    # docker_layer_caching preserves the BuildKit cache volume across
+    # builds on the same node (~200 credits/job, but each subsequent
+    # build skips unchanged layers AND reuses BuildKit's pip cache
+    # mounts — massive win for the torch + 28-custom-node Dockerfile).
+    machine:
+      image: ubuntu-2404:current
+      docker_layer_caching: true
+    resource_class: xlarge
+    environment:
+      DOCKER_BUILDKIT: 1
+      COMPOSE_DOCKER_CLI_BUILD: 1
+
+commands:
+  notify-flowbot:
+    description: Send a webhook notification to FlowBot
+    parameters:
+      message:
+        type: string
+    steps:
+      - run:
+          name: Notify FlowBot
+          when: always
+          command: |
+            if [ -z "$FLOWBOT_WEBHOOK_URL" ] || [ -z "$FLOWBOT_WEBHOOK_TOKEN" ]; then
+              echo "Missing webhook env vars, skipping notification."
+              exit 0
+            fi
+            curl -s -X POST "${FLOWBOT_WEBHOOK_URL}/hooks/agent" \
+              -H "Authorization: Bearer ${FLOWBOT_WEBHOOK_TOKEN}" \
+              -H "Content-Type: application/json" \
+              -d "{\"message\": \"<< parameters.message >>\", \"source\": \"circleci\"}"
+
+jobs:
+  build_and_push:
+    executor: docker-dind
+    steps:
+      - checkout
+
+      - run:
+          name: Log in to Docker Hub
+          command: |
+            echo "$DOCKERHUB_PAT" | docker login -u "$DOCKERHUB_USER" --password-stdin
+
+      - notify-flowbot:
+          message: "A Docker build for comfyui-wan-template has started."
+
+      - run:
+          name: Build & push (DLC + registry cache)
+          command: |
+            TAG="${CIRCLE_TAG:-latest}"
+            IMG="docker.io/$DOCKERHUB_USER/comfyui-wan-template"
+            CACHE_TAG="buildcache"
+
+            # Seed BuildKit from the previous build's cache image, if any.
+            # Best-effort: first build (no prior cache) is a no-op miss.
+            docker pull "${IMG}:${CACHE_TAG}" || true
+
+            # BUILDKIT_INLINE_CACHE=1 embeds layer metadata in the output
+            # image so future --cache-from runs can read it.
+            docker build \
+              --progress=plain \
+              --cache-from "${IMG}:${CACHE_TAG}" \
+              --build-arg BUILDKIT_INLINE_CACHE=1 \
+              -t "${IMG}:${TAG}" .
+
+            # Push the version tag (what users pull).
+            docker push "${IMG}:${TAG}"
+
+            # Refresh the cache tag so the next build has a current seed.
+            # Kept on a dedicated tag so :latest is never implicitly touched.
+            docker tag "${IMG}:${TAG}" "${IMG}:${CACHE_TAG}"
+            docker push "${IMG}:${CACHE_TAG}"
+
+            # --- Experimental CUDA 13 + NVFP4 image: same git tag, -cuda13 suffix ---
+            # Same Dockerfile, four CUDA ARGs overridden. Own cache tag so it never
+            # thrashes the cu128 layer cache.
+            CUDA13_CACHE_TAG="buildcache-cuda13"
+            docker pull "${IMG}:${CUDA13_CACHE_TAG}" || true
+
+            docker build \
+              --progress=plain \
+              --cache-from "${IMG}:${CUDA13_CACHE_TAG}" \
+              --build-arg BUILDKIT_INLINE_CACHE=1 \
+              --build-arg CUDA_BASE_IMAGE=nvidia/cuda:13.0.3-cudnn-devel-ubuntu24.04 \
+              --build-arg TORCH_PACKAGES="torch==2.11.0 torchvision==0.26.0 torchaudio==2.11.0" \
+              --build-arg TORCH_INDEX_URL=https://download.pytorch.org/whl/cu130 \
+              --build-arg CUDA_VARIANT=cu130 \
+              -t "${IMG}:${TAG}-cuda13" .
+
+            docker push "${IMG}:${TAG}-cuda13"
+
+            docker tag "${IMG}:${TAG}-cuda13" "${IMG}:${CUDA13_CACHE_TAG}"
+            docker push "${IMG}:${CUDA13_CACHE_TAG}"
+
+            touch /tmp/build_success
+
+      - run:
+          name: Notify FlowBot — build complete
+          when: always
+          command: |
+            TAG="${CIRCLE_TAG:-latest}"
+            if [ -z "$FLOWBOT_WEBHOOK_URL" ] || [ -z "$FLOWBOT_WEBHOOK_TOKEN" ]; then
+              echo "Missing webhook env vars, skipping notification."
+              exit 0
+            fi
+            if [ -f /tmp/build_success ]; then
+              MSG="Docker build for comfyui-wan-template:${TAG} completed and pushed to Docker Hub."
+            else
+              MSG="Docker build for comfyui-wan-template:${TAG} failed."
+            fi
+            curl -s -X POST "${FLOWBOT_WEBHOOK_URL}/hooks/agent" \
+              -H "Authorization: Bearer ${FLOWBOT_WEBHOOK_TOKEN}" \
+              -H "Content-Type: application/json" \
+              -d "{\"message\": \"${MSG}\", \"source\": \"circleci\"}"
+
+workflows:
+  version: 2
+  build_on_tag:
+    jobs:
+      - build_and_push:
+          context:
+            - docker-hub
+            - flowbot-webhook-token
+          filters:
+            tags:
+              only: /^v[0-9]+(\.[0-9]+)*$/   # run on tags like v5 or v1.2.3
+            branches:
+              ignore: /.*/
