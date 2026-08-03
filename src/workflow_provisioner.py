@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """Workflow-driven model provisioner.
 
-Reads enabled flags (download_wan21, download_wan22, download_wan_animate,
-download_steady_dancer, DOWNLOAD_SCAIL2), walks the matching workflow folders,
-resolves model
-basenames against models_registry.json, emits a tab-separated download manifest
-for hf_download_manager.py, and copies the selected workflow JSONs into the
-user's ComfyUI workflows directory.
+Reads enabled flags (download_minimax_h3), walks the matching workflow folders,
+resolves model basenames against models_registry.json, emits a tab-separated
+download manifest for hf_download_manager.py, and copies the selected workflow
+JSONs into the user's ComfyUI workflows directory, retargeted onto the
+requested quant profile.
 
 Source of truth is the workflows tree itself. Adding a model reference to a
 workflow without a corresponding registry entry surfaces as a user-supplied
@@ -17,29 +16,37 @@ import argparse
 import json
 import os
 import re
-import shutil
 import sys
 from pathlib import Path
 
 FLAG_DIRS = {
-    "download_wan21": ["Wan 2.1", "Infinite Talk"],
-    "download_wan22": ["Wan 2.2", "SVI_Video_Extension_Wan2.2"],
-    "download_wan_animate": ["Wan Animate"],
-    "download_steady_dancer": ["Steady Dancer"],
-    "DOWNLOAD_SCAIL2": ["SCAIL-2"],
+    "download_minimax_h3": ["MiniMax H3"],
 }
 
-# Fetched at runtime by custom nodes (controlnet_aux, segment-anything-2, etc.)
-AUTO_DOWNLOAD = {
-    "rife49.pth",
-    "depth_anything_v2_vitl.pth",
-    "sam2_hiera_base_plus.safetensors",
-    "sam2.1_hiera_base_plus.safetensors",
-    "yolox_l.onnx",
+# The bundled workflows are written against the int8 profile; selecting a
+# different one swaps both what gets downloaded and what the copied
+# workflows load. fp8 e4m3 is native on Ada/Hopper/
+# Blackwell; NVFP4 only accelerates on Blackwell (sm_120) and is emulated
+# everywhere else; int8_convrot runs on anything. The VAEs have one quant
+# each and are always downloaded.
+QUANT_PROFILES = {
+    "fp8": {
+        "fl2va": "minimax_h3_fl2va_pruned_fp8_scaled.safetensors",
+        "ref2va": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+        "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+    },
+    "int8": {
+        "fl2va": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+        "ref2va": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+        "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+    },
+    "nvfp4": {
+        "fl2va": "minimax_h3_fl2va_pruned_fp8_scaled.safetensors",
+        "ref2va": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+        "text_encoder": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+    },
 }
-
-# Baked into the docker image
-IMAGE_BAKED = {"4xLSDIR.pth"}
+QUANTIZED = {b for p in QUANT_PROFILES.values() for b in p.values()}
 
 MODEL_PAT = re.compile(r'"([^"]+\.(?:safetensors|bin|onnx|pth|ckpt))"')
 
@@ -52,6 +59,7 @@ def main() -> int:
     ap.add_argument("--models-root", required=True)
     ap.add_argument("--manifest", required=True)
     ap.add_argument("--flag", action="append", dest="flags", default=[])
+    ap.add_argument("--quant", default="int8", choices=sorted(QUANT_PROFILES))
     args = ap.parse_args()
 
     registry = json.loads(Path(args.registry).read_text())
@@ -84,21 +92,19 @@ def main() -> int:
             for m in MODEL_PAT.findall(wf.read_text()):
                 refs.setdefault(os.path.basename(m), set()).add(str(wf))
 
-    queued: dict[str, dict] = {}
+    # The workflows name one quant per role — the selected profile decides
+    # what is actually pulled, so queue it explicitly instead of relying on
+    # every variant being mentioned somewhere in the workflow tree.
+    selected = QUANT_PROFILES[args.quant]
+    queued: dict[str, dict] = {b: registry[b] for b in selected.values()}
     user_supplied: list[str] = []
     for b in refs:
-        if b in IMAGE_BAKED or b in AUTO_DOWNLOAD:
+        if b in QUANTIZED:
             continue
         if b in registry:
             queued[b] = registry[b]
         else:
             user_supplied.append(b)
-
-    # Auto-include sidecars whose trigger is in the queue (e.g. vitpose .bin)
-    for b, entry in registry.items():
-        trigger = entry.get("auto_include_with")
-        if trigger and trigger in queued:
-            queued[b] = entry
 
     # Skip files that already exist on disk above a sanity threshold.
     # Matches the pre-refactor bash behavior (10 MB cutoff catches
@@ -115,16 +121,35 @@ def main() -> int:
         lines.append(f"{entry['url']}\t{dest}")
     manifest.write_text("\n".join(lines) + ("\n" if lines else ""))
 
+    # Point the copied workflows' loader widgets at the quant that was
+    # actually downloaded. Only exact filename widget values are swapped, so
+    # the Model Links notes keep listing every variant (which is also what
+    # keeps the alternates visible to the ref walk above).
+    selected = QUANT_PROFILES[args.quant]
+    swaps = {b: selected[role] for p in QUANT_PROFILES.values()
+             for role, b in p.items() if b != selected[role]}
+
     dst_root.mkdir(parents=True, exist_ok=True)
     copied = 0
     for wf in workflow_files:
         rel = wf.relative_to(src_root)
         out = dst_root / rel
         out.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(wf, out)
+        doc = json.loads(wf.read_text())
+        for group in [doc.get("nodes", [])] + [
+            sg.get("nodes", [])
+            for sg in doc.get("definitions", {}).get("subgraphs", [])
+        ]:
+            for n in group:
+                wv = n.get("widgets_values")
+                if isinstance(wv, list):
+                    n["widgets_values"] = [
+                        swaps.get(v, v) if isinstance(v, str) else v for v in wv
+                    ]
+        out.write_text(json.dumps(doc, indent=2, ensure_ascii=False))
         copied += 1
 
-    print(f"[provisioner] flags: {','.join(args.flags)}")
+    print(f"[provisioner] flags: {','.join(args.flags)}  quant: {args.quant}")
     print(f"[provisioner] workflows copied: {copied}")
     print(f"[provisioner] models queued: {len(lines)} "
           f"({len(skipped_existing)} already on disk, skipped)")

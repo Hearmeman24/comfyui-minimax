@@ -10,8 +10,8 @@
 # container ("Could not resolve host: github.com"). Now we retry with
 # backoff, and if GitHub stays unreachable we fall back to whatever repo
 # copy is already on disk rather than bricking the pod.
-REPO_DIR=/comfyui-wan
-REPO_URL=https://github.com/Hearmeman24/comfyui-wan.git
+REPO_DIR=/comfyui-minimax
+REPO_URL=https://github.com/Hearmeman24/comfyui-minimax.git
 
 sync_repo() {
     if [ -d "$REPO_DIR/.git" ]; then

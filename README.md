@@ -5,56 +5,54 @@
 # Troubleshooting guide in case you encounter any errors:
 [click here](https://docs.google.com/document/d/1822H-x7AevWz2T_jzMu8-9e5UlQ-zrH0FhCFmQ6FtRc/edit?usp=sharing)
 ---
-# v12 — Major Refactor (May 2026)
-> ⚠️ **Breaking change for existing users.**
-> The old per-resolution / per-feature flags are gone. If you're updating an existing pod template, **delete** the removed env vars below and **add** the new ones — otherwise nothing will download.
 
-> ⚠️ **CUDA 12.8 required.** Before deploying, open Additional Filters and select CUDA 12.8.
-> Fallback (older CUDA): https://runpod.io/console/deploy?template=0b7tk92912&ref=uyjfcrgy
+# MiniMax-H3: video and audio in one pass
 
----
+A ComfyUI pod template built around one model, the open-weights release of **MiniMax-H3**. H3
+generates the picture and a native 32 kHz stereo soundtrack at the same time: dialogue, room tone,
+footsteps, score. There is no separate TTS or lip-sync stage.
 
-## What's new in v12
-- **Workflow-driven downloads.** The pod now reads the workflows you choose and downloads only the models those workflows actually reference. No more redundant multi-gigabyte downloads.
-- **Faster HF transfers.** Hugging Face's `hf_xet` accelerator is enabled image-wide (`HF_XET_HIGH_PERFORMANCE=1`), typically 1.5–3× faster than aria2 on HF.
-- **Live download manager.** A 3-way pool with an append-only status snapshot every 10s (active %, speed, ETA; queued list; done count). No more interleaved aria2 spam.
-- **Faster boot.** `comfy-aimdo` / `comfy-kitchen` now install in the background instead of blocking startup; redundant apt/pip steps removed.
-- **Slimmer workflow set.** Obsolete Wan-Fun-SDXL helper, legacy VACE preview, and the unused Video Extend workflow have been removed.
+> ⚠️ **Deploy with CUDA 13.0+ selected in Additional Filters.** The default image is built on CUDA
+> 13 with torch cu130. If your host only offers CUDA 12.8, use the `-cuda12` tag instead (see below).
 
 ---
 
-## 🧪 Experimental: CUDA 13 + NVFP4 (`-cuda13` tag)
+## What you actually get
 
-Every release also ships an experimental CUDA 13 image. To use it, append **`-cuda13`** to the
-image tag (e.g. `…/comfyui-wan-template:v12-cuda13` instead of `:v12`), or deploy from the
-experimental template.
+| | |
+|---|---|
+| Resolution | **768p only.** The open weights top out here. |
+| Clip length | 4 to 15 seconds at 24 fps |
+| Audio | 32 kHz stereo, generated with the video |
+| Aspect ratios | 21:9, 16:9, 4:3, 1:1, 3:4, 9:16 |
+| Dialogue languages | Arabic, Chinese, English, French, German, Italian, Japanese, Korean, Portuguese, Russian, Spanish |
 
-- **What you get:** PyTorch cu130, so **NVFP4** quants load natively on **Blackwell GPUs**
-  (RTX 50xx / sm_120). On other GPUs NVFP4 degrades to fp16/fp8 — no speedup, but it still runs.
-- **SageAttention** ships as a prebuilt cu130 wheel and is used automatically when your GPU
-  supports it; otherwise it's built from source on first boot (same as the standard image).
-- **Deploy with CUDA 13.0+** selected in Additional Filters.
-- The standard `:vN` image (CUDA 12.8) is unchanged — stay on it if you don't specifically need NVFP4.
+> **About 2K:** MiniMax's 2K output comes from their hosted H3-Regenerate-2K API. It is not part of
+> the open weights and it is not in this template. Any local setup advertising 2K is upscaling 768p.
+
+### Bundled workflows
+
+Three, all built on ComfyUI's native H3 nodes:
+
+| Workflow | Does |
+|---|---|
+| `video_minimax_h3_t2v` | Text to video and audio |
+| `video_minimax_h3_i2v` | One image to video and audio |
+| `video_minimax_h3_r2v` | Reference-driven: up to 9 images, 3 video clips of 2 to 15s each, 3 audio clips, 12 files total |
 
 ---
 
 ## ⚙️ Environment Variables
 
-Set the flags you want to **`true`** (lowercase, as strings). Multiple may be enabled at once — shared models are deduplicated automatically.
+Set the flags you want to **`true`** (lowercase, as strings).
 
-### Download flags (new in v12)
-
-| Variable | Downloads + provisions |
+| Variable | Description |
 |---|---|
-| `download_wan21` | Wan 2.1 (incl. VACE) + Infinite Talk workflows + their models |
-| `download_wan22` | Wan 2.2 + SVI Video Extension workflows + their models |
-| `download_wan_animate` | Wan Animate workflows + models |
-| `download_steady_dancer` | Steady Dancer workflow + models |
+| `download_minimax_h3` | Downloads the H3 weights and copies the three workflows into ComfyUI |
+| `minimax_quant` | Which quantization to pull: `int8` (default), `fp8`, or `nvfp4` |
 
-Only the workflows for enabled flags are copied into your ComfyUI workflows folder — you'll see exactly what your models can run.
-
-### Removed in v12 (delete these from your template if you're upgrading)
-`download_480p_native_models`, `download_720p_native_models`, `download_wan_fun_and_sdxl_helper`, `download_vace`, `download_vace_debug`, `download_wan_animate_only`, `debug_models`
+`minimax_quant` also retargets the loader widgets in the copied workflows, so what you open already
+points at the files that were downloaded. You never touch a dropdown.
 
 ### CivitAI (unchanged)
 
@@ -68,12 +66,65 @@ Only the workflows for enabled flags are copied into your ComfyUI workflows fold
 
 ---
 
+## Picking a quantization
+
+**You can skip this section.** The default is `int8`, it runs natively on every GPU RunPod rents, and
+it is what the bundled workflows are set up for. Nothing to configure.
+
+H3 ships as two pieces: a 21 GB diffusion transformer, and a Qwen3-VL-32B text encoder that is
+bigger than the transformer. The quant you pick applies to both.
+
+| `minimax_quant` | Text encoder | Diffusion transformer | Use it on |
+|---|---|---|---|
+| `int8` (default) | int8, 27 GB | int8, 21 GB each | Everything. Ampere, Ada, Hopper, Blackwell. int8 needs no special hardware. |
+| `fp8` | int8, 27 GB | fp8 scaled, 21 GB each | Ada (RTX 4090, L40) and Hopper (H100, H200), which run FP8 e4m3 natively. Emulated on Ampere. |
+| `nvfp4` | NVFP4 AWQ, 16 GB | fp8 scaled, 21 GB each | Blackwell only (RTX 5090, PRO 6000, B200). The encoder is about 40% smaller than the int8 one. Emulated, and slower, on anything older. |
+
+The other two exist because `int8` is the safe choice, not the fastest one on every card. If you know
+you rented Blackwell, `nvfp4` is worth trying. If you rented Ampere, leave it alone: both alternatives
+would emulate and you would end up slower than the default.
+
+This template ships the Comfy-Org weights, where NVFP4 is published for the text encoder only. That
+is why the `nvfp4` profile pairs an NVFP4 encoder with the FP8 transformer rather than going NVFP4 on
+both. Community NVFP4 transformer quants do exist elsewhere; they aren't bundled here.
+
+**Switching quant is an env var change and a pod restart, not a dropdown.** Only the quant you asked
+for gets downloaded, so the other variants are not sitting on disk waiting. Change `minimax_quant`,
+restart, and the pod fetches the new files and repoints the workflows at them.
+
+The template pulls both transformers, one for text and image to video, one for reference to video.
+Budget roughly 75 GB of network volume for `int8` or `fp8`, and 64 GB for `nvfp4`. Add room for
+outputs on top of that; 100 GB is comfortable.
+
+The reference deployment for this template ran on an H200 with 80 GB. ComfyUI loads the text encoder
+and the transformer in separate passes rather than holding both at once, so smaller cards can work.
+But 768p at 15 seconds is not a 24 GB job, and I have not benchmarked where the floor actually sits.
+
+---
+
+## Image variants
+
+| Tag | Build |
+|---|---|
+| `:vN` | CUDA 13.0 with torch 2.11.0 cu130. The default. Ships a prebuilt SageAttention wheel, so there is no five-minute build on first boot. Required for NVFP4 to run natively. |
+| `:vN-cuda12` | CUDA 12.8 with stable torch cu128, for hosts pinned to a 12.8 driver. No NVFP4, and SageAttention compiles from source at boot. |
+
+Both come from the same Dockerfile with four build-args overridden. Both ship **ComfyUI v0.30.1**,
+pinned rather than tracked, so a given tag rebuilds to the same thing later. H3 support landed in
+v0.30.0, and the image refuses to build below that.
+
+---
+
 ## 🚀 Deploying
 
-1. Set your env vars (at least one `download_*` flag set to `"true"`).
+1. Set `download_minimax_h3` to `"true"`. Leave `minimax_quant` alone unless you've read the section above.
 2. Click **Deploy**.
-3. Wait for setup (5–20 minutes depending on flags + network).
-4. Future deployments are faster on a persistent network volume.
+3. Wait for setup. The weights are large, so expect 10 to 30 minutes depending on network.
+4. Later deployments off the same network volume are much faster.
+
+Step 1 is not optional. Leave `download_minimax_h3` unset and the pod boots a perfectly healthy
+ComfyUI with no models in it, so the workflows open with empty loader dropdowns and look broken. The
+boot log says which flag it was waiting for.
 
 ## 🌐 Accessing ComfyUI
 1. Click **Connect**
@@ -85,16 +136,55 @@ Only the workflows for enabled flags are copied into your ComfyUI workflows fold
 
 ---
 
+## Prompting H3
+
+ComfyUI hands your prompt to H3 verbatim. Nothing rewrites it on the way in, which is why the local
+model can feel worse than MiniMax's demo reels: the demos are fed a structured prompt, and most
+people type a sentence.
+
+H3 wants named sections. For text-to-video that is three of them:
+
+```
+integrated_multimodal_description: ...
+overall_soundscape: ...
+non_diegetic_music: ...
+```
+
+Two things that catch people out:
+
+- A thin `overall_soundscape` gives you a near-silent clip. The audio is generated, not attached, so
+  describe the ambience, the physical sounds of the action, the breathing.
+- `non_diegetic_music` wants instrumentation, tempo and dynamics, not mood words. "Sparse
+  fingerpicked guitar, slow, dropping to near silence" works. "Melancholy and hopeful" does not.
+
+Aim for 350 to 500 words in the description. MiniMax's own prompt-writing guides cover the rest of
+the format, including shot-cut timestamps and `<d>` dialogue blocks.
+
+---
+
 ## 🛠️ Troubleshooting
 
-### Fixing Missing Custom Nodes
-If you see `IMPORT FAILED` in ComfyUI:
+### `IMPORT FAILED` in ComfyUI
 1. Open the **Manager** menu
 2. Click **Install missing custom nodes**
 3. Click **Try fix**
 
+The H3 nodes are part of ComfyUI core, so the three bundled workflows need no custom node pack at
+all. If one of them shows a red node, something is wrong with the image rather than with your setup.
+
+The image does bake in a small general-purpose toolkit for building your own graphs on top of H3:
+KJNodes, rgthree, VideoHelperSuite, Essentials, Easy-Use, Frame Interpolation, UltimateSDUpscale,
+Impact Pack, RMBG, and segment-anything-2, plus the Manager itself. Anything further you install
+through the Manager persists on your network volume.
+
+Two of those fetch their own model weights the first time you use them rather than at build time.
+Frame Interpolation pulls its interpolation checkpoint, and segment-anything-2 pulls SAM2. Neither is
+part of the bundled model download, so expect a wait on first use and expect it again after a pod
+rebuild.
+
 ### User-supplied LoRAs
-If a workflow references a LoRA that isn't bundled (your personal training LoRAs, NSFW pack, etc.), the boot log will list them as "user-supplied". Drop them into `/workspace/ComfyUI/models/loras/` manually or via `LORAS_IDS_TO_DOWNLOAD`.
+If a workflow references a LoRA that isn't bundled, the boot log lists it as "user-supplied". Drop it
+into `/workspace/ComfyUI/models/loras/` manually or via `LORAS_IDS_TO_DOWNLOAD`.
 
 > ℹ️ **For my other templates**:
 > [Click HERE](https://docs.google.com/spreadsheets/d/1NfbfZLzE9GIAD5B_y6xjK1IdW95c14oS1JuIG9QihL8/edit?usp=sharing)
