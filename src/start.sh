@@ -146,71 +146,9 @@ git clone "https://github.com/Hearmeman24/CivitAI_Downloader.git" || { echo "Git
 mv CivitAI_Downloader/download_with_aria.py "/usr/local/bin/" || { echo "Move failed"; exit 1; }
 chmod +x "/usr/local/bin/download_with_aria.py" || { echo "Chmod failed"; exit 1; }
 rm -rf CivitAI_Downloader  # Clean up the cloned repo
-# onnxruntime-gpu is now installed at image build time (Dockerfile);
-# we verify + reinstall later if any runtime requirements clobber it.
 
-# Custom nodes to provision at boot. Format: "<git-url>" or "<git-url>|<pinned-sha>".
-CUSTOM_NODE_REPOS=(
-    "https://github.com/kijai/ComfyUI-WanVideoWrapper.git"
-    "https://github.com/kijai/ComfyUI-KJNodes.git|204f6d5"
-    "https://github.com/wildminder/ComfyUI-VibeVoice.git"
-    "https://github.com/kijai/ComfyUI-WanAnimatePreprocess.git"
-    "https://github.com/obisin/ComfyUI-FSampler.git"
-    "https://github.com/cmeka/ComfyUI-WanMoEScheduler.git"
-    "https://github.com/lrzjason/ComfyUI-VAE-Utils.git"
-    "https://github.com/wallen0322/ComfyUI-Wan22FMLF.git"
-)
-
-for entry in "${CUSTOM_NODE_REPOS[@]}"; do
-    url="${entry%%|*}"
-    pin=""
-    [[ "$entry" == *"|"* ]] && pin="${entry#*|}"
-    name="$(basename "$url" .git)"
-    dir="$CUSTOM_NODES_DIR/$name"
-    if [ ! -d "$dir" ]; then
-        git clone "$url" "$dir"
-    else
-        echo "Updating $name"
-        git -C "$dir" pull
-    fi
-    if [ -n "$pin" ]; then
-        git -C "$dir" reset --hard "$pin"
-    fi
-done
-
-# OpenRouter node — provisioned alongside the Wan Animate and SCAIL-2 flows.
-OPENROUTER_PID=""
-if [ "$download_wan_animate" = "true" ] || [ "$DOWNLOAD_SCAIL2" = "true" ]; then
-    OPENROUTER_DIR="$CUSTOM_NODES_DIR/ComfyUI-Openrouter_node"
-    if [ ! -d "$OPENROUTER_DIR" ]; then
-        git clone "https://github.com/gabe-init/ComfyUI-Openrouter_node.git" "$OPENROUTER_DIR"
-    else
-        echo "Updating ComfyUI-Openrouter_node"
-        git -C "$OPENROUTER_DIR" pull
-    fi
-    if [ -f "$OPENROUTER_DIR/requirements.txt" ]; then
-        echo "🔧 Installing OpenRouter node packages..."
-        pip install -r "$OPENROUTER_DIR/requirements.txt" &
-        OPENROUTER_PID=$!
-    fi
-fi
-
-
-echo "🔧 Installing KJNodes packages..."
-pip install -r $CUSTOM_NODES_DIR/ComfyUI-KJNodes/requirements.txt &
-KJ_PID=$!
-
-echo "🔧 Installing WanVideoWrapper packages..."
-pip install -r $CUSTOM_NODES_DIR/ComfyUI-WanVideoWrapper/requirements.txt &
-WAN_PID=$!
-
-echo "🔧 Installing VibeVoice packages..."
-pip install -r $CUSTOM_NODES_DIR/ComfyUI-VibeVoice/requirements.txt &
-VIBE_PID=$!
-
-echo "🔧 Installing WanAnimatePreprocess packages..."
-pip install -r $CUSTOM_NODES_DIR/ComfyUI-WanAnimatePreprocess/requirements.txt &
-WAN_ANIMATE_PID=$!
+# The MiniMax H3 workflows run entirely on core ComfyUI nodes (>= v0.30.0),
+# so there are no custom nodes to provision at boot.
 
 echo "🔧 Installing comfy-aimdo + comfy-kitchen..."
 pip install comfy-aimdo comfy-kitchen &
@@ -220,9 +158,6 @@ COMFY_EXTRAS_PID=$!
 export change_preview_method="true"
 
 
-# Change to the directory
-cd "$CUSTOM_NODES_DIR" || exit 1
-
 # ---------------------------------------------------------------
 # Workflow-driven model provisioning. The provisioner walks the
 # workflow folders for each enabled flag, resolves model basenames
@@ -230,27 +165,34 @@ cd "$CUSTOM_NODES_DIR" || exit 1
 # and copies the matching workflow JSONs to $WORKFLOW_DIR.
 #
 # Recognized flags (env vars set to "true"):
-#   download_wan21   download_wan22   download_wan_animate   download_steady_dancer
-#   DOWNLOAD_SCAIL2
+#   download_minimax_h3
+#
+# minimax_quant picks which quant of the DiT + text encoder is pulled, and
+# retargets the copied workflows onto it:
+#   fp8   (default) fp8_scaled DiT + int8_convrot text encoder. Native on
+#                   Ada/Hopper (L40S, H100, H200) and fine on Blackwell.
+#   int8            int8_convrot everywhere. Works on any GPU, incl. Ampere.
+#   nvfp4           fp8_scaled DiT + nvfp4_awq text encoder. Blackwell only
+#                   (RTX 50xx / B200 / PRO 6000) — NVFP4 is emulated on
+#                   anything older, so do NOT select it on an H100/H200.
 # ---------------------------------------------------------------
 HF_QUEUE_FILE="/tmp/hf_download_queue.tsv"
 PROVISIONER_FLAGS=()
-for v in download_wan21 download_wan22 download_wan_animate download_steady_dancer DOWNLOAD_SCAIL2; do
-    if [ "${!v}" = "true" ]; then
-        PROVISIONER_FLAGS+=(--flag "$v")
-    fi
-done
+if [ "$download_minimax_h3" = "true" ]; then
+    PROVISIONER_FLAGS+=(--flag download_minimax_h3)
+fi
 
 if [ ${#PROVISIONER_FLAGS[@]} -eq 0 ]; then
-    echo "ℹ️  No download_wan21/wan22/wan_animate/steady_dancer/DOWNLOAD_SCAIL2 flag enabled — skipping model phase."
+    echo "ℹ️  download_minimax_h3 not enabled — skipping model phase."
     : > "$HF_QUEUE_FILE"
 else
     python3 /workflow_provisioner.py \
         --registry /models_registry.json \
-        --workflows-src /comfyui-wan/workflows \
+        --workflows-src /comfyui-minimax/workflows \
         --workflows-dst "$WORKFLOW_DIR" \
         --models-root "$NETWORK_VOLUME/ComfyUI/models" \
         --manifest "$HF_QUEUE_FILE" \
+        --quant "${minimax_quant:-int8}" \
         "${PROVISIONER_FLAGS[@]}"
 
     echo "🔽 Starting HF download manager..."
@@ -299,35 +241,6 @@ done
 echo "✅ All models downloaded successfully!"
 
 echo "All downloads completed!"
-
-
-echo "Downloading upscale models"
-mkdir -p "$NETWORK_VOLUME/ComfyUI/models/upscale_models"
-if [ ! -f "$NETWORK_VOLUME/ComfyUI/models/upscale_models/4xLSDIR.pth" ]; then
-    if [ -f "/4xLSDIR.pth" ]; then
-        mv "/4xLSDIR.pth" "$NETWORK_VOLUME/ComfyUI/models/upscale_models/4xLSDIR.pth"
-        echo "Moved 4xLSDIR.pth to the correct location."
-    else
-        echo "4xLSDIR.pth not found in the root directory."
-    fi
-else
-    echo "4xLSDIR.pth already exists. Skipping."
-fi
-
-# 2xLiveActionV1_SPAN — direct download (raw GitHub, not on HF, so not
-# part of the model registry/provisioner).
-LIVEACTION_DEST="$NETWORK_VOLUME/ComfyUI/models/upscale_models/2xLiveActionV1_SPAN_490000.pth"
-if [ ! -f "$LIVEACTION_DEST" ]; then
-    echo "Downloading 2xLiveActionV1_SPAN..."
-    aria2c -x 8 -s 8 --console-log-level=warn --summary-interval=0 \
-        -d "$(dirname "$LIVEACTION_DEST")" -o "$(basename "$LIVEACTION_DEST")" \
-        "https://raw.githubusercontent.com/jcj83429/upscaling/f73a3a02874360ec6ced18f8bdd8e43b5d7bba57/2xLiveActionV1_SPAN/2xLiveActionV1_SPAN_490000.pth" \
-        || echo "⚠️  2xLiveActionV1_SPAN download failed (continuing)"
-else
-    echo "2xLiveActionV1_SPAN already exists. Skipping."
-fi
-
-echo "Finished downloading models!"
 
 
 # Workflow copying is handled by the provisioner above (per enabled flag).
@@ -379,33 +292,12 @@ fi
 echo "cd $NETWORK_VOLUME" >> ~/.bashrc
 
 
-# Wait for all background pip installs to complete; abort on any failure.
-declare -A INSTALL_PIDS=(
-    [KJNodes]=$KJ_PID
-    [WanVideoWrapper]=$WAN_PID
-    [VibeVoice]=$VIBE_PID
-    [WanAnimatePreprocess]=$WAN_ANIMATE_PID
-    [comfy-aimdo+comfy-kitchen]=$COMFY_EXTRAS_PID
-)
-[ -n "$OPENROUTER_PID" ] && INSTALL_PIDS[OpenRouter]=$OPENROUTER_PID
-for name in "${!INSTALL_PIDS[@]}"; do
-    if wait "${INSTALL_PIDS[$name]}"; then
-        echo "✅ $name install complete"
-    else
-        echo "❌ $name install failed."
-        exit 1
-    fi
-done
-
-# Defensive: verify onnxruntime exposes the CUDA provider. If a custom
-# node's requirements pulled in plain onnxruntime (CPU) and it
-# shadowed the image's onnxruntime-gpu, reinstall the GPU build.
-if ! /opt/venv/bin/python -c \
-    'import onnxruntime as o, sys; sys.exit(0 if "CUDAExecutionProvider" in o.get_available_providers() else 1)' \
-    2>/dev/null; then
-    echo "⚙️  onnxruntime CUDA provider missing — reinstalling onnxruntime-gpu..."
-    pip uninstall -y onnxruntime onnxruntime-gpu 2>/dev/null || true
-    pip install onnxruntime-gpu
+# Wait for the background pip install to complete; abort on failure.
+if wait "$COMFY_EXTRAS_PID"; then
+    echo "✅ comfy-aimdo+comfy-kitchen install complete"
+else
+    echo "❌ comfy-aimdo+comfy-kitchen install failed."
+    exit 1
 fi
 
 echo "Renaming loras downloaded as zip files to safetensors files"

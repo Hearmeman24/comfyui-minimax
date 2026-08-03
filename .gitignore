@@ -7,6 +7,10 @@ tests/*
 # macOS system files
 .DS_Store
 
+# Python bytecode (src/ and tools/ are run directly during boot and testing)
+__pycache__/
+*.pyc
+
 # Ignore zip files in workflows folder
 workflows/**/*.zip
 

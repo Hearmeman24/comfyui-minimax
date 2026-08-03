@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """CI validator: registry coverage + URL reachability.
 
-- Coverage: every model basename referenced in workflows/**/*.json must be
-  either in src/models_registry.json, in the auto-download allowlist (fetched
-  by a custom node at runtime), or image-baked. Anything else is flagged as
-  user-supplied (warning, not error) — the user is expected to provide it via
+- Coverage: every model basename referenced in workflows/**/*.json must be in
+  src/models_registry.json. Anything else is flagged as user-supplied
+  (warning, not error) — the user is expected to provide it via
   CHECKPOINT_IDS/LORAS_IDS at runtime.
 - Reachability: every registry URL must return 200/301/302 on HEAD.
 
@@ -19,14 +18,6 @@ from pathlib import Path
 
 import httpx
 
-AUTO_DOWNLOAD = {
-    "rife49.pth",
-    "depth_anything_v2_vitl.pth",
-    "sam2_hiera_base_plus.safetensors",
-    "sam2.1_hiera_base_plus.safetensors",
-    "yolox_l.onnx",
-}
-IMAGE_BAKED = {"4xLSDIR.pth"}
 MODEL_PAT = re.compile(r'"([^"]+\.(?:safetensors|bin|onnx|pth|ckpt))"')
 
 REPO = Path(__file__).resolve().parents[1]
@@ -66,7 +57,7 @@ async def main() -> int:
 
     warnings: list[str] = []
     for b, wfs in sorted(refs.items()):
-        if b in AUTO_DOWNLOAD or b in IMAGE_BAKED or b in registry:
+        if b in registry:
             continue
         warnings.append(f"user-supplied (not in registry): {b}  [{len(wfs)} workflow(s)]")
 
