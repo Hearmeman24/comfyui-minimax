@@ -146,6 +146,15 @@ def main() -> int:
                     n["widgets_values"] = [
                         swaps.get(v, v) if isinstance(v, str) else v for v in wv
                     ]
+                # The frontend's "Missing Models" dialog reads
+                # properties.models, not the loader widget. Leave it on the
+                # quant we didn't download and the customer is told a file is
+                # missing and handed a button that saves it to their own PC.
+                for m in (n.get("properties") or {}).get("models") or []:
+                    new = swaps.get(m.get("name"))
+                    if new:
+                        m["name"] = new
+                        m["url"] = registry[new]["url"]
         out.write_text(json.dumps(doc, indent=2, ensure_ascii=False))
         copied += 1
 
