@@ -49,6 +49,13 @@ fi
 # didn't already give us a working kernel).
 if [ -z "$SAGE_FLAG" ]; then
     echo "Starting SageAttention build..."
+    # /tmp survives a pod restart, so a previous boot's marker and clone are
+    # still here. Left in place, the wait loop below sees the stale marker and
+    # returns instantly — probing sage while this build is mid-reinstall — and
+    # git clone fails into the existing directory. Clear both, synchronously,
+    # before the build starts.
+    rm -f /tmp/sage_build_done
+    rm -rf /tmp/SageAttention
     (
         export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32
         cd /tmp
