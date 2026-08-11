@@ -24,13 +24,21 @@ open weights and not in this template. Any local setup advertising 2K is upscali
 
 ## Workflows
 
-Three, all on ComfyUI's native H3 nodes:
-
 | Workflow | Does |
 |---|---|
-| `video_minimax_h3_t2v` | Text to video and audio |
-| `video_minimax_h3_i2v` | One image to video and audio |
+| `MiniMax - T2V - Custom Prompt` | Text to video and audio |
+| `MiniMax - T2V - Auto Prompt` | Same, but writes the structured H3 prompt for you from a one-line idea |
+| `MiniMax - I2V - Custom Prompt` | One image to video and audio |
+| `MiniMax - I2V - Auto Prompt` | Same, with the prompt written for you |
 | `video_minimax_h3_r2v` | Reference-driven: up to 9 images, 3 video clips, 3 audio clips, 12 files total |
+
+The four T2V and I2V workflows are mine. They run the turbo LoRA at 4 steps and give you a TAEH3
+live preview while sampling, and they use KJNodes, rgthree and VideoHelperSuite, all baked into the
+image. `r2v` is ComfyUI's stock template on native H3 nodes only.
+
+**Auto Prompt** needs an [OpenRouter](https://openrouter.ai) key. See the `LLM_KEY` variable below,
+or paste it into the "OpenRouter API Key" node in the graph. Prompt rewriting is billed by
+OpenRouter, not by this template. Everything else here runs locally.
 
 ## Environment variables
 
@@ -38,6 +46,7 @@ Three, all on ComfyUI's native H3 nodes:
 |---|---|
 | `download_minimax_h3` | Set to `"true"`. Downloads the weights and installs the workflows. |
 | `minimax_quant` | `int8` (default), `fp8`, or `nvfp4` |
+| `LLM_KEY` | OpenRouter API key, used by the Auto Prompt workflow |
 | `civitai_token` | CivitAI token for auto-downloading LoRAs and checkpoints |
 | `LORAS_IDS_TO_DOWNLOAD` | Comma-separated CivitAI LoRA version IDs |
 | `CHECKPOINT_IDS_TO_DOWNLOAD` | Comma-separated CivitAI checkpoint version IDs |
@@ -52,9 +61,13 @@ already set up for it.
 
 | `minimax_quant` | Encoder | Transformer | Use on |
 |---|---|---|---|
-| `int8` (default) | int8, 27 GB | int8, 21 GB | Everything |
-| `fp8` | int8, 27 GB | fp8, 21 GB | Ada and Hopper (4090, L40, H100, H200) |
+| `int8` (default) | int8, 26 GB | int8, 21 GB | Everything |
+| `fp8` | int8, 26 GB | fp8, 21 GB | Ada and Hopper (4090, L40, H100, H200) |
 | `nvfp4` | NVFP4, 16 GB | fp8, 21 GB | Blackwell only (5090, PRO 6000, B200) |
+
+The text encoder is the uncensored Qwen3-VL-32B build, not Comfy-Org's stock one. Same architecture,
+same loader. The stock encoder quietly degrades prompts it does not like instead of erroring, which
+is hard to debug and easy to mistake for a bad prompt.
 
 `fp8` and `nvfp4` are emulated on hardware that doesn't support them, which makes them slower than
 the default. On Ampere, leave it alone.
@@ -107,11 +120,13 @@ timestamps and `<d>` dialogue blocks.
 ## Troubleshooting
 
 If ComfyUI reports `IMPORT FAILED`, open Manager, click Install missing custom nodes, then Try fix.
-The H3 nodes are part of ComfyUI core, so the three bundled workflows need no custom pack at all. A
-red node in one of them means something is wrong with the image rather than your setup.
+Every pack the bundled workflows need is already in the image, so a red node in one of them means
+something is wrong with the image rather than your setup.
 
 The image bakes in KJNodes, rgthree, VideoHelperSuite, Essentials, Easy-Use, Frame Interpolation,
-UltimateSDUpscale, Impact Pack, RMBG, segment-anything-2 and the Manager. Frame Interpolation and
+UltimateSDUpscale, Impact Pack, RMBG, segment-anything-2 and the Manager. The OpenRouter pack the
+Auto Prompt workflows need is fetched onto your network volume on first boot instead, so it lands
+without a new image. Frame Interpolation and
 segment-anything-2 fetch their own weights on first use, so expect a wait there.
 
 If the boot log lists a model as "user-supplied", it is a LoRA a workflow references but the
