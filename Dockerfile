@@ -25,7 +25,7 @@ ENV CUDA_VARIANT=${CUDA_VARIANT}
 
 # ComfyUI is pinned to a release tag, not master. Native MiniMax-H3 support landed
 # in 57500fc5 (PR #15224), an ancestor of v0.30.0 — below that tag the MiniMaxH3*
-# nodes do not exist and all three bundled workflows open with red nodes. Pinning
+# nodes do not exist and every bundled workflow opens with red nodes. Pinning
 # also means a `vN` git tag rebuilds to the same image months later, which is the
 # same reason the cu128 variant uses the stable torch channel over nightly.
 # Bump deliberately; the version assertion below is the floor, not the target.
@@ -97,7 +97,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 # Hard floor, independent of the pin above: MiniMax-H3 lives in ComfyUI core
 # (comfy_extras/nodes_minimax_h3.py), not in a custom node, and it landed in
 # v0.30.0. This is what stops anyone overriding COMFYUI_REF to something older
-# and shipping an image whose three bundled workflows open with red nodes.
+# and shipping an image whose bundled workflows open with red nodes.
 RUN cd /ComfyUI \
     && test -f comfy_extras/nodes_minimax_h3.py \
     && python3 -c "from comfyui_version import __version__ as v; assert tuple(map(int, v.split('.')[:2])) >= (0, 30), v; print('ComfyUI', v, 'has MiniMax-H3')"
@@ -123,11 +123,20 @@ RUN if [ "$CUDA_VARIANT" = "cu130" ]; then \
         pip install cupy-cuda12x; \
     fi
 
-# Custom nodes. None of these are needed by the three bundled MiniMax-H3
-# workflows — every node type in those resolves to ComfyUI core — so this is a
-# deliberately curated general-purpose toolkit for people building their own
-# graphs on top of H3, not a dependency set. Keep the list short: each pack is
-# import surface that can break a boot.
+# Custom nodes. The stock r2v workflow needs none of these — every node type in
+# it resolves to ComfyUI core. Three packs ARE load-bearing for the bundled
+# T2V/I2V workflows and cannot be dropped: KJNodes (ModelPreviewOverrideKJ,
+# StringConstant, SomethingToString), rgthree (Power Lora Loader, Display Any)
+# and VideoHelperSuite (VHS_VideoCombine).
+# The rest is a deliberately curated general-purpose toolkit for people building
+# their own graphs on top of H3. Keep the list short: each pack is import
+# surface that can break a boot.
+#
+# ComfyUI-Openrouter_node is the fourth load-bearing pack (the OpenRouterNode
+# inside the Auto Prompt subgraph) and is deliberately NOT here: start.sh
+# clones it at boot instead, so it reaches pods already running a published tag
+# without waiting on a rebuild. Adding it here too would give ComfyUI two copies
+# of the same NODE_CLASS_MAPPINGS.
 #
 # Install handling per pack, in this order: clone, then requirements.txt under
 # the torch constraint (so nothing swaps out the pinned cu130 trio), then
