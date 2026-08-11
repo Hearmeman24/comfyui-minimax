@@ -141,6 +141,7 @@ network_volume:
     latent_upscale_models: models/latent_upscale_models
     detection: models/detection
     vae: models/vae
+    vae_approx: models/vae_approx
     custom_nodes: custom_nodes
 EOF
     EXTRA_PATHS_FLAG="--extra-model-paths-config $COMFYUI_DIR/extra_model_paths.yaml"
@@ -154,8 +155,36 @@ mv CivitAI_Downloader/download_with_aria.py "/usr/local/bin/" || { echo "Move fa
 chmod +x "/usr/local/bin/download_with_aria.py" || { echo "Chmod failed"; exit 1; }
 rm -rf CivitAI_Downloader  # Clean up the cloned repo
 
-# The MiniMax H3 workflows run entirely on core ComfyUI nodes (>= v0.30.0),
-# so there are no custom nodes to provision at boot.
+# Custom nodes. The H3 nodes are ComfyUI core (>= v0.30.0); KJNodes, rgthree and
+# VideoHelperSuite are baked into the image and cover the T2V/I2V workflows.
+#
+# ComfyUI-Openrouter_node (the OpenRouterNode inside the Auto Prompt subgraph)
+# is provisioned here rather than in the Dockerfile, so it reaches pods running
+# an already-published tag without waiting on a rebuild. It clones onto the
+# network volume, which extra_model_paths.yaml adds to ComfyUI's custom_nodes
+# search path additively — so it survives restarts and is fetched once per
+# volume, not once per boot. The image-copy check keeps this a no-op if a later
+# rebuild ever bakes the pack in; two copies would register the same
+# NODE_CLASS_MAPPINGS twice.
+OPENROUTER_DIR="$PERSIST_ROOT/custom_nodes/ComfyUI-Openrouter_node"
+if [ -d "$OPENROUTER_DIR/.git" ]; then
+    echo "✅ ComfyUI-Openrouter_node already installed"
+elif [ -d "$COMFYUI_DIR/custom_nodes/ComfyUI-Openrouter_node" ]; then
+    echo "✅ ComfyUI-Openrouter_node is baked into the image — skipping runtime install"
+else
+    echo "🔧 Installing ComfyUI-Openrouter_node..."
+    mkdir -p "$PERSIST_ROOT/custom_nodes"
+    if git clone --depth=1 \
+        https://github.com/gabe-init/ComfyUI-Openrouter_node.git "$OPENROUTER_DIR"; then
+        CONSTRAINT=""
+        [ -f /torch-constraint.txt ] && CONSTRAINT="--constraint /torch-constraint.txt"
+        pip install -r "$OPENROUTER_DIR/requirements.txt" $CONSTRAINT
+    else
+        # Non-fatal: everything except the two Auto Prompt workflows still runs.
+        echo "⚠️  ComfyUI-Openrouter_node install failed — the Auto Prompt workflows will open with a red node."
+        rm -rf "$OPENROUTER_DIR"
+    fi
+fi
 
 echo "🔧 Installing comfy-aimdo + comfy-kitchen..."
 pip install comfy-aimdo comfy-kitchen &
