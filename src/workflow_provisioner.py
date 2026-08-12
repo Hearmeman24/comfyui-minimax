@@ -7,10 +7,12 @@ download manifest for hf_download_manager.py, and copies the selected workflow
 JSONs into the user's ComfyUI workflows directory, retargeted onto the
 requested quant profile.
 
-Source of truth is the workflows tree itself. Adding a model reference to a
-workflow without a corresponding registry entry surfaces as a user-supplied
-warning (not a hard error here — the CI validator in tools/validate_models.py
-enforces registry coverage at merge time).
+Source of truth is the workflows tree itself, plus two explicit additions: the
+quant profile (which decides which build of each role is pulled) and
+BUNDLED_LORAS (alternates the template ships for a dropdown to point at).
+Adding a model reference to a workflow without a corresponding registry entry
+surfaces as a user-supplied warning (not a hard error here — the CI validator
+in tools/validate_models.py enforces registry coverage at merge time).
 """
 import argparse
 import json
@@ -49,6 +51,14 @@ QUANT_PROFILES = {
     },
 }
 QUANTIZED = {b for p in QUANT_PROFILES.values() for b in p.values()}
+
+# Registry entries pulled whether or not a bundled workflow names them. The
+# workflows load one turbo LoRA; these are the alternates, on the volume so
+# the Turbo LoRA dropdown can be switched without a manual download.
+BUNDLED_LORAS: list[str] = [
+    "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
+    "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+]
 
 MODEL_PAT = re.compile(r'"([^"]+\.(?:safetensors|bin|onnx|pth|ckpt))"')
 
@@ -99,6 +109,7 @@ def main() -> int:
     # every variant being mentioned somewhere in the workflow tree.
     selected = QUANT_PROFILES[args.quant]
     queued: dict[str, dict] = {b: registry[b] for b in selected.values()}
+    queued.update({b: registry[b] for b in BUNDLED_LORAS})
     user_supplied: list[str] = []
     for b in refs:
         if b in QUANTIZED:
