@@ -154,35 +154,24 @@ mv CivitAI_Downloader/download_with_aria.py "/usr/local/bin/" || { echo "Move fa
 chmod +x "/usr/local/bin/download_with_aria.py" || { echo "Chmod failed"; exit 1; }
 rm -rf CivitAI_Downloader  # Clean up the cloned repo
 
-# Custom nodes. The H3 nodes are ComfyUI core (>= v0.30.0); KJNodes, rgthree and
-# VideoHelperSuite are baked into the image and cover the T2V/I2V workflows.
+# Custom nodes. The H3 nodes are ComfyUI core (>= v0.30.0); KJNodes, rgthree,
+# VideoHelperSuite and Openrouter_node are baked into the image and cover the
+# T2V/I2V workflows. Nothing is installed at boot any more.
 #
 # ComfyUI-Openrouter_node (the OpenRouterNode inside the Auto Prompt subgraph)
-# is provisioned here rather than in the Dockerfile, so it reaches pods running
-# an already-published tag without waiting on a rebuild. It clones onto the
-# network volume, which extra_model_paths.yaml adds to ComfyUI's custom_nodes
-# search path additively — so it survives restarts and is fetched once per
-# volume, not once per boot. The image-copy check keeps this a no-op if a later
-# rebuild ever bakes the pack in; two copies would register the same
-# NODE_CLASS_MAPPINGS twice.
+# is baked into the image. Earlier tags cloned it onto the network volume
+# instead, which extra_model_paths.yaml adds to ComfyUI's custom_nodes search
+# path additively — so a volume carried over from one of those tags still holds
+# a second copy, and two copies register the same NODE_CLASS_MAPPINGS twice.
+# Drop the volume copy whenever the image ships the pack itself.
 OPENROUTER_DIR="$PERSIST_ROOT/custom_nodes/ComfyUI-Openrouter_node"
-if [ -d "$OPENROUTER_DIR/.git" ]; then
-    echo "✅ ComfyUI-Openrouter_node already installed"
-elif [ -d "$COMFYUI_DIR/custom_nodes/ComfyUI-Openrouter_node" ]; then
-    echo "✅ ComfyUI-Openrouter_node is baked into the image — skipping runtime install"
-else
-    echo "🔧 Installing ComfyUI-Openrouter_node..."
-    mkdir -p "$PERSIST_ROOT/custom_nodes"
-    if git clone --depth=1 \
-        https://github.com/gabe-init/ComfyUI-Openrouter_node.git "$OPENROUTER_DIR"; then
-        CONSTRAINT=""
-        [ -f /torch-constraint.txt ] && CONSTRAINT="--constraint /torch-constraint.txt"
-        pip install -r "$OPENROUTER_DIR/requirements.txt" $CONSTRAINT
-    else
-        # Non-fatal: everything except the two Auto Prompt workflows still runs.
-        echo "⚠️  ComfyUI-Openrouter_node install failed — the Auto Prompt workflows will open with a red node."
+if [ -d "$COMFYUI_DIR/custom_nodes/ComfyUI-Openrouter_node" ]; then
+    if [ -d "$OPENROUTER_DIR" ]; then
+        echo "🧹 ComfyUI-Openrouter_node is baked into the image — removing the older network-volume copy"
         rm -rf "$OPENROUTER_DIR"
     fi
+else
+    echo "⚠️  ComfyUI-Openrouter_node is missing from the image — the Auto Prompt workflows will open with a red node."
 fi
 
 echo "🔧 Installing comfy-aimdo + comfy-kitchen..."
@@ -282,46 +271,21 @@ echo "All downloads completed!"
 # Workflow copying is handled by the provisioner above (per enabled flag).
 cd /
 
+# VHS ships its animated latent preview off by default. The bundled workflows
+# carry VHS_latentpreview themselves and drive the preview through KJNodes'
+# ModelPreviewOverrideKJ + TAEH3, so this only sets the default for graphs
+# people build from scratch.
+#
+# Manager's config.ini is no longer seeded here. Every value that block wrote
+# already matched Manager's own defaults (security_level normal, network_mode
+# public, db_mode cache, share_option all, component_policy workflow,
+# update_policy stable-comfyui) apart from preview_method, which the in-graph
+# preview override makes redundant.
 if [ "$change_preview_method" == "true" ]; then
-    echo "Updating default preview method..."
+    echo "Enabling VHS animated latent previews by default..."
     sed -i '/id: *'"'"'VHS.LatentPreview'"'"'/,/defaultValue:/s/defaultValue: false/defaultValue: true/' $CUSTOM_NODES_DIR/ComfyUI-VideoHelperSuite/web/js/VHS.core.js
-    CONFIG_PATH="$PERSIST_ROOT/user/default/ComfyUI-Manager"
-    CONFIG_FILE="$CONFIG_PATH/config.ini"
-
-# Ensure the directory exists
-mkdir -p "$CONFIG_PATH"
-
-# Create the config file if it doesn't exist
-if [ ! -f "$CONFIG_FILE" ]; then
-    echo "Creating config.ini..."
-    cat <<EOL > "$CONFIG_FILE"
-[default]
-preview_method = auto
-git_exe =
-use_uv = False
-channel_url = https://raw.githubusercontent.com/ltdrdata/ComfyUI-Manager/main
-share_option = all
-bypass_ssl = False
-file_logging = True
-component_policy = workflow
-update_policy = stable-comfyui
-windows_selector_event_loop_policy = False
-model_download_by_agent = False
-downgrade_blacklist =
-security_level = normal
-skip_migration_check = False
-always_lazy_install = False
-network_mode = public
-db_mode = cache
-EOL
 else
-    echo "config.ini already exists. Updating preview_method..."
-    sed -i 's/^preview_method = .*/preview_method = auto/' "$CONFIG_FILE"
-fi
-echo "Config file setup complete!"
-    echo "Default preview method updated to 'auto'"
-else
-    echo "Skipping preview method update (change_preview_method is not 'true')."
+    echo "Skipping VHS latent preview default (change_preview_method is not 'true')."
 fi
 
 # Workspace as main working directory

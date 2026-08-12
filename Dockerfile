@@ -29,7 +29,19 @@ ENV CUDA_VARIANT=${CUDA_VARIANT}
 # also means a `vN` git tag rebuilds to the same image months later, which is the
 # same reason the cu128 variant uses the stable torch channel over nightly.
 # Bump deliberately; the version assertion below is the floor, not the target.
-ARG COMFYUI_REF=v0.30.1
+#
+# v0.32.0 is the first pin that carries the H3 fix wave: audio sampler support
+# (bdcb886a), audio carry to wrappers (93cb5edb), audio VAE full offload
+# (2340099d), tiled audio decode (2a19bbf0), VAE optimization (2a68ce33), peak
+# memory (62b3c94b), VAEDecodeTiled on NestedTensor latents (6233790c), latent
+# noise mask sampling (563b98ee). It also adds comfy-kitchen int8 attention
+# (bf4c9a08), which wires H3's attention path through AttentionTensorContainer
+# and exposes a ModelAttentionBackend node — start.sh already pip-installs
+# comfy-kitchen unpinned, so the backend is available without a further change.
+# Two hard requirements ride on this pin: ComfyUI e377e263 (in v0.31.0) is the
+# floor for the Spectrum pack below, and v0.32.0 raises minimum torch to 2.7
+# (both variants are well above it).
+ARG COMFYUI_REF=v0.32.0
 
 # Consolidated environment variables
 ENV DEBIAN_FRONTEND=noninteractive \
@@ -124,19 +136,30 @@ RUN if [ "$CUDA_VARIANT" = "cu130" ]; then \
     fi
 
 # Custom nodes. The stock r2v workflow needs none of these — every node type in
-# it resolves to ComfyUI core. Three packs ARE load-bearing for the bundled
+# it resolves to ComfyUI core. Four packs ARE load-bearing for the bundled
 # T2V/I2V workflows and cannot be dropped: KJNodes (ModelPreviewOverrideKJ,
-# StringConstant, SomethingToString), rgthree (Power Lora Loader, Display Any)
-# and VideoHelperSuite (VHS_VideoCombine).
+# StringConstant, SomethingToString), rgthree (Power Lora Loader, Display Any),
+# VideoHelperSuite (VHS_VideoCombine) and Openrouter_node (see below).
 # The rest is a deliberately curated general-purpose toolkit for people building
 # their own graphs on top of H3. Keep the list short: each pack is import
 # surface that can break a boot.
 #
 # ComfyUI-Openrouter_node is the fourth load-bearing pack (the OpenRouterNode
-# inside the Auto Prompt subgraph) and is deliberately NOT here: start.sh
-# clones it at boot instead, so it reaches pods already running a published tag
-# without waiting on a rebuild. Adding it here too would give ComfyUI two copies
-# of the same NODE_CLASS_MAPPINGS.
+# inside the Auto Prompt subgraph). It used to be cloned at boot by start.sh so
+# it could reach pods running an already-published tag; it is baked in here now,
+# and start.sh deletes the old network-volume copy on boot instead — two copies
+# would register the same NODE_CLASS_MAPPINGS twice.
+#
+# ComfyUI-Spectrum-MiniMax-H3 is an optional accelerator, not load-bearing: it
+# forecasts post-transformer features with Chebyshev ridge regression to skip
+# transformer evaluations, and adds one node (Spectrum Apply MiniMax H3, under
+# sampling/spectrum). Baked in because it is not registered in ComfyUI-Manager's
+# default channel, which puts it on the "high risk" install path — and that path
+# now requires allow_git_url_install AND a loopback listener, so it is
+# permanently unreachable from Manager on a pod (ComfyUI runs with --listen).
+# It needs ComfyUI >= e377e263 for the latent_shapes argument on outer_sample,
+# which is why the pin above cannot go back below v0.31.0. Output is approximate
+# by design, so it is off unless a graph adds the node.
 #
 # Install handling per pack, in this order: clone, then requirements.txt under
 # the torch constraint (so nothing swaps out the pinned cu130 trio), then
@@ -152,7 +175,9 @@ RUN for repo in \
     https://github.com/ssitu/ComfyUI_UltimateSDUpscale.git \
     https://github.com/ltdrdata/ComfyUI-Impact-Pack.git \
     https://github.com/1038lab/ComfyUI-RMBG.git \
-    https://github.com/kijai/ComfyUI-segment-anything-2.git; \
+    https://github.com/kijai/ComfyUI-segment-anything-2.git \
+    https://github.com/gabe-init/ComfyUI-Openrouter_node.git \
+    https://github.com/xmarre/ComfyUI-Spectrum-MiniMax-H3.git; \
     do \
         cd /ComfyUI/custom_nodes; \
         repo_dir=$(basename "$repo" .git); \
