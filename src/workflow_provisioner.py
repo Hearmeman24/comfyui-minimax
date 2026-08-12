@@ -29,27 +29,21 @@ FLAG_DIRS = {
 # Blackwell; NVFP4 only accelerates on Blackwell (sm_120) and is emulated
 # everywhere else; int8_convrot runs on anything. The VAEs have one quant
 # each and are always downloaded.
-#
-# The text encoder is the uncensored "heretic" Qwen3-VL-32B rather than
-# Comfy-Org's stock one. The stock encoder refuses a large share of the
-# prompts this template exists to serve, and the refusal shows up as a
-# degraded/empty conditioning rather than an error. Same architecture, same
-# loader, same quants — it drops straight into CLIPLoader with type "minimax".
 QUANT_PROFILES = {
     "fp8": {
         "fl2va": "minimax_h3_fl2va_pruned_fp8_scaled.safetensors",
         "ref2va": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
-        "text_encoder": "qwen3vl_32b_h3_ultra_uncensored_heretic_int8_convrot.safetensors",
+        "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
     },
     "int8": {
         "fl2va": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
         "ref2va": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
-        "text_encoder": "qwen3vl_32b_h3_ultra_uncensored_heretic_int8_convrot.safetensors",
+        "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
     },
     "nvfp4": {
         "fl2va": "minimax_h3_fl2va_pruned_fp8_scaled.safetensors",
         "ref2va": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
-        "text_encoder": "qwen3vl_32b_heretic_minimax_h3_nvfp4.safetensors",
+        "text_encoder": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
     },
 }
 QUANTIZED = {b for p in QUANT_PROFILES.values() for b in p.values()}

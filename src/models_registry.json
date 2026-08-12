@@ -27,12 +27,12 @@
   "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/minimax_h3_video_vae_fp16.safetensors",
   "subdir": "vae"
  },
- "qwen3vl_32b_h3_ultra_uncensored_heretic_int8_convrot.safetensors": {
-  "url": "https://huggingface.co/ethanfel/Qwen3-VL-32B-Ultra-Heretic-H3-ComfyUI-INT8-ConvRot/resolve/main/qwen3vl_32b_h3_ultra_uncensored_heretic_int8_convrot.safetensors",
+ "qwen3vl_32b_minimax_h3_int8_convrot.safetensors": {
+  "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
   "subdir": "text_encoders"
  },
- "qwen3vl_32b_heretic_minimax_h3_nvfp4.safetensors": {
-  "url": "https://huggingface.co/sakamakismile/Qwen3-VL-32B-Heretic-MiniMax-H3-NVFP4/resolve/main/qwen3vl_32b_heretic_minimax_h3_nvfp4.safetensors",
+ "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors": {
+  "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
   "subdir": "text_encoders"
  },
  "taeh3.safetensors": {
