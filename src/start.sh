@@ -13,6 +13,16 @@ else
     echo "additional_params.sh not found in /workspace. Skipping..."
 fi
 
+# Set the network volume path. Resolved here, before the SageAttention block,
+# because the source-build fallback caches its wheel on the volume and needs to
+# know whether there is one.
+NETWORK_VOLUME="/workspace"
+URL="http://127.0.0.1:8188"
+if [ ! -d "$NETWORK_VOLUME" ]; then
+    echo "NETWORK_VOLUME directory '$NETWORK_VOLUME' does not exist. You are NOT using a network volume. Setting NETWORK_VOLUME to '/' (root directory)."
+    NETWORK_VOLUME="/"
+fi
+
 # SageAttention strategy.
 #   cu130 image: a prebuilt cu130 wheel is baked at /opt/sage. Install it and
 #   verify with a REAL kernel launch on this worker's GPU — import success isn't
@@ -46,37 +56,26 @@ if [ "$CUDA_VARIANT" = "cu130" ] && [ -n "$SAGE_WHEEL" ]; then
 fi
 
 # Start SageAttention source build in the background (only if the wheel path
-# didn't already give us a working kernel).
+# didn't already give us a working kernel). sage_build.sh caches the wheel it
+# produces on the network volume, so this is a ~3-minute compile on a volume's
+# first boot and a few seconds on every boot after it. It runs from the repo
+# copy the entrypoint already synced, same as the workflows below, so it reaches
+# pods on a published tag without waiting on an image rebuild.
 if [ -z "$SAGE_FLAG" ]; then
     echo "Starting SageAttention build..."
-    # /tmp survives a pod restart, so a previous boot's marker and clone are
-    # still here. Left in place, the wait loop below sees the stale marker and
-    # returns instantly — probing sage while this build is mid-reinstall — and
-    # git clone fails into the existing directory. Clear both, synchronously,
-    # before the build starts.
+    # A previous boot's marker can still be here. Left in place, the wait loop
+    # below sees it and returns instantly — probing sage while this build is
+    # mid-reinstall. Clear it synchronously, before the build starts.
     rm -f /tmp/sage_build_done
-    rm -rf /tmp/SageAttention
-    (
-        export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32
-        cd /tmp
-        git clone https://github.com/thu-ml/SageAttention.git
-        cd SageAttention
-        git reset --hard 68de379
-        pip install -e .
-        echo "SageAttention build completed" > /tmp/sage_build_done
-    ) > /tmp/sage_build.log 2>&1 &
+    SAGE_CACHE_ROOT=""
+    [ "$NETWORK_VOLUME" != "/" ] && SAGE_CACHE_ROOT="$NETWORK_VOLUME/.sage_wheel_cache"
+    bash /comfyui-minimax/src/sage_build.sh "$SAGE_CACHE_ROOT" /tmp \
+        > /tmp/sage_build.log 2>&1 &
     SAGE_PID=$!
     echo "SageAttention build started in background (PID: $SAGE_PID)"
 fi
 
-# Set the network volume path
-NETWORK_VOLUME="/workspace"
-URL="http://127.0.0.1:8188"
-
-# Check if NETWORK_VOLUME exists; if not, use root directory instead
-if [ ! -d "$NETWORK_VOLUME" ]; then
-    echo "NETWORK_VOLUME directory '$NETWORK_VOLUME' does not exist. You are NOT using a network volume. Setting NETWORK_VOLUME to '/' (root directory)."
-    NETWORK_VOLUME="/"
+if [ "$NETWORK_VOLUME" = "/" ]; then
     echo "NETWORK_VOLUME directory doesn't exist. Starting JupyterLab on root directory..."
     jupyter-lab --ip=0.0.0.0 --allow-root --no-browser --NotebookApp.token='' --NotebookApp.password='' --ServerApp.allow_origin='*' --ServerApp.allow_credentials=True --notebook-dir=/ &
 else
