@@ -32,13 +32,36 @@ open weights and not in this template. Any local setup advertising 2K is upscali
 | `MiniMax - I2V - Auto Prompt` | Same, with the prompt written for you |
 | `video_minimax_h3_r2v` | Reference-driven: up to 9 images, 3 video clips, 3 audio clips, 12 files total |
 
-The four T2V and I2V workflows are mine. They run the turbo LoRA at 4 steps and give you a TAEH3
+The four T2V and I2V workflows are mine. They run a turbo LoRA and give you a TAEH3
 live preview while sampling, and they use KJNodes, rgthree and VideoHelperSuite, all baked into the
 image. `r2v` is ComfyUI's stock template on native H3 nodes only.
 
 **Auto Prompt** needs an [OpenRouter](https://openrouter.ai) key. See the `LLM_KEY` variable below,
 or paste it into the "OpenRouter API Key" node in the graph. Prompt rewriting is billed by
 OpenRouter, not by this template. Everything else here runs locally.
+
+## Turbo LoRAs
+
+The T2V and I2V workflows sample through a distilled turbo LoRA from
+[lightx2v](https://github.com/ModelTC/Minimax-H3-Turbo). All three of their ComfyUI builds are
+downloaded, so trying a different one is a dropdown in the Turbo LoRA node and nothing else.
+
+| LoRA in the dropdown | Trained at | Distilled NFE | lightx2v's recommended steps |
+|---|---|---|---|
+| `minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy` (the one loaded) | 544p, mixed aspect | 4 | 4 |
+| `minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16` | 768p, 1344x768 | 4 | 4 |
+| `minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16` | 544p, mixed aspect | 8 | 8 or 4 |
+
+The workflows load the v0.1 build they were tuned around, and they do not sample at its bare 4
+NFE — the Beta scheduler is set to 8 and an `ExtendIntermediateSigmas` node adds more on top of
+that schedule. The two v1.0 builds are newer and worth an A/B on your own prompts; change the
+Beta scheduler's step count when you switch.
+
+Two things move with the file. **Strength:** the v0.1 build has its scale baked into the weights,
+which is why the node sits at 0.5; the v1.0 builds ship their own alpha instead, so start them at
+1.0. **Sigma shift:** lightx2v distilled v0.1 and the 8-step at 12 video / 3 audio, and the 768p
+one at 6 / 3. Their [model spec table](https://github.com/ModelTC/Minimax-H3-Turbo#model-specs) is
+the thing to read before tuning further.
 
 ## Spectrum
 
@@ -82,8 +105,8 @@ emulated on Ampere, which makes it slower than the default — on Ampere, leave 
 Changing quant is an env var plus a pod restart. Only the quant you ask for is downloaded, and the
 workflows are repointed at those files automatically, so you never touch a dropdown.
 
-Budget 75 GB of network volume whichever quant you pick. 100 GB is comfortable with room for
-outputs.
+Budget 80 GB of network volume whichever quant you pick — the three turbo LoRAs are about 6 GB of
+that. 100 GB is comfortable with room for outputs.
 
 ## Image variants
 
