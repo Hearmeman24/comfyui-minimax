@@ -62,17 +62,17 @@ already set up for it.
 | `minimax_quant` | Encoder | Transformer | Use on |
 |---|---|---|---|
 | `int8` (default) | int8, 27 GB | int8, 21 GB | Everything |
-| `fp8` | int8, 27 GB | fp8, 21 GB | Ada and Hopper (4090, L40, H100, H200) |
-| `nvfp4` | NVFP4, 16 GB | fp8, 21 GB | Blackwell only (5090, PRO 6000, B200) |
+| `fp8` | int8, 27 GB | fp8, 21 GB | Ada, Hopper and Blackwell (4090, L40, H100, H200, 5090) |
+| `nvfp4` | int8, 27 GB | fp8, 21 GB | Same files as `fp8` |
 
-`fp8` and `nvfp4` are emulated on hardware that doesn't support them, which makes them slower than
-the default. On Ampere, leave it alone.
+The encoder is the same int8 build in every case; the quant only picks the transformer. `fp8` is
+emulated on Ampere, which makes it slower than the default — on Ampere, leave it alone.
 
 Changing quant is an env var plus a pod restart. Only the quant you ask for is downloaded, and the
 workflows are repointed at those files automatically, so you never touch a dropdown.
 
-Budget 75 GB of network volume for `int8` or `fp8`, 64 GB for `nvfp4`. 100 GB is comfortable with
-room for outputs.
+Budget 75 GB of network volume whichever quant you pick. 100 GB is comfortable with room for
+outputs.
 
 ## Image variants
 
