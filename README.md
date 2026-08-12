@@ -40,6 +40,17 @@ image. `r2v` is ComfyUI's stock template on native H3 nodes only.
 or paste it into the "OpenRouter API Key" node in the graph. Prompt rewriting is billed by
 OpenRouter, not by this template. Everything else here runs locally.
 
+## Spectrum
+
+[Spectrum](https://github.com/xmarre/ComfyUI-Spectrum-MiniMax-H3) is baked in. It skips some of H3's
+transformer evaluations by forecasting the features they would have produced, which makes sampling
+faster. Add **Spectrum Apply MiniMax H3** (under `sampling/spectrum`) to a graph to use it. Nothing
+uses it unless you add it.
+
+The speedup is not free: forecasting changes the denoising trajectory, so the same prompt and seed
+will not give you the same clip it gives you without the node. A/B the seed before you commit to it,
+and turn it off for finals. The pack's own README is worth reading before you tune anything.
+
 ## Environment variables
 
 | Variable | Description |
@@ -81,7 +92,7 @@ outputs.
 | `:vN` | CUDA 13.0, torch 2.11.0 cu130. Prebuilt SageAttention wheel, no build on first boot. Needed for native NVFP4. |
 | `:vN-cuda12` | CUDA 12.8, stable torch cu128, for hosts pinned to a 12.8 driver. No NVFP4, SageAttention compiles at boot. |
 
-Both ship **ComfyUI v0.30.1**, pinned rather than tracked, so a tag rebuilds to the same thing later.
+Both ship **ComfyUI v0.32.0**, pinned rather than tracked, so a tag rebuilds to the same thing later.
 
 ## Deploying
 
@@ -119,11 +130,10 @@ If ComfyUI reports `IMPORT FAILED`, open Manager, click Install missing custom n
 Every pack the bundled workflows need is already in the image, so a red node in one of them means
 something is wrong with the image rather than your setup.
 
-The image bakes in KJNodes, rgthree, VideoHelperSuite, Essentials, Easy-Use, Frame Interpolation,
-UltimateSDUpscale, Impact Pack, RMBG, segment-anything-2 and the Manager. The OpenRouter pack the
-Auto Prompt workflows need is fetched onto your network volume on first boot instead, so it lands
-without a new image. Frame Interpolation and
-segment-anything-2 fetch their own weights on first use, so expect a wait there.
+The image bakes in KJNodes, rgthree, VideoHelperSuite, the OpenRouter pack the Auto Prompt workflows
+need, Spectrum, Essentials, Easy-Use, Frame Interpolation, UltimateSDUpscale, Impact Pack, RMBG,
+segment-anything-2 and the Manager. Frame Interpolation and segment-anything-2 fetch their own
+weights on first use, so expect a wait there.
 
 If the boot log lists a model as "user-supplied", it is a LoRA a workflow references but the
 template does not bundle. Drop it into `/workspace/ComfyUI/models/loras/` or pull it with
