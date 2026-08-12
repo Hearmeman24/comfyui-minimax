@@ -31,10 +31,6 @@
   "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
   "subdir": "text_encoders"
  },
- "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors": {
-  "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
-  "subdir": "text_encoders"
- },
  "taeh3.safetensors": {
   "url": "https://huggingface.co/Kijai/MiniMax-H3-TAE/resolve/main/vae_approx/taeh3.safetensors",
   "subdir": "vae_approx"

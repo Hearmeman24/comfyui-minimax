@@ -205,14 +205,13 @@ export change_preview_method="true"
 #
 # minimax_quant picks which quant of the DiT + text encoder is pulled, and
 # retargets the copied workflows onto it:
-#   int8  (default) int8_convrot everywhere. The only quant with no emulated
-#                   path on any card RunPod rents, Ampere included. Safe, not
-#                   the fastest.
-#   fp8             fp8_scaled DiT + int8_convrot text encoder. Native on
-#                   Ada/Hopper (L40S, H100, H200). Emulated on Ampere.
-#   nvfp4           fp8_scaled DiT + nvfp4_awq text encoder. Blackwell only
-#                   (RTX 50xx / B200 / PRO 6000). NVFP4 is emulated on
-#                   anything older, so do NOT select it on an H100/H200.
+# The text encoder is int8_convrot in every case; the quant only picks the DiT.
+#   int8  (default) int8_convrot DiT. The only quant with no emulated path on
+#                   any card RunPod rents, Ampere included. Safe, not the
+#                   fastest.
+#   fp8             fp8_scaled DiT. Native on Ada/Hopper/Blackwell (L40S,
+#                   H100, H200, RTX 50xx). Emulated on Ampere.
+#   nvfp4           same files as fp8, kept so pods already setting it boot.
 # ---------------------------------------------------------------
 HF_QUEUE_FILE="/tmp/hf_download_queue.tsv"
 PROVISIONER_FLAGS=()

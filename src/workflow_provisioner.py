@@ -25,10 +25,12 @@ FLAG_DIRS = {
 
 # The bundled workflows are written against the int8 profile; selecting a
 # different one swaps both what gets downloaded and what the copied
-# workflows load. fp8 e4m3 is native on Ada/Hopper/
-# Blackwell; NVFP4 only accelerates on Blackwell (sm_120) and is emulated
-# everywhere else; int8_convrot runs on anything. The VAEs have one quant
-# each and are always downloaded.
+# workflows load. fp8 e4m3 is native on Ada/Hopper/Blackwell; int8_convrot
+# runs on anything. The VAEs have one quant each and are always downloaded.
+#
+# The text encoder is int8_convrot in every profile — the quant only picks
+# the DiT. That leaves nvfp4 resolving to the same files as fp8; it stays a
+# valid value so pods already setting it keep booting.
 QUANT_PROFILES = {
     "fp8": {
         "fl2va": "minimax_h3_fl2va_pruned_fp8_scaled.safetensors",
@@ -43,7 +45,7 @@ QUANT_PROFILES = {
     "nvfp4": {
         "fl2va": "minimax_h3_fl2va_pruned_fp8_scaled.safetensors",
         "ref2va": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
-        "text_encoder": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+        "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
     },
 }
 QUANTIZED = {b for p in QUANT_PROFILES.values() for b in p.values()}
