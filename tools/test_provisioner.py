@@ -10,6 +10,7 @@ a file is missing and offers to download it to their own PC.
 Run: python3 tools/test_provisioner.py
 """
 import json
+import re
 import subprocess
 import sys
 import tempfile
@@ -17,11 +18,21 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
-from workflow_provisioner import QUANT_PROFILES, QUANTIZED  # noqa: E402
+from workflow_provisioner import (  # noqa: E402
+    BUNDLED_LORAS,
+    QUANT_PROFILES,
+    QUANTIZED,
+)
 
 REGISTRY = json.loads((REPO / "src" / "models_registry.json").read_text())
 
 TEXT_ENCODER = "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
+
+TURBO_LORAS = [
+    "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
+    "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
+    "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+]
 
 
 def check_text_encoder() -> None:
@@ -41,6 +52,38 @@ def check_text_encoder() -> None:
     ]
     assert not strays, f"registry carries unused text encoders: {sorted(strays)}"
     print(f"✅ every quant profile loads {TEXT_ENCODER}")
+
+
+def check_turbo_loras() -> None:
+    """All three turbo LoRAs ship, whatever the bundled workflows load.
+
+    The workflows load one of them; the other two are there so the Turbo LoRA
+    dropdown can be switched without downloading anything by hand. Nothing in
+    the workflow tree references those two, so the provisioner has to bundle
+    them explicitly.
+    """
+    for b in TURBO_LORAS:
+        assert b in REGISTRY, f"turbo LoRA missing from registry: {b}"
+        assert REGISTRY[b]["subdir"] == "loras", (
+            f"{b}: subdir is {REGISTRY[b]['subdir']}, expected loras"
+        )
+    unreferenced = [b for b in TURBO_LORAS if b not in workflow_refs()]
+    assert set(unreferenced) <= set(BUNDLED_LORAS), (
+        "turbo LoRAs no workflow references and the provisioner does not "
+        f"bundle: {sorted(set(unreferenced) - set(BUNDLED_LORAS))}"
+    )
+    print(f"✅ {len(TURBO_LORAS)} turbo LoRAs registered, "
+          f"{len(BUNDLED_LORAS)} bundled without a workflow reference")
+
+
+def workflow_refs() -> set[str]:
+    """Every model basename the workflow tree names, in any node or note."""
+    pat = re.compile(r'"([^"]+\.(?:safetensors|bin|onnx|pth|ckpt))"')
+    names = set()
+    for wf in (REPO / "workflows").rglob("*.json"):
+        for m in pat.findall(wf.read_text()):
+            names.add(m.rsplit("/", 1)[-1])
+    return names
 
 
 def declared(workflow_dir: Path) -> set[str]:
@@ -69,6 +112,7 @@ def declared(workflow_dir: Path) -> set[str]:
 
 def main() -> int:
     check_text_encoder()
+    check_turbo_loras()
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         for quant, profile in sorted(QUANT_PROFILES.items()):
@@ -98,7 +142,12 @@ def main() -> int:
                 f"{quant}: profile files missing from manifest: "
                 f"{sorted(wanted - downloaded)}"
             )
-            print(f"✅ {quant}: workflows and manifest agree on {len(wanted)} files")
+            assert set(TURBO_LORAS) <= downloaded, (
+                f"{quant}: turbo LoRAs missing from manifest: "
+                f"{sorted(set(TURBO_LORAS) - downloaded)}"
+            )
+            print(f"✅ {quant}: workflows and manifest agree on {len(wanted)} files, "
+                  f"all {len(TURBO_LORAS)} turbo LoRAs queued")
     print("✅ all quant profiles consistent")
     return 0
 
