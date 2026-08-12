@@ -21,6 +21,27 @@ from workflow_provisioner import QUANT_PROFILES, QUANTIZED  # noqa: E402
 
 REGISTRY = json.loads((REPO / "src" / "models_registry.json").read_text())
 
+TEXT_ENCODER = "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
+
+
+def check_text_encoder() -> None:
+    """The DiT quant varies by card. The text encoder does not.
+
+    Every profile loads Comfy-Org's stock int8 build, so no quant can pull a
+    second encoder onto the volume or fall off the stock repo.
+    """
+    for quant, profile in sorted(QUANT_PROFILES.items()):
+        assert profile["text_encoder"] == TEXT_ENCODER, (
+            f"{quant}: text_encoder is {profile['text_encoder']}, "
+            f"expected {TEXT_ENCODER}"
+        )
+    strays = [
+        b for b in REGISTRY
+        if b.startswith("qwen3vl") and b != TEXT_ENCODER
+    ]
+    assert not strays, f"registry carries unused text encoders: {sorted(strays)}"
+    print(f"✅ every quant profile loads {TEXT_ENCODER}")
+
 
 def declared(workflow_dir: Path) -> set[str]:
     """Every quantized model basename the copied workflows claim to load."""
@@ -47,6 +68,7 @@ def declared(workflow_dir: Path) -> set[str]:
 
 
 def main() -> int:
+    check_text_encoder()
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
         for quant, profile in sorted(QUANT_PROFILES.items()):
