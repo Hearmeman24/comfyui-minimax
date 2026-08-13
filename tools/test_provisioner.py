@@ -1,15 +1,26 @@
 #!/usr/bin/env python3
-"""Self-check: a provisioned pod must be internally consistent.
+"""Self-check: a provisioned pod must be internally consistent, per quant.
 
-For every quant profile, the workflows copied to the user's ComfyUI must
-declare exactly the model files the download manifest pulled — in the loader
-widgets AND in each node's `properties.models`, which is what the ComfyUI
-frontend's "Missing Models" dialog reads. A mismatch there tells the customer
-a file is missing and offers to download it to their own PC.
+Drives the shared runtime's provisioner (comfyui-runtime/src/provisioner.py,
+pinned by pins.json) against this repo's REAL template.json,
+models_registry.json and workflows/, once per `minimax_quant` value: unset,
+int8, fp8, FP8, nvfp4, and a garbage value. For each, the workflows copied
+to the user's ComfyUI must declare exactly the model files the download
+manifest pulled: in the loader widgets AND in each node's
+`properties.models`, which is what the ComfyUI frontend's "Missing Models"
+dialog reads. A mismatch there tells the customer a file is missing and
+offers to download it to their own PC.
+
+This is also the ONLY gate on template.json's `extra_models` key (the two
+v1.0 turbo LoRAs no workflow references): the runtime validator ignores the
+key and the provisioner only prints an error line at boot, so a typo there
+is invisible everywhere else.
 
 Run: python3 tools/test_provisioner.py
+Stdlib only, no pytest. Needs template.json + pins.json in the repo root.
 """
 import json
+import os
 import re
 import subprocess
 import sys
@@ -17,77 +28,51 @@ import tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(REPO / "src"))
-from workflow_provisioner import (  # noqa: E402
-    BUNDLED_LORAS,
-    QUANT_PROFILES,
-    QUANTIZED,
-)
-
-REGISTRY = json.loads((REPO / "src" / "models_registry.json").read_text())
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from validate_models import runtime_dir  # noqa: E402
 
 TEXT_ENCODER = "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
 
-TURBO_LORAS = [
-    "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
+# The two v1.0 turbo LoRAs are referenced by ZERO workflows and download only
+# via template.json's extra_models; the v0.1 arrives via the workflow scan.
+BUNDLED_LORAS = [
     "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
     "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
 ]
+TURBO_LORAS = BUNDLED_LORAS + [
+    "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
+]
+
+# (env value or None for unset) -> expected outcome. Replicates the
+# provisioner's resolve rule: exact profile name, else lowercased, else warn
+# and fall back to the group's default (the deliberate behaviour change vs
+# the old provisioner, which exited 2 and left the pod modelless).
+CASES = [None, "int8", "fp8", "FP8", "nvfp4", "not-a-quant"]
 
 
-def check_text_encoder() -> None:
-    """The DiT quant varies by card. The text encoder does not.
-
-    Every profile loads Comfy-Org's stock int8 build, so no quant can pull a
-    second encoder onto the volume or fall off the stock repo.
-    """
-    for quant, profile in sorted(QUANT_PROFILES.items()):
-        assert profile["text_encoder"] == TEXT_ENCODER, (
-            f"{quant}: text_encoder is {profile['text_encoder']}, "
-            f"expected {TEXT_ENCODER}"
-        )
-    strays = [
-        b for b in REGISTRY
-        if b.startswith("qwen3vl") and b != TEXT_ENCODER
-    ]
-    assert not strays, f"registry carries unused text encoders: {sorted(strays)}"
-    print(f"✅ every quant profile loads {TEXT_ENCODER}")
+def load_json(path: Path, hint: str) -> dict:
+    try:
+        return json.loads(path.read_text())
+    except OSError as e:
+        raise SystemExit(f"FATAL: cannot read {path.name} ({hint}): {e}")
+    except ValueError as e:
+        raise SystemExit(f"FATAL: {path.name} is not valid JSON: {e}")
 
 
-def check_turbo_loras() -> None:
-    """All three turbo LoRAs ship, whatever the bundled workflows load.
-
-    The workflows load one of them; the other two are there so the Turbo LoRA
-    dropdown can be switched without downloading anything by hand. Nothing in
-    the workflow tree references those two, so the provisioner has to bundle
-    them explicitly.
-    """
-    for b in TURBO_LORAS:
-        assert b in REGISTRY, f"turbo LoRA missing from registry: {b}"
-        assert REGISTRY[b]["subdir"] == "loras", (
-            f"{b}: subdir is {REGISTRY[b]['subdir']}, expected loras"
-        )
-    unreferenced = [b for b in TURBO_LORAS if b not in workflow_refs()]
-    assert set(unreferenced) <= set(BUNDLED_LORAS), (
-        "turbo LoRAs no workflow references and the provisioner does not "
-        f"bundle: {sorted(set(unreferenced) - set(BUNDLED_LORAS))}"
-    )
-    print(f"✅ {len(TURBO_LORAS)} turbo LoRAs registered, "
-          f"{len(BUNDLED_LORAS)} bundled without a workflow reference")
+def expected_profile(group: dict, raw) -> str:
+    if raw is None:
+        return group["default"]
+    if raw in group["profiles"]:
+        return raw
+    low = raw.strip().lower()
+    if low in group["profiles"]:
+        return low
+    return group["default"]
 
 
-def workflow_refs() -> set[str]:
-    """Every model basename the workflow tree names, in any node or note."""
-    pat = re.compile(r'"([^"]+\.(?:safetensors|bin|onnx|pth|ckpt))"')
-    names = set()
-    for wf in (REPO / "workflows").rglob("*.json"):
-        for m in pat.findall(wf.read_text()):
-            names.add(m.rsplit("/", 1)[-1])
-    return names
-
-
-def declared(workflow_dir: Path) -> set[str]:
-    """Every quantized model basename the copied workflows claim to load."""
+def declared(workflow_dir: Path, quantized: set, registry: dict) -> set:
+    """Every managed (quant-swappable) basename the copied workflows claim
+    to load, from widgets and properties.models, top level and subgraphs."""
     names = set()
     for wf in workflow_dir.rglob("*.json"):
         doc = json.loads(wf.read_text())
@@ -98,57 +83,123 @@ def declared(workflow_dir: Path) -> set[str]:
         for group in groups:
             for n in group:
                 for v in n.get("widgets_values") or []:
-                    if isinstance(v, str) and v in QUANTIZED:
+                    if isinstance(v, str) and v in quantized:
                         names.add(v)
                 for m in (n.get("properties") or {}).get("models") or []:
-                    if m.get("name") in QUANTIZED:
+                    if m.get("name") in quantized:
                         names.add(m["name"])
-                        assert m.get("url") == REGISTRY[m["name"]]["url"], (
-                            f"{wf.name}: {m['name']} declares url {m.get('url')}, "
-                            f"registry says {REGISTRY[m['name']]['url']}"
+                        assert m.get("url") == registry[m["name"]]["url"], (
+                            f"{wf.name}: {m['name']} declares url "
+                            f"{m.get('url')}, registry says "
+                            f"{registry[m['name']]['url']}"
                         )
     return names
 
 
 def main() -> int:
-    check_text_encoder()
-    check_turbo_loras()
-    with tempfile.TemporaryDirectory() as tmp:
-        tmp = Path(tmp)
-        for quant, profile in sorted(QUANT_PROFILES.items()):
-            dst = tmp / f"wf-{quant}"
-            manifest = tmp / f"manifest-{quant}.tsv"
-            subprocess.run(
-                [sys.executable, str(REPO / "src" / "workflow_provisioner.py"),
+    template = load_json(REPO / "template.json",
+                         "written by the migration's slice A; this test only "
+                         "goes green once the slices are integrated")
+    registry = load_json(REPO / "src" / "models_registry.json", "registry")
+
+    groups = template.get("swap_groups") or []
+    assert len(groups) == 1, f"expected exactly one swap group, got {len(groups)}"
+    group = groups[0]
+    assert group["env"] == "minimax_quant", group["env"]
+    assert group["default"] == "int8", group["default"]
+    profiles = group["profiles"]
+    quantized = {f for p in profiles.values() for f in p.values()}
+
+    # The DiT quant varies by card. The text encoder does not: every profile
+    # ships Comfy-Org's stock int8 build, so no quant can pull a second
+    # encoder onto the volume.
+    for quant, profile in sorted(profiles.items()):
+        assert profile["text_encoder"] == TEXT_ENCODER, (
+            f"{quant}: text_encoder is {profile['text_encoder']}, "
+            f"expected {TEXT_ENCODER}"
+        )
+    strays = [b for b in registry
+              if b.startswith("qwen3vl") and b != TEXT_ENCODER]
+    assert not strays, f"registry carries unused text encoders: {sorted(strays)}"
+    print(f"✅ every quant profile loads {TEXT_ENCODER}")
+
+    for b in TURBO_LORAS:
+        assert b in registry, f"turbo LoRA missing from registry: {b}"
+        assert registry[b]["subdir"] == "loras", (
+            f"{b}: subdir is {registry[b]['subdir']}, expected loras"
+        )
+    flag = template["flags"]["download_minimax_h3"]
+    assert sorted(flag.get("extra_models", [])) == sorted(BUNDLED_LORAS), (
+        f"extra_models must list exactly the two v1.0 turbo LoRAs, "
+        f"got {flag.get('extra_models')}"
+    )
+    print(f"✅ {len(TURBO_LORAS)} turbo LoRAs registered, "
+          f"{len(BUNDLED_LORAS)} bundled via extra_models")
+
+    provisioner = runtime_dir() / "src" / "provisioner.py"
+    assert provisioner.is_file(), f"no provisioner at {provisioner}"
+
+    manifests: dict = {}
+    with tempfile.TemporaryDirectory() as tmpdir:
+        tmp = Path(tmpdir)
+        for raw in CASES:
+            key = expected_profile(group, raw)
+            label = "unset" if raw is None else raw
+            slug = re.sub(r"[^A-Za-z0-9]", "_", label)
+            dst = tmp / f"wf-{slug}"
+            manifest = tmp / f"manifest-{slug}.tsv"
+            env = dict(os.environ)
+            env["download_minimax_h3"] = "true"
+            env.pop("minimax_quant", None)
+            if raw is not None:
+                env["minimax_quant"] = raw
+            proc = subprocess.run(
+                [sys.executable, str(provisioner),
+                 "--template", str(REPO / "template.json"),
                  "--registry", str(REPO / "src" / "models_registry.json"),
                  "--workflows-src", str(REPO / "workflows"),
                  "--workflows-dst", str(dst),
-                 "--models-root", str(tmp / "models"),
-                 "--manifest", str(manifest),
-                 "--flag", "download_minimax_h3",
-                 "--quant", quant],
-                check=True, stdout=subprocess.DEVNULL,
+                 "--models-root", str(tmp / f"models-{slug}"),
+                 "--manifest", str(manifest)],
+                env=env, capture_output=True, text=True,
             )
-            downloaded = {
-                line.split("\t")[1].rsplit("/", 1)[1]
-                for line in manifest.read_text().splitlines() if line
-            }
-            wanted = set(profile.values())
-            assert declared(dst) == wanted, (
-                f"{quant}: workflows declare {sorted(declared(dst))}, "
-                f"profile is {sorted(wanted)}"
+            assert proc.returncode == 0, (
+                f"{label}: provisioner exited {proc.returncode}\n"
+                f"{proc.stdout}\n{proc.stderr}"
+            )
+            lines = [l for l in manifest.read_text().splitlines() if l]
+            downloaded = {l.split("\t")[1].rsplit("/", 1)[1] for l in lines}
+            manifests[label] = {l.split("\t", 1)[0] for l in lines}
+
+            wanted = set(profiles[key].values())
+            got = declared(dst, quantized, registry)
+            assert got == wanted, (
+                f"{label}: workflows declare {sorted(got)}, "
+                f"selected profile {key!r} is {sorted(wanted)}"
             )
             assert wanted <= downloaded, (
-                f"{quant}: profile files missing from manifest: "
+                f"{label}: profile files missing from manifest: "
                 f"{sorted(wanted - downloaded)}"
             )
             assert set(TURBO_LORAS) <= downloaded, (
-                f"{quant}: turbo LoRAs missing from manifest: "
+                f"{label}: turbo LoRAs missing from manifest: "
                 f"{sorted(set(TURBO_LORAS) - downloaded)}"
             )
-            print(f"✅ {quant}: workflows and manifest agree on {len(wanted)} files, "
-                  f"all {len(TURBO_LORAS)} turbo LoRAs queued")
-    print("✅ all quant profiles consistent")
+            if raw is not None and key != raw and key != raw.strip().lower():
+                assert "warning: unknown" in proc.stdout, (
+                    f"{label}: expected an unknown-quant warning, got:\n"
+                    f"{proc.stdout}"
+                )
+            print(f"✅ {label} -> {key}: workflows and manifest agree on "
+                  f"{len(wanted)} files, all {len(TURBO_LORAS)} turbo LoRAs "
+                  f"queued")
+
+    # The garbage value must produce the int8 manifest, byte-identical in
+    # URL terms, not merely "some default-ish" set.
+    assert manifests["not-a-quant"] == manifests["int8"] == manifests["unset"], (
+        "unset / int8 / garbage must queue the same URLs"
+    )
+    print("✅ all quant profiles consistent; garbage falls back to int8")
     return 0
 
 

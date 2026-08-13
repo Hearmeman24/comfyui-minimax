@@ -41,6 +41,7 @@
  },
  "taeh3.safetensors": {
   "url": "https://huggingface.co/Kijai/MiniMax-H3-TAE/resolve/main/vae_approx/taeh3.safetensors",
-  "subdir": "vae_approx"
+  "subdir": "vae_approx",
+  "min_size_mb": 5
  }
 }
