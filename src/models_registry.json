@@ -40,8 +40,9 @@
   "subdir": "text_encoders"
  },
  "taeh3.safetensors": {
-  "url": "https://huggingface.co/Kijai/MiniMax-H3-TAE/resolve/main/vae_approx/taeh3.safetensors",
+  "url": "https://huggingface.co/Hearmeman/comfyui-template-assets/resolve/main/vae_approx/taeh3.safetensors",
   "subdir": "vae_approx",
-  "min_size_mb": 5
+  "min_size_mb": 5,
+  "upstream_url": "https://huggingface.co/Kijai/MiniMax-H3-TAE/resolve/main/vae_approx/taeh3.safetensors"
  }
 }
