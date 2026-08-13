@@ -1,0 +1,41 @@
+{
+  "template_repo": "https://github.com/Hearmeman24/comfyui-minimax.git",
+  "branch": "master",
+  "provisioning_mode": "walk",
+  "flags": {
+    "download_minimax_h3": {
+      "folders": ["MiniMax H3"],
+      "extra_models": [
+        "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
+        "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors"
+      ]
+    }
+  },
+  "swap_groups": [
+    {
+      "env": "minimax_quant",
+      "default": "int8",
+      "flags": ["download_minimax_h3"],
+      "profiles": {
+        "int8": {
+          "fl2va": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+          "ref2va": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+          "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
+        },
+        "fp8": {
+          "fl2va": "minimax_h3_fl2va_pruned_fp8_scaled.safetensors",
+          "ref2va": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+          "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
+        },
+        "nvfp4": {
+          "fl2va": "minimax_h3_fl2va_pruned_fp8_scaled.safetensors",
+          "ref2va": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+          "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
+        }
+      }
+    }
+  ],
+  "models_symlink": false,
+  "custom_nodes": { "target": "image", "repos": [] },
+  "sage": true
+}
