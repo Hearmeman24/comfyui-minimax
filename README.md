@@ -8,8 +8,8 @@ A ComfyUI pod template built around the open-weights release of **MiniMax-H3**, 
 picture and a native 32 kHz stereo soundtrack at the same time. Dialogue, room tone, footsteps, score.
 There is no separate TTS or lip-sync stage.
 
-> ⚠️ **Select CUDA 13.0+ in Additional Filters when you deploy.** If your host only offers CUDA 12.8,
-> use the `-cuda12` tag instead.
+> ⚠️ **Select CUDA 13.0+ in Additional Filters when you deploy.** Hosts that only offer a CUDA 12.8
+> driver are not supported from v4 onward.
 
 | | |
 |---|---|
@@ -113,7 +113,7 @@ that. 100 GB is comfortable with room for outputs.
 | Tag | Build |
 |---|---|
 | `:vN` | CUDA 13.0, torch 2.11.0 cu130. Prebuilt SageAttention wheel, no build on first boot. Needed for native NVFP4. |
-| `:vN-cuda12` | CUDA 12.8, stable torch cu128, for hosts pinned to a 12.8 driver. No NVFP4, SageAttention compiles at boot. |
+| `:vN-cuda12` | Discontinued from v4. Tags v3 and earlier still have it for hosts pinned to a 12.8 driver. |
 
 Both ship **ComfyUI v0.32.0**, pinned rather than tracked, so a tag rebuilds to the same thing later.
 
