@@ -552,20 +552,8 @@
         },
         {
           "on": false,
-          "lora": "HMBreasts_085e0750_e40.safetensors",
-          "strength": 0.6,
-          "strengthTwo": null
-        },
-        {
-          "on": false,
-          "lora": "HMPenis_minimax-h3_epoch35.safetensors",
+          "lora": "Your_Character_LoRA_Here.safetensors",
           "strength": 1,
-          "strengthTwo": null
-        },
-        {
-          "on": false,
-          "lora": "hmpussy_v6/hmpussy_v6_epoch35.safetensors",
-          "strength": 0.6382812500000015,
           "strengthTwo": null
         },
         {},
