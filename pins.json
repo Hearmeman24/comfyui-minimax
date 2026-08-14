@@ -1,4 +1,4 @@
 {
-  "runtime_ref": "77af26a9707f150f94ffe11a8a64bdd2cbc5140b",
+  "runtime_ref": "stable",
   "base_image": "hearmeman/comfyui-base:cu130-comfy0.32.0-torch2.11.0"
 }
