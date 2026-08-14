@@ -111,6 +111,22 @@ so the same prompt and seed will not give you the clip you get without
 the node. A/B a seed before you commit to it, and turn it off for
 finals.
 
+## Dynamic VRAM is turned off here
+
+This template starts ComfyUI with --disable-dynamic-vram. It is not a
+performance choice. ComfyUI's dynamic VRAM mode has an open bug that hits
+the MiniMax int8 models, and it shows up as a CUDA "illegal memory access"
+that kills the run partway through. Turning it off avoids it.
+
+You do not need to do anything. It is on your pod already.
+
+If you want it back, set COMFY_EXTRA_ARGS to --enable-dynamic-vram and
+restart the pod. Your setting is applied last, so it wins.
+
+One thing worth knowing if you do hit that error: it breaks the whole pod,
+not just the one job. Every later run fails the same way until ComfyUI is
+restarted. Restart the pod and it clears.
+
 ## Live previews while sampling
 
 The bundled workflows show an animated preview of the video while it is
