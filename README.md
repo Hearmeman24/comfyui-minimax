@@ -43,25 +43,32 @@ OpenRouter, not by this template. Everything else here runs locally.
 ## Turbo LoRAs
 
 The T2V and I2V workflows sample through a distilled turbo LoRA from
-[lightx2v](https://github.com/ModelTC/Minimax-H3-Turbo). All three of their ComfyUI builds are
+[lightx2v](https://github.com/ModelTC/Minimax-H3-Turbo). All four of their ComfyUI builds are
 downloaded, so trying a different one is a dropdown in the Turbo LoRA node and nothing else.
 
-| LoRA in the dropdown | Trained at | Distilled NFE | lightx2v's recommended steps |
-|---|---|---|---|
-| `minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy` (the one loaded) | 544p, mixed aspect | 4 | 4 |
-| `minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16` | 768p, 1344x768 | 4 | 4 |
-| `minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16` | 544p, mixed aspect | 8 | 8 or 4 |
+| LoRA in the dropdown | Distilled for | Trained at | Distilled NFE | lightx2v's recommended steps |
+|---|---|---|---|---|
+| `minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy` (the one loaded) | FL2VA / T2VA | 544p, mixed aspect | 4 | 4 |
+| `minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16` | FL2VA / T2VA | 768p, 1344x768 | 4 | 4 |
+| `minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16` | FL2VA / T2VA | 544p, mixed aspect | 8 | 8 or 4 |
+| `minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16` | Ref2VA | 544p, mixed aspect | 4 | 4 |
 
-The workflows load the v0.1 build they were tuned around, and they do not sample at its bare 4
-NFE — the Beta scheduler is set to 8 and an `ExtendIntermediateSigmas` node adds more on top of
+The workflows load the FL2VA v0.1 build they were tuned around, and they do not sample at its bare
+4 NFE — the Beta scheduler is set to 8 and an `ExtendIntermediateSigmas` node adds more on top of
 that schedule. The two v1.0 builds are newer and worth an A/B on your own prompts; change the
 Beta scheduler's step count when you switch.
 
-Two things move with the file. **Strength:** the v0.1 build has its scale baked into the weights,
-which is why the node sits at 0.5; the v1.0 builds ship their own alpha instead, so start them at
-1.0. **Sigma shift:** lightx2v distilled v0.1 and the 8-step at 12 video / 3 audio, and the 768p
-one at 6 / 3. Their [model spec table](https://github.com/ModelTC/Minimax-H3-Turbo#model-specs) is
-the thing to read before tuning further.
+The Ref2VA build is the odd one out: it is distilled for the reference path, and nothing in this
+template loads it. `video_minimax_h3_r2v` is ComfyUI's stock graph with no LoRA node in it, so
+using this file means adding a `LoraLoaderModelOnly` after the ref2va model loader yourself. It is
+downloaded so that it is already on the volume when you do.
+
+Two things move with the file. **Strength:** the FL2VA v0.1 build has its scale baked into the
+weights, which is why the node sits at 0.5; the other three carry their own alpha instead, so start
+them at 1.0. **Sigma shift:** lightx2v distilled v0.1, the 8-step and the Ref2VA build at 12 video
+/ 3 audio, and the 768p one at 6 / 3. Their
+[model spec table](https://github.com/ModelTC/Minimax-H3-Turbo#model-specs) is the thing to read
+before tuning further.
 
 ## Spectrum
 
@@ -105,7 +112,7 @@ emulated on Ampere, which makes it slower than the default — on Ampere, leave 
 Changing quant is an env var plus a pod restart. Only the quant you ask for is downloaded, and the
 workflows are repointed at those files automatically, so you never touch a dropdown.
 
-Budget 80 GB of network volume whichever quant you pick — the three turbo LoRAs are about 6 GB of
+Budget 82 GB of network volume whichever quant you pick — the four turbo LoRAs are about 8 GB of
 that. 100 GB is comfortable with room for outputs.
 
 ## Image variants

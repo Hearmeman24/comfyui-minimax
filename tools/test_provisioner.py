@@ -11,10 +11,10 @@ manifest pulled: in the loader widgets AND in each node's
 dialog reads. A mismatch there tells the customer a file is missing and
 offers to download it to their own PC.
 
-This is also the ONLY gate on template.json's `extra_models` key (the two
-v1.0 turbo LoRAs no workflow references): the runtime validator ignores the
-key and the provisioner only prints an error line at boot, so a typo there
-is invisible everywhere else.
+This is also the ONLY gate on template.json's `extra_models` key (the turbo
+LoRAs no workflow references): the runtime validator ignores the key and the
+provisioner only prints an error line at boot, so a typo there is invisible
+everywhere else.
 
 Run: python3 tools/test_provisioner.py
 Stdlib only, no pytest. Needs template.json + pins.json in the repo root.
@@ -33,11 +33,13 @@ from validate_models import runtime_dir  # noqa: E402
 
 TEXT_ENCODER = "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
 
-# The two v1.0 turbo LoRAs are referenced by ZERO workflows and download only
-# via template.json's extra_models; the v0.1 arrives via the workflow scan.
+# The two v1.0 builds and the Ref2VA build are referenced by ZERO workflows
+# and download only via template.json's extra_models; the FL2VA v0.1 arrives
+# via the workflow scan.
 BUNDLED_LORAS = [
     "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
     "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+    "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
 ]
 TURBO_LORAS = BUNDLED_LORAS + [
     "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
@@ -130,8 +132,8 @@ def main() -> int:
         )
     flag = template["flags"]["download_minimax_h3"]
     assert sorted(flag.get("extra_models", [])) == sorted(BUNDLED_LORAS), (
-        f"extra_models must list exactly the two v1.0 turbo LoRAs, "
-        f"got {flag.get('extra_models')}"
+        f"extra_models must list exactly the {len(BUNDLED_LORAS)} turbo LoRAs "
+        f"no workflow references, got {flag.get('extra_models')}"
     )
     print(f"✅ {len(TURBO_LORAS)} turbo LoRAs registered, "
           f"{len(BUNDLED_LORAS)} bundled via extra_models")
