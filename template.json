@@ -4,7 +4,9 @@
   "provisioning_mode": "walk",
   "flags": {
     "download_minimax_h3": {
-      "folders": ["MiniMax H3"],
+      "folders": [
+        "MiniMax H3"
+      ],
       "extra_models": [
         "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
         "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
@@ -16,7 +18,9 @@
     {
       "env": "minimax_quant",
       "default": "int8",
-      "flags": ["download_minimax_h3"],
+      "flags": [
+        "download_minimax_h3"
+      ],
       "profiles": {
         "int8": {
           "fl2va": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
@@ -37,6 +41,10 @@
     }
   ],
   "models_symlink": false,
-  "custom_nodes": { "target": "image", "repos": [] },
-  "sage": true
+  "custom_nodes": {
+    "target": "image",
+    "repos": []
+  },
+  "sage": true,
+  "comfy_extra_args": "--disable-dynamic-vram"
 }
