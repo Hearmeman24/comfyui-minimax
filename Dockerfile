@@ -19,15 +19,24 @@
 ARG BASE_IMAGE=hearmeman/comfyui-base:cu130-comfy0.32.0-torch2.11.0
 FROM ${BASE_IMAGE}
 
-# The minimax node set, culled 2026-08-13 to the packs the 5 shipped workflows
-# actually resolve nodes from. Four packs ARE load-bearing for the bundled
-# T2V/I2V workflows: KJNodes (ModelPreviewOverrideKJ, StringConstant,
+# The minimax node set, culled 2026-08-13 to the packs the shipped workflows
+# actually resolve nodes from. Five packs ARE load-bearing. Four for the
+# bundled T2V/I2V workflows: KJNodes (ModelPreviewOverrideKJ, StringConstant,
 # SomethingToString), rgthree (Power Lora Loader, Display Any),
 # VideoHelperSuite (VHS_VideoCombine) and Openrouter_node (the OpenRouterNode
 # inside the Auto Prompt subgraph; its API key is user-supplied via widget,
-# LLM_KEY, or a JSON file in the node dir, never baked). The stock r2v
-# workflow needs none of these: every node type in it resolves to ComfyUI
-# core.
+# LLM_KEY, or a JSON file in the node dir, never baked). The fifth is
+# MiniMaxRefPack, ours, which supplies the single MiniMaxH3ReferencePack node
+# in "MiniMax - R2V - Auto Prompt": a reference manager plus an OpenRouter
+# call that writes the six-section Ref2VA prompt. Its only declared
+# requirement is `requests`, and av / numpy / Pillow / requests are all in
+# ComfyUI v0.32.0's own requirements.txt, so it adds no new dependency to
+# this image. Its key resolution mirrors Openrouter_node's
+# (widget -> OPENROUTER_API_KEY -> LLM_KEY), so the LLM_KEY a customer
+# already sets for the Auto Prompt workflows covers this one too.
+#
+# The stock r2v workflow needs none of these: every node type in it resolves
+# to ComfyUI core.
 #
 # ComfyUI-Spectrum-MiniMax-H3 is an optional accelerator, not load-bearing:
 # it forecasts post-transformer features with Chebyshev ridge regression to
@@ -40,16 +49,25 @@ FROM ${BASE_IMAGE}
 # argument on outer_sample; the base's v0.32.0 pin satisfies that floor.
 # Output is approximate by design, so it is off unless a graph adds the node.
 #
-# No ADD cache-buster: none of these packs version-gates a model release, so
-# pack HEADs freeze in the layer cache until this loop line changes, the same
-# deliberate shape as the previous minimax image.
+# Cache-buster, on MiniMaxRefPack only. The four third-party packs do not
+# version-gate a model release, which is why this image shipped without one.
+# MiniMaxRefPack is different: it is ours, it is under active development, and
+# a workflow in this repo is saved against its widget list. ComfyUI restores
+# widgets POSITIONALLY, so a rebuild that silently reused a months-old cached
+# clone would hand the shipped R2V workflow a node whose widget order predates
+# the file, and the graph would come back with values in the wrong boxes. This
+# ADD makes the layer track that pack's main. It is one RUN, so a push there
+# re-clones all five at their current HEADs — that is the wan shape, and the
+# packs are unpinned either way.
+ADD https://api.github.com/repos/Hearmeman24/ComfyUI-MiniMaxRefPack/git/refs/heads/main /tmp/minimax_refpack.ref
 # PIP_CONSTRAINT (base-owned) applies to every requirements install below.
 RUN for repo in \
     https://github.com/kijai/ComfyUI-KJNodes.git \
     https://github.com/rgthree/rgthree-comfy.git \
     https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git \
     https://github.com/gabe-init/ComfyUI-Openrouter_node.git \
-    https://github.com/xmarre/ComfyUI-Spectrum-MiniMax-H3.git; \
+    https://github.com/xmarre/ComfyUI-Spectrum-MiniMax-H3.git \
+    https://github.com/Hearmeman24/ComfyUI-MiniMaxRefPack.git; \
     do \
         cd /ComfyUI/custom_nodes; \
         repo_dir=$(basename "$repo" .git); \
