@@ -5,20 +5,55 @@ soundtrack in one pass. Dialogue, footsteps, music and room tone come
 out of the same generation, with nothing to sync afterwards. Clips are
 768p, 4 to 15 seconds, at 24 fps.
 
-It comes with five workflows:
+It comes with six workflows:
 
 - MiniMax - T2V - Custom Prompt: text to video and audio.
 - MiniMax - T2V - Auto Prompt: same, but writes the full H3 prompt for
   you from a one-line idea.
 - MiniMax - I2V - Custom Prompt: one image to video and audio.
 - MiniMax - I2V - Auto Prompt: same, with the prompt written for you.
-- video_minimax_h3_r2v: reference-driven, up to 9 images, 3 video clips
-  and 3 audio clips.
+- MiniMax - R2V - Auto Prompt: reference-driven, with the reference
+  manager and the prompt written for you. See below.
+- video_minimax_h3_r2v: the stock reference graph, up to 9 images, 3
+  video clips and 3 audio clips.
 
-The two Auto Prompt workflows need an OpenRouter key. Set the LLM_KEY
+The three Auto Prompt workflows need an OpenRouter key. Set the LLM_KEY
 variable to your key, or paste it into the OpenRouter API Key node in
 the graph. Prompt writing is billed by OpenRouter; everything else runs
 on your pod.
+
+## The R2V reference manager
+
+Reference-to-video is the hardest of the three to prompt by hand. You
+are not describing a scene, you are telling H3 which parts of which
+reference to keep and which to throw away, and it wants that written
+out reference by reference in named sections.
+
+MiniMax - R2V - Auto Prompt does that part for you. The MiniMax
+References Manager node in that graph has its own panel: click it, add
+your images, video clips and audio clips, and the panel handles the tags
+H3 expects (<Picture 1>, <Video 1>, <Audio 1>) and the order they go in.
+Then write one line saying what you actually want in the direction box,
+and the node writes the full six-section prompt.
+
+Two things worth knowing:
+
+The job_type setting picks which register it writes in. "standard"
+writes a scene. "replacement" swaps one thing in a reference video for
+the thing in a reference image, which is a different prompt shape
+entirely. "auto" is the default and decides for you, and it only bothers
+deciding when you have given it at least one video and one image.
+
+Video references are resampled to 24 fps, because that is what H3
+generates at. A 30 fps clip keeps its real duration, not its frame
+count.
+
+The Generated Prompt panel shows you what the node wrote and sent. If a
+clip surprises you, read that before you change anything else. The node
+also has a second output called debug, which nothing is wired to in the
+shipped graph: connect it to a Display Any node and it reports the
+model, the settings and the reference list it used, and on auto it tells
+you which register it resolved to.
 
 ## Writing a prompt H3 responds to
 
@@ -76,9 +111,10 @@ value that is not on the list, the pod tells you and uses int8.
 
 ## Turbo LoRAs
 
-The T2V and I2V workflows sample through a distilled turbo LoRA from
-lightx2v. All four of their builds are downloaded, so trying another
-one is a dropdown change in the Turbo LoRA node and nothing else.
+The T2V, I2V and R2V workflows sample through a distilled turbo LoRA
+from lightx2v. All four of their builds are downloaded, so trying
+another one is a dropdown change in the Turbo LoRA node and nothing
+else.
 
 | LoRA in the dropdown | Steps | Strength | Sigma shift |
 |---|---|---|---|
@@ -92,11 +128,11 @@ the node sits at 0.5. The other three ship their own alpha instead, so
 start them at 1.0, and change the Beta scheduler's step count when you
 switch.
 
-The Ref2VA build is the odd one out. It is distilled for the reference
-path, and nothing in this template loads it: video_minimax_h3_r2v is
-ComfyUI's stock graph and has no LoRA node in it. To use this file, add
-a LoraLoaderModelOnly after the ref2va model loader yourself. It is
-downloaded so that it is already on the volume when you want it.
+The Ref2VA build is the one distilled for the reference path, and it is
+what MiniMax - R2V - Auto Prompt loads, at 0.85. The stock
+video_minimax_h3_r2v graph does not: it is ComfyUI's own and has no
+LoRA node in it. To use the file there, add a LoraLoaderModelOnly after
+the ref2va model loader yourself.
 
 ## Spectrum
 
