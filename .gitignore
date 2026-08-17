@@ -22,3 +22,9 @@ CLAUDE.md
 CHANGELOG.md
 .history/
 .claude/hooks/
+
+# Working material, not a deliverable: the ledger, specs, audits, review output.
+# Local-only and never published — it carries absolute home paths and internal
+# notes. git is NOT a backup for any of it; anything that must survive belongs
+# in ~/brain.
+docs/

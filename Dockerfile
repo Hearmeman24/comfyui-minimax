@@ -57,8 +57,11 @@ FROM ${BASE_IMAGE}
 # clone would hand the shipped R2V workflow a node whose widget order predates
 # the file, and the graph would come back with values in the wrong boxes. This
 # ADD makes the layer track that pack's main. It is one RUN, so a push there
-# re-clones all five at their current HEADs — that is the wan shape, and the
-# packs are unpinned either way.
+# re-clones all six at their current HEADs — that is the wan shape, and the
+# packs are unpinned either way. Corollary, and it has bitten twice now (v6,
+# v7): a tag cut purely to pick up a MiniMaxRefPack release lands on the same
+# repo commit as the tag before it, so tag -> commit does NOT identify an
+# image's node set. Read the pack HEADs off the build log, not off git.
 ADD https://api.github.com/repos/Hearmeman24/ComfyUI-MiniMaxRefPack/git/refs/heads/main /tmp/minimax_refpack.ref
 # PIP_CONSTRAINT (base-owned) applies to every requirements install below.
 RUN for repo in \
