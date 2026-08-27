@@ -33,11 +33,12 @@ from validate_models import runtime_dir  # noqa: E402
 
 TEXT_ENCODER = "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
 
-# The two v1.0 builds and the Ref2VA build are referenced by ZERO workflows
-# and download only via template.json's extra_models; the FL2VA v0.1 arrives
-# via the workflow scan.
+# The four v1.0/Ref2VA builds are referenced by ZERO workflows and download
+# only via template.json's extra_models; the FL2VA v0.1 arrives via the
+# workflow scan.
 BUNDLED_LORAS = [
     "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
+    "minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
     "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
     "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
 ]
