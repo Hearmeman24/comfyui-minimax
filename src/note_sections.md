@@ -112,7 +112,7 @@ value that is not on the list, the pod tells you and uses int8.
 ## Turbo LoRAs
 
 The T2V, I2V and R2V workflows sample through a distilled turbo LoRA
-from lightx2v. All four of their builds are downloaded, so trying
+from lightx2v. All five of their builds are downloaded, so trying
 another one is a dropdown change in the Turbo LoRA node and nothing
 else.
 
@@ -121,10 +121,11 @@ else.
 | minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy (the one loaded) | 4 | 0.5 | 12 video / 3 audio |
 | minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16 | 4 | 1.0 | 6 video / 3 audio |
 | minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16 | 8 | 1.0 | 12 video / 3 audio |
+| minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16 | 8 | 1.0 | 6 video / 3 audio |
 | minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16 | 4 | 1.0 | 12 video / 3 audio |
 
 The v0.1 build has its strength baked into the weights, which is why
-the node sits at 0.5. The other three ship their own alpha instead, so
+the node sits at 0.5. The other four ship their own alpha instead, so
 start them at 1.0, and change the Beta scheduler's step count when you
 switch.
 

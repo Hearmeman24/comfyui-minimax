@@ -16,7 +16,7 @@ Click Edit Template and open the environment variables tab. Set `download_minima
 is off by default, and a pod without it boots a working but empty ComfyUI, so the workflows open
 with blank loader dropdowns and look broken. The full list is in the next section.
 
-Give the pod a network volume of at least 80 GB. That is roughly what the models come to whichever
+Give the pod a network volume of at least 85 GB. That is roughly what the models come to whichever
 quant you pick. 100 GB is comfortable and leaves room for your outputs.
 
 If you want your own CivitAI LoRAs or checkpoints on the pod, set `civitai_token` and the ID
