@@ -40,7 +40,7 @@ commands:
 jobs:
   # Cheap static checks, mirroring comfyui-runtime's verify job: shell syntax,
   # shellcheck, python byte-compile, JSON validity, the Dockerfile onnx gate,
-  # and the per-quant provisioner self-check. No contexts needed.
+  # and the quant/precision provisioner self-check. No contexts needed.
   verify:
     executor: python
     steps:
@@ -85,7 +85,7 @@ jobs:
             fi
             echo "OK: Dockerfile carries the CUDAExecutionProvider assertion, with no pip install after it"
       - run:
-          name: Provisioner self-check (every minimax_quant value)
+          name: Provisioner self-check (quant and precision profiles)
           command: python3 tools/test_provisioner.py
 
   validate_models:
