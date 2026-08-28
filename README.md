@@ -16,8 +16,9 @@ Click Edit Template and open the environment variables tab. Set `download_minima
 is off by default, and a pod without it boots a working but empty ComfyUI, so the workflows open
 with blank loader dropdowns and look broken. The full list is in the next section.
 
-Give the pod a network volume of at least 85 GB. That is roughly what the models come to whichever
-quant you pick. 100 GB is comfortable and leaves room for your outputs.
+Give the pod a network volume of at least 85 GB for the default quantized models. 100 GB is
+comfortable and leaves room for your outputs. Full bf16 is much larger: use at least 180 GB, or
+200 GB to leave comfortable output space.
 
 If you want your own CivitAI LoRAs or checkpoints on the pod, set `civitai_token` and the ID
 variables below. The steps are
@@ -36,7 +37,7 @@ FYI: this template is built for CUDA 13.0 and above.
 | Variable | Default | What it does |
 |---|---|---|
 | `download_minimax_h3` | false | Downloads the models and installs the six workflows. Set it to true. |
-| `minimax_quant` | int8 | Which build of the model to download: int8, fp8 or nvfp4. You can leave this alone. |
+| `minimax_quant` | int8 | Which build to download: int8, fp8, nvfp4, or false for full bf16. You can leave this alone. |
 | `LLM_KEY` | empty | Your OpenRouter key. Only the three Auto Prompt workflows use it. |
 | `civitai_token` | empty | Your CivitAI API token |
 | `CIVITAI_LORAS` | empty | Comma-separated CivitAI version IDs. They go to `models/loras`. |
@@ -46,8 +47,11 @@ FYI: this template is built for CUDA 13.0 and above.
 About `minimax_quant`: the default int8 runs natively on every GPU RunPod rents and the workflows
 are already set up for it. fp8 is native on 4090, L40, H100, H200 and RTX 50xx cards and emulated
 on anything older, which makes it slower there. nvfp4 downloads the same files as fp8 and only
-accelerates on RTX 50xx. Only the quant you ask for is downloaded and the workflows are pointed at
-those files for you, so you never touch a dropdown.
+accelerates on RTX 50xx. Set `minimax_quant` to false to download the full
+`minimax_h3_fl2va_bf16.safetensors` and `minimax_h3_ref2va_bf16.safetensors` diffusion models
+instead. The text encoder, VAEs, and bundled Turbo LoRAs stay the same. Only the profile you ask
+for is downloaded and the workflows are pointed at those files for you, so you never touch a
+dropdown.
 
 ## Once it is up
 

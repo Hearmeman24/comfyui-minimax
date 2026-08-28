@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Self-check: a provisioned pod must be internally consistent, per quant.
+"""Self-check: a provisioned pod must be internally consistent, per profile.
 
 Drives the shared runtime's provisioner (comfyui-runtime/src/provisioner.py,
 pinned by pins.json) against this repo's REAL template.json,
-models_registry.json and workflows/, once per `minimax_quant` value: unset,
-int8, fp8, FP8, nvfp4, and a garbage value. For each, the workflows copied
-to the user's ComfyUI must declare exactly the model files the download
-manifest pulled: in the loader widgets AND in each node's
+models_registry.json and workflows/ across every supported `minimax_quant`
+value, case/whitespace normalization, and invalid-value fallback. For each, the
+workflows copied to the user's ComfyUI must declare exactly the model files the
+download manifest pulled: in the loader widgets AND in each node's
 `properties.models`, which is what the ComfyUI frontend's "Missing Models"
 dialog reads. A mismatch there tells the customer a file is missing and
 offers to download it to their own PC.
@@ -32,6 +32,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from validate_models import runtime_dir  # noqa: E402
 
 TEXT_ENCODER = "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
+BF16_MODELS = {
+    "fl2va": "minimax_h3_fl2va_bf16.safetensors",
+    "ref2va": "minimax_h3_ref2va_bf16.safetensors",
+}
 
 # The four v1.0/Ref2VA builds are referenced by ZERO workflows and download
 # only via template.json's extra_models; the FL2VA v0.1 arrives via the
@@ -46,11 +50,20 @@ TURBO_LORAS = BUNDLED_LORAS + [
     "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
 ]
 
-# (env value or None for unset) -> expected outcome. Replicates the
-# provisioner's resolve rule: exact profile name, else lowercased, else warn
-# and fall back to the group's default (the deliberate behaviour change vs
-# the old provisioner, which exited 2 and left the pod modelless).
-CASES = [None, "int8", "fp8", "FP8", "nvfp4", "not-a-quant"]
+# label, minimax_quant, expected profile, expected warning fragment. The false
+# profile selects full bf16; invalid values keep booting on int8 with a warning.
+CASES = [
+    ("unset", None, "int8", None),
+    ("int8", "int8", "int8", None),
+    ("fp8", "fp8", "fp8", None),
+    ("FP8", "FP8", "fp8", None),
+    ("nvfp4", "nvfp4", "nvfp4", None),
+    ("false", "false", "false", None),
+    ("FALSE", "FALSE", "false", None),
+    ("false-whitespace", " false ", "false", None),
+    ("invalid-quant", "not-a-quant", "int8",
+     "warning: unknown minimax_quant"),
+]
 
 
 def load_json(path: Path, hint: str) -> dict:
@@ -60,17 +73,6 @@ def load_json(path: Path, hint: str) -> dict:
         raise SystemExit(f"FATAL: cannot read {path.name} ({hint}): {e}")
     except ValueError as e:
         raise SystemExit(f"FATAL: {path.name} is not valid JSON: {e}")
-
-
-def expected_profile(group: dict, raw) -> str:
-    if raw is None:
-        return group["default"]
-    if raw in group["profiles"]:
-        return raw
-    low = raw.strip().lower()
-    if low in group["profiles"]:
-        return low
-    return group["default"]
 
 
 def declared(workflow_dir: Path, quantized: set, registry: dict) -> set:
@@ -111,7 +113,26 @@ def main() -> int:
     assert group["env"] == "minimax_quant", group["env"]
     assert group["default"] == "int8", group["default"]
     profiles = group["profiles"]
+    assert set(profiles) == {"int8", "fp8", "nvfp4", "false"}, profiles
     quantized = {f for p in profiles.values() for f in p.values()}
+    diffusion_models = {
+        profile[role]
+        for profile in profiles.values()
+        for role in ("fl2va", "ref2va")
+    }
+
+    assert {role: profiles["false"][role] for role in BF16_MODELS} == (
+        BF16_MODELS
+    ), profiles["false"]
+    for role, basename in BF16_MODELS.items():
+        assert registry[basename]["subdir"] == "diffusion_models", (
+            f"{role}: {basename} must install under diffusion_models"
+        )
+        assert registry[basename]["url"] == (
+            "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/"
+            f"diffusion_models/{basename}"
+        ), f"{role}: unexpected bf16 URL {registry[basename]['url']}"
+    print("✅ bf16 profile points at the two requested Comfy-Org models")
 
     # The DiT quant varies by card. The text encoder does not: every profile
     # ships Comfy-Org's stock int8 build, so no quant can pull a second
@@ -124,7 +145,7 @@ def main() -> int:
     strays = [b for b in registry
               if b.startswith("qwen3vl") and b != TEXT_ENCODER]
     assert not strays, f"registry carries unused text encoders: {sorted(strays)}"
-    print(f"✅ every quant profile loads {TEXT_ENCODER}")
+    print(f"✅ every model profile loads {TEXT_ENCODER}")
 
     for b in TURBO_LORAS:
         assert b in registry, f"turbo LoRA missing from registry: {b}"
@@ -145,17 +166,15 @@ def main() -> int:
     manifests: dict = {}
     with tempfile.TemporaryDirectory() as tmpdir:
         tmp = Path(tmpdir)
-        for raw in CASES:
-            key = expected_profile(group, raw)
-            label = "unset" if raw is None else raw
+        for label, raw_quant, key, warning in CASES:
             slug = re.sub(r"[^A-Za-z0-9]", "_", label)
             dst = tmp / f"wf-{slug}"
             manifest = tmp / f"manifest-{slug}.tsv"
             env = dict(os.environ)
             env["download_minimax_h3"] = "true"
             env.pop("minimax_quant", None)
-            if raw is not None:
-                env["minimax_quant"] = raw
+            if raw_quant is not None:
+                env["minimax_quant"] = raw_quant
             proc = subprocess.run(
                 [sys.executable, str(provisioner),
                  "--template", str(REPO / "template.json"),
@@ -184,25 +203,40 @@ def main() -> int:
                 f"{label}: profile files missing from manifest: "
                 f"{sorted(wanted - downloaded)}"
             )
+            selected_diffusion = downloaded & diffusion_models
+            wanted_diffusion = {
+                profiles[key]["fl2va"], profiles[key]["ref2va"]
+            }
+            assert selected_diffusion == wanted_diffusion, (
+                f"{label}: queued diffusion files {sorted(selected_diffusion)}, "
+                f"expected only {sorted(wanted_diffusion)}"
+            )
             assert set(TURBO_LORAS) <= downloaded, (
                 f"{label}: turbo LoRAs missing from manifest: "
                 f"{sorted(set(TURBO_LORAS) - downloaded)}"
             )
-            if raw is not None and key != raw and key != raw.strip().lower():
-                assert "warning: unknown" in proc.stdout, (
-                    f"{label}: expected an unknown-quant warning, got:\n"
-                    f"{proc.stdout}"
+            if warning:
+                assert warning in proc.stdout, (
+                    f"{label}: expected warning {warning!r}, got:\n{proc.stdout}"
                 )
             print(f"✅ {label} -> {key}: workflows and manifest agree on "
                   f"{len(wanted)} files, all {len(TURBO_LORAS)} turbo LoRAs "
                   f"queued")
 
-    # The garbage value must produce the int8 manifest, byte-identical in
-    # URL terms, not merely "some default-ish" set.
-    assert manifests["not-a-quant"] == manifests["int8"] == manifests["unset"], (
-        "unset / int8 / garbage must queue the same URLs"
+    # Fallback and aliases must be byte-identical in URL terms, not merely
+    # "some default-ish" sets.
+    assert (manifests["invalid-quant"] == manifests["int8"] ==
+            manifests["unset"]), (
+        "unset / int8 / invalid quant must queue the same URLs"
     )
-    print("✅ all quant profiles consistent; garbage falls back to int8")
+    assert manifests["fp8"] == manifests["FP8"], (
+        "quant matching must ignore case"
+    )
+    assert (manifests["false"] == manifests["FALSE"] ==
+            manifests["false-whitespace"]), (
+        "false must select bf16 regardless of case or surrounding whitespace"
+    )
+    print("✅ all minimax_quant profiles consistent; fallbacks are safe")
     return 0
 
 
