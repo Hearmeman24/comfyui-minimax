@@ -3,11 +3,10 @@
 
 Drives the shared runtime's provisioner (comfyui-runtime/src/provisioner.py,
 pinned by pins.json) against this repo's REAL template.json,
-models_registry.json and workflows/ through the REAL pre-download hook, across
-the supported `minimax_quant` and `minimax_precision` values, mixed precedence,
-case normalization, and invalid-value fallback. For each, the workflows copied
-to the user's ComfyUI must declare exactly the model files the download manifest
-pulled: in the loader widgets AND in each node's
+models_registry.json and workflows/ across every supported `minimax_quant`
+value, case/whitespace normalization, and invalid-value fallback. For each, the
+workflows copied to the user's ComfyUI must declare exactly the model files the
+download manifest pulled: in the loader widgets AND in each node's
 `properties.models`, which is what the ComfyUI frontend's "Missing Models"
 dialog reads. A mismatch there tells the customer a file is missing and
 offers to download it to their own PC.
@@ -37,7 +36,6 @@ BF16_MODELS = {
     "fl2va": "minimax_h3_fl2va_bf16.safetensors",
     "ref2va": "minimax_h3_ref2va_bf16.safetensors",
 }
-HOOK = REPO / "src" / "hooks" / "pre_download.sh"
 
 # The four v1.0/Ref2VA builds are referenced by ZERO workflows and download
 # only via template.json's extra_models; the FL2VA v0.1 arrives via the
@@ -52,32 +50,20 @@ TURBO_LORAS = BUNDLED_LORAS + [
     "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
 ]
 
-# label, minimax_quant, minimax_precision, expected internal profile,
-# expected warning fragment. Precision=bf16 overrides quant; unset/convrot
-# preserves the existing quant selector. Invalid public values keep booting on
-# the safe current/default profile with a warning.
+# label, minimax_quant, expected profile, expected warning fragment. The false
+# profile selects full bf16; invalid values keep booting on int8 with a warning.
 CASES = [
-    ("unset", None, None, "int8", None),
-    ("int8", "int8", None, "int8", None),
-    ("fp8", "fp8", None, "fp8", None),
-    ("FP8", "FP8", None, "fp8", None),
-    ("nvfp4", "nvfp4", None, "nvfp4", None),
-    ("invalid-quant", "not-a-quant", None, "int8",
+    ("unset", None, "int8", None),
+    ("int8", "int8", "int8", None),
+    ("fp8", "fp8", "fp8", None),
+    ("FP8", "FP8", "fp8", None),
+    ("nvfp4", "nvfp4", "nvfp4", None),
+    ("false", "false", "false", None),
+    ("FALSE", "FALSE", "false", None),
+    ("false-whitespace", " false ", "false", None),
+    ("invalid-quant", "not-a-quant", "int8",
      "warning: unknown minimax_quant"),
-    ("convrot", None, "convrot", "int8", None),
-    ("convrot-fp8", "fp8", " ConvRot ", "fp8", None),
-    ("bf16", None, "bf16", "bf16", None),
-    ("bf16-overrides-fp8", "fp8", " BF16 ", "bf16", None),
-    ("invalid-precision", "nvfp4", "not-a-precision", "nvfp4",
-     "unknown minimax_precision"),
 ]
-
-HOOK_WRAPPER = r"""
-report_warn() { :; }
-source "$1"
-shift
-exec "$@"
-"""
 
 
 def load_json(path: Path, hint: str) -> dict:
@@ -127,7 +113,7 @@ def main() -> int:
     assert group["env"] == "minimax_quant", group["env"]
     assert group["default"] == "int8", group["default"]
     profiles = group["profiles"]
-    assert set(profiles) == {"int8", "fp8", "nvfp4", "bf16"}, profiles
+    assert set(profiles) == {"int8", "fp8", "nvfp4", "false"}, profiles
     quantized = {f for p in profiles.values() for f in p.values()}
     diffusion_models = {
         profile[role]
@@ -135,9 +121,9 @@ def main() -> int:
         for role in ("fl2va", "ref2va")
     }
 
-    assert {role: profiles["bf16"][role] for role in BF16_MODELS} == (
+    assert {role: profiles["false"][role] for role in BF16_MODELS} == (
         BF16_MODELS
-    ), profiles["bf16"]
+    ), profiles["false"]
     for role, basename in BF16_MODELS.items():
         assert registry[basename]["subdir"] == "diffusion_models", (
             f"{role}: {basename} must install under diffusion_models"
@@ -176,34 +162,21 @@ def main() -> int:
 
     provisioner = runtime_dir() / "src" / "provisioner.py"
     assert provisioner.is_file(), f"no provisioner at {provisioner}"
-    assert HOOK.is_file(), f"no pre-download hook at {HOOK}"
 
     manifests: dict = {}
     with tempfile.TemporaryDirectory() as tmpdir:
         tmp = Path(tmpdir)
-        comfyui_dir = tmp / "comfyui"
-        (comfyui_dir / "custom_nodes" / "ComfyUI-Openrouter_node").mkdir(
-            parents=True
-        )
-        persist_root = tmp / "persist"
-        persist_root.mkdir()
-        for label, raw_quant, raw_precision, key, warning in CASES:
+        for label, raw_quant, key, warning in CASES:
             slug = re.sub(r"[^A-Za-z0-9]", "_", label)
             dst = tmp / f"wf-{slug}"
             manifest = tmp / f"manifest-{slug}.tsv"
             env = dict(os.environ)
             env["download_minimax_h3"] = "true"
             env.pop("minimax_quant", None)
-            env.pop("minimax_precision", None)
-            env["COMFYUI_DIR"] = str(comfyui_dir)
-            env["PERSIST_ROOT"] = str(persist_root)
             if raw_quant is not None:
                 env["minimax_quant"] = raw_quant
-            if raw_precision is not None:
-                env["minimax_precision"] = raw_precision
             proc = subprocess.run(
-                ["bash", "-c", HOOK_WRAPPER, "precision-hook", str(HOOK),
-                 sys.executable, str(provisioner),
+                [sys.executable, str(provisioner),
                  "--template", str(REPO / "template.json"),
                  "--registry", str(REPO / "src" / "models_registry.json"),
                  "--workflows-src", str(REPO / "workflows"),
@@ -253,19 +226,17 @@ def main() -> int:
     # Fallback and aliases must be byte-identical in URL terms, not merely
     # "some default-ish" sets.
     assert (manifests["invalid-quant"] == manifests["int8"] ==
-            manifests["unset"] == manifests["convrot"]), (
-        "unset / convrot / int8 / invalid quant must queue the same URLs"
+            manifests["unset"]), (
+        "unset / int8 / invalid quant must queue the same URLs"
     )
-    assert manifests["fp8"] == manifests["FP8"] == manifests["convrot-fp8"], (
-        "convrot must preserve fp8 and quant matching must ignore case"
+    assert manifests["fp8"] == manifests["FP8"], (
+        "quant matching must ignore case"
     )
-    assert manifests["bf16"] == manifests["bf16-overrides-fp8"], (
-        "bf16 precision must override minimax_quant"
+    assert (manifests["false"] == manifests["FALSE"] ==
+            manifests["false-whitespace"]), (
+        "false must select bf16 regardless of case or surrounding whitespace"
     )
-    assert manifests["invalid-precision"] == manifests["nvfp4"], (
-        "invalid precision must preserve the requested current quant"
-    )
-    print("✅ quant + precision profiles consistent; fallbacks are safe")
+    print("✅ all minimax_quant profiles consistent; fallbacks are safe")
     return 0
 
 

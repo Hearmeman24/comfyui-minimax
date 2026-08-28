@@ -90,8 +90,7 @@ you deploy, or edit the variables on this pod and restart it.
 | Variable | Default | What it does |
 |---|---|---|
 | download_minimax_h3 | unset | Set to true to download the models and install the workflows. Leave it unset and the pod boots with no models. |
-| minimax_quant | int8 | Which build of the model to download: int8, fp8 or nvfp4. See below. |
-| minimax_precision | unset (convrot) | Optional. Set to bf16 to replace the quantized FL2VA and Ref2VA models with the full bf16 builds. |
+| minimax_quant | int8 | Which build to download: int8, fp8, nvfp4, or false for full bf16. See below. |
 | LLM_KEY | empty | Your OpenRouter key, for the Auto Prompt workflows. |
 
 ## Picking a quant
@@ -104,24 +103,15 @@ rents and the workflows are already set up for it.
 | int8 (default) | The int8 model. Works well everywhere. |
 | fp8 | The fp8 model. Native on 4090, L40, H100, H200 and RTX 50xx cards. Slower than int8 on older cards. |
 | nvfp4 | Same files as fp8. NVFP4 only accelerates on Blackwell cards (RTX 50xx); other GPUs fall back. |
+| false | The full bf16 FL2VA and Ref2VA models. Needs a much larger network volume. |
 
 The text encoder is the same int8 build whichever quant you pick. Only
 the quant you ask for is downloaded, and the workflows are pointed at
 those files automatically, so you never touch a dropdown. If you set a
 value that is not on the list, the pod tells you and uses int8.
 
-## Picking a precision
-
-Leave minimax_precision unset, or set it to convrot, to keep the model
-selected by minimax_quant. Set it to bf16 to download the full
-minimax_h3_fl2va_bf16 and minimax_h3_ref2va_bf16 diffusion models instead.
-bf16 overrides minimax_quant. The text encoder, VAEs and Turbo LoRAs stay
-the same.
-
-The default convrot/quantized set needs at least an 85 GB network volume.
-The full bf16 set needs at least 180 GB; 200 GB leaves comfortable room for
-outputs. An unknown minimax_precision value prints a warning and keeps the
-current minimax_quant selection.
+The default quantized set needs at least an 85 GB network volume. The full
+bf16 set needs at least 180 GB; 200 GB leaves comfortable room for outputs.
 
 ## Turbo LoRAs
 

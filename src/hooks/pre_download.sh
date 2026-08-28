@@ -7,30 +7,6 @@
 # scope. Sourcing rules: no `exit`, no `set -e`, runs on EVERY boot and must
 # be idempotent, own errors handled here (a nonzero return only warns).
 #
-# `minimax_precision` is intentionally absent/off by default. Unset or
-# `convrot` preserves the existing minimax_quant selector; `bf16` overrides it
-# with the internal bf16 swap profile so the provisioner queues the full FL2VA
-# and Ref2VA files INSTEAD of a quantized pair. Normalize like the provisioner:
-# surrounding whitespace and case do not change the choice, and a typo warns
-# without turning a working pod modelless.
-MINIMAX_PRECISION_VALUE="${minimax_precision:-}"
-MINIMAX_PRECISION_VALUE="${MINIMAX_PRECISION_VALUE#"${MINIMAX_PRECISION_VALUE%%[![:space:]]*}"}"
-MINIMAX_PRECISION_VALUE="${MINIMAX_PRECISION_VALUE%"${MINIMAX_PRECISION_VALUE##*[![:space:]]}"}"
-MINIMAX_PRECISION_VALUE="$(printf '%s' "$MINIMAX_PRECISION_VALUE" | tr '[:upper:]' '[:lower:]')"
-case "$MINIMAX_PRECISION_VALUE" in
-    ""|convrot)
-        ;;
-    bf16)
-        export minimax_quant=bf16
-        echo "🎚️  minimax_precision=bf16: selecting the full bf16 FL2VA and Ref2VA models"
-        ;;
-    *)
-        echo "⚠️  unknown minimax_precision=${minimax_precision@Q}; using convrot/current minimax_quant selection"
-        report_warn "unknown minimax_precision; using convrot/current minimax_quant selection"
-        ;;
-esac
-unset MINIMAX_PRECISION_VALUE
-#
 # OpenRouter volume-copy cleanup, ported from the pre-migration
 # src/start.sh:160-175. ComfyUI-Openrouter_node (the OpenRouterNode inside
 # the Auto Prompt subgraph) is baked into the image. Earlier tags cloned it
