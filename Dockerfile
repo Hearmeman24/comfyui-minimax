@@ -16,7 +16,7 @@
 # the entrypoint. BASE_IMAGE is passed by CI from pins.json's "base_image";
 # the default below mirrors that pin so a plain build stays coherent.
 # ============================================================================
-ARG BASE_IMAGE=hearmeman/comfyui-base:cu130-comfy0.32.0-torch2.11.0
+ARG BASE_IMAGE=hearmeman/comfyui-base:cu130-comfy0.34.0-torch2.11.0
 FROM ${BASE_IMAGE}
 
 # The minimax node set, culled 2026-08-13 to the packs the shipped workflows
