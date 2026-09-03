@@ -37,7 +37,7 @@ BF16_MODELS = {
     "ref2va": "minimax_h3_ref2va_bf16.safetensors",
 }
 
-# The four v1.0/Ref2VA builds are referenced by ZERO workflows and download
+# The five v1.0/Ref2VA builds are referenced by ZERO workflows and download
 # only via template.json's extra_models; the FL2VA v0.1 arrives via the
 # workflow scan.
 BUNDLED_LORAS = [
@@ -45,6 +45,7 @@ BUNDLED_LORAS = [
     "minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
     "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
     "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+    "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
 ]
 TURBO_LORAS = BUNDLED_LORAS + [
     "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
@@ -152,6 +153,11 @@ def main() -> int:
         assert registry[b]["subdir"] == "loras", (
             f"{b}: subdir is {registry[b]['subdir']}, expected loras"
         )
+    for b in BUNDLED_LORAS:
+        assert registry[b]["url"] == (
+            "https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/main/"
+            f"{b}"
+        ), f"{b}: unexpected LightX2V URL {registry[b]['url']}"
     flag = template["flags"]["download_minimax_h3"]
     assert sorted(flag.get("extra_models", [])) == sorted(BUNDLED_LORAS), (
         f"extra_models must list exactly the {len(BUNDLED_LORAS)} turbo LoRAs "

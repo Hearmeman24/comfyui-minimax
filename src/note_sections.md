@@ -110,13 +110,13 @@ the quant you ask for is downloaded, and the workflows are pointed at
 those files automatically, so you never touch a dropdown. If you set a
 value that is not on the list, the pod tells you and uses int8.
 
-The default quantized set needs at least an 85 GB network volume. The full
+The default quantized set needs at least a 90 GB network volume. The full
 bf16 set needs at least 180 GB; 200 GB leaves comfortable room for outputs.
 
 ## Turbo LoRAs
 
 The T2V, I2V and R2V workflows sample through a distilled turbo LoRA
-from lightx2v. All five of their builds are downloaded, so trying
+from lightx2v. All six of their builds are downloaded, so trying
 another one is a dropdown change in the Turbo LoRA node and nothing
 else.
 
@@ -127,13 +127,14 @@ else.
 | minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16 | 8 | 1.0 | 12 video / 3 audio |
 | minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16 | 8 | 1.0 | 6 video / 3 audio |
 | minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16 | 4 | 1.0 | 12 video / 3 audio |
+| minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16 | 8 | 1.0 | 6 video / 3 audio |
 
-The v0.1 build has its strength baked into the weights, which is why
-the node sits at 0.5. The other four ship their own alpha instead, so
+The FL2V v0.1 build has its strength baked into the weights, which is why
+the node sits at 0.5. The other five ship their own alpha instead, so
 start them at 1.0, and change the Beta scheduler's step count when you
 switch.
 
-The Ref2VA build is the one distilled for the reference path, and it is
+The Ref2VA v0.1 build is the one distilled for the reference path, and it is
 what MiniMax - R2V - Auto Prompt loads, at 0.85. The stock
 video_minimax_h3_r2v graph does not: it is ComfyUI's own and has no
 LoRA node in it. To use the file there, add a LoraLoaderModelOnly after
