@@ -12,7 +12,8 @@
         "minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
         "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
         "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
-        "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors"
+        "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+        "minimax_h3_latent_upscaler_3d_fp16.safetensors"
       ]
     }
   },
@@ -50,7 +51,9 @@
   "models_symlink": false,
   "custom_nodes": {
     "target": "image",
-    "repos": []
+    "repos": [
+      "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git|d7c01b9011f2e8439493f6c02c29995a27df276f"
+    ]
   },
   "sage": true,
   "comfy_extra_args": "--disable-dynamic-vram"

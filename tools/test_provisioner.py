@@ -12,9 +12,9 @@ dialog reads. A mismatch there tells the customer a file is missing and
 offers to download it to their own PC.
 
 This is also the ONLY gate on template.json's `extra_models` key (the turbo
-LoRAs no workflow references): the runtime validator ignores the key and the
-provisioner only prints an error line at boot, so a typo there is invisible
-everywhere else.
+LoRAs and latent upscaler no workflow references): the runtime validator
+ignores the key and the provisioner only prints an error line at boot, so a
+typo there is invisible everywhere else.
 
 Run: python3 tools/test_provisioner.py
 Stdlib only, no pytest. Needs template.json + pins.json in the repo root.
@@ -50,6 +50,16 @@ BUNDLED_LORAS = [
 TURBO_LORAS = BUNDLED_LORAS + [
     "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
 ]
+LATENT_UPSCALER = "minimax_h3_latent_upscaler_3d_fp16.safetensors"
+LATENT_UPSCALER_URL = (
+    "https://huggingface.co/LBH-123-AI/Minimax_h3_latent_Upscaler/resolve/"
+    "main/minimax_h3_latent_upscaler_3d_fp16.safetensors"
+)
+LATENT_UPSCALER_NODE = (
+    "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git|"
+    "d7c01b9011f2e8439493f6c02c29995a27df276f"
+)
+EXTRA_MODELS = BUNDLED_LORAS + [LATENT_UPSCALER]
 
 # label, minimax_quant, expected profile, expected warning fragment. The false
 # profile selects full bf16; invalid values keep booting on int8 with a warning.
@@ -159,12 +169,25 @@ def main() -> int:
             f"{b}"
         ), f"{b}: unexpected LightX2V URL {registry[b]['url']}"
     flag = template["flags"]["download_minimax_h3"]
-    assert sorted(flag.get("extra_models", [])) == sorted(BUNDLED_LORAS), (
-        f"extra_models must list exactly the {len(BUNDLED_LORAS)} turbo LoRAs "
-        f"no workflow references, got {flag.get('extra_models')}"
+    assert LATENT_UPSCALER in registry, "latent upscaler missing from registry"
+    assert registry[LATENT_UPSCALER] == {
+        "url": LATENT_UPSCALER_URL,
+        "subdir": "latent_upscale_models",
+        "min_size_mb": 650,
+    }, f"unexpected latent upscaler registry entry: {registry[LATENT_UPSCALER]}"
+    assert sorted(flag.get("extra_models", [])) == sorted(EXTRA_MODELS), (
+        f"extra_models must list exactly the {len(EXTRA_MODELS)} models no "
+        f"workflow references, got {flag.get('extra_models')}"
     )
     print(f"✅ {len(TURBO_LORAS)} turbo LoRAs registered, "
           f"{len(BUNDLED_LORAS)} bundled via extra_models")
+
+    custom_nodes = template["custom_nodes"]
+    assert custom_nodes["target"] == "image", custom_nodes
+    assert custom_nodes.get("repos") == [LATENT_UPSCALER_NODE], (
+        f"latent upscaler node must be reproducibly pinned, got {custom_nodes}"
+    )
+    print("✅ latent upscaler model destination and custom-node pin are exact")
 
     provisioner = runtime_dir() / "src" / "provisioner.py"
     assert provisioner.is_file(), f"no provisioner at {provisioner}"
@@ -197,6 +220,11 @@ def main() -> int:
             )
             lines = [l for l in manifest.read_text().splitlines() if l]
             downloaded = {l.split("\t")[1].rsplit("/", 1)[1] for l in lines}
+            destinations = {
+                Path(line.split("\t")[1]).name:
+                    Path(line.split("\t")[1])
+                for line in lines
+            }
             manifests[label] = {l.split("\t", 1)[0] for l in lines}
 
             wanted = set(profiles[key].values())
@@ -221,13 +249,22 @@ def main() -> int:
                 f"{label}: turbo LoRAs missing from manifest: "
                 f"{sorted(set(TURBO_LORAS) - downloaded)}"
             )
+            expected_upscaler_path = (
+                tmp / f"models-{slug}" / "latent_upscale_models" /
+                LATENT_UPSCALER
+            )
+            assert destinations.get(LATENT_UPSCALER) == expected_upscaler_path, (
+                f"{label}: latent upscaler destination is "
+                f"{destinations.get(LATENT_UPSCALER)}, expected "
+                f"{expected_upscaler_path}"
+            )
             if warning:
                 assert warning in proc.stdout, (
                     f"{label}: expected warning {warning!r}, got:\n{proc.stdout}"
                 )
             print(f"✅ {label} -> {key}: workflows and manifest agree on "
                   f"{len(wanted)} files, all {len(TURBO_LORAS)} turbo LoRAs "
-                  f"queued")
+                  f"and the latent upscaler queued")
 
     # Fallback and aliases must be byte-identical in URL terms, not merely
     # "some default-ish" sets.

@@ -140,6 +140,16 @@ video_minimax_h3_r2v graph does not: it is ComfyUI's own and has no
 LoRA node in it. To use the file there, add a LoraLoaderModelOnly after
 the ref2va model loader yourself.
 
+## Latent upscaling
+
+The MiniMax H3 Latent Upscaler node pack is installed on this template.
+With download_minimax_h3 set to true, its 3D fp16 weight is downloaded
+to models/latent_upscale_models. Add “Minimax H3 Latent Upscaler (3D)”
+to your graph to use it. The six bundled workflows do not add it for you.
+
+This upscales MiniMax's latent before decoding. It can shorten the
+high-resolution part of a workflow, but it does not reduce peak VRAM.
+
 ## Spectrum
 
 Spectrum is baked into the image. It skips some of H3's transformer

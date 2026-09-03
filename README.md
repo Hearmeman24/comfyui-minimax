@@ -53,6 +53,12 @@ instead. The text encoder, VAEs, and bundled Turbo LoRAs stay the same. Only the
 for is downloaded and the workflows are pointed at those files for you, so you never touch a
 dropdown.
 
+The template also installs the
+[MiniMax H3 Latent Upscaler nodes](https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler).
+When `download_minimax_h3` is true, its 3D fp16 weight is downloaded to
+`models/latent_upscale_models`. Add “Minimax H3 Latent Upscaler (3D)” to a graph to use it; none of
+the six bundled workflows enables it automatically.
+
 ## Once it is up
 
 Click Connect, then open port 8188 for ComfyUI or port 8888 for JupyterLab. The boot log is at
