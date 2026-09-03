@@ -8,6 +8,7 @@
         "MiniMax H3"
       ],
       "extra_models": [
+        "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
         "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
         "minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
         "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",

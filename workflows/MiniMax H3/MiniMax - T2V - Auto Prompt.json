@@ -1,8 +1,8 @@
 {
   "id": "f2c401be-8cad-4b93-83f5-8b3307974678",
   "revision": 0,
-  "last_node_id": 176,
-  "last_link_id": 345,
+  "last_node_id": 178,
+  "last_link_id": 347,
   "nodes": [
     {
       "id": 121,
@@ -43,7 +43,10 @@
       },
       "widgets_values": [
         "minimax_h3_video_vae_fp16.safetensors"
-      ]
+      ],
+      "widgets_values_named": {
+        "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+      }
     },
     {
       "id": 122,
@@ -83,7 +86,10 @@
       },
       "widgets_values": [
         "minimax_h3_audio_vae_fp32.safetensors"
-      ]
+      ],
+      "widgets_values_named": {
+        "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+      }
     },
     {
       "id": 127,
@@ -125,7 +131,12 @@
         "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
         "minimax",
         "default"
-      ]
+      ],
+      "widgets_values_named": {
+        "clip_name": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+        "type": "minimax",
+        "device": "default"
+      }
     },
     {
       "id": 135,
@@ -166,7 +177,11 @@
       "widgets_values": [
         "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
         "default"
-      ]
+      ],
+      "widgets_values_named": {
+        "unet_name": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      }
     },
     {
       "id": 141,
@@ -182,7 +197,7 @@
       "flags": {
         "collapsed": false
       },
-      "order": 12,
+      "order": 15,
       "mode": 0,
       "inputs": [
         {
@@ -228,90 +243,16 @@
         5,
         "taeh3.safetensors",
         ""
-      ]
-    },
-    {
-      "id": 148,
-      "type": "ExtendIntermediateSigmas",
-      "pos": [
-        -1851.4229850314766,
-        5140.002678964271
       ],
-      "size": [
-        277.1353515625,
-        130
-      ],
-      "flags": {},
-      "order": 18,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "sigmas",
-          "type": "SIGMAS",
-          "link": 282
-        }
-      ],
-      "outputs": [
-        {
-          "name": "SIGMAS",
-          "type": "SIGMAS",
-          "links": [
-            316
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.1",
-        "Node name for S&R": "ExtendIntermediateSigmas"
-      },
-      "widgets_values": [
-        3,
-        0.8,
-        0,
-        "linear"
-      ]
-    },
-    {
-      "id": 147,
-      "type": "BetaSamplingScheduler",
-      "pos": [
-        -1845.7063267801532,
-        4994.696216798019
-      ],
-      "size": [
-        270,
-        106
-      ],
-      "flags": {},
-      "order": 16,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 310
-        }
-      ],
-      "outputs": [
-        {
-          "name": "SIGMAS",
-          "type": "SIGMAS",
-          "links": [
-            282
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.1",
-        "Node name for S&R": "BetaSamplingScheduler"
-      },
-      "widgets_values": [
-        8,
-        0.79,
-        0.5
-      ]
+      "widgets_values_named": {
+        "max_resolution": 1024,
+        "jpeg_quality": 92,
+        "suppress_default_preview": true,
+        "preview_frames": 120,
+        "preview_fps": 5,
+        "tiny_vae": "taeh3.safetensors",
+        "preview": ""
+      }
     },
     {
       "id": 154,
@@ -347,7 +288,11 @@
       "widgets_values": [
         998272501897613,
         "randomize"
-      ]
+      ],
+      "widgets_values_named": {
+        "noise_seed": 998272501897613,
+        "control_after_generate": "randomize"
+      }
     },
     {
       "id": 153,
@@ -361,7 +306,7 @@
         140
       ],
       "flags": {},
-      "order": 19,
+      "order": 22,
       "mode": 0,
       "inputs": [
         {
@@ -409,8 +354,7 @@
         "cnr_id": "comfy-core",
         "ver": "0.30.1",
         "Node name for S&R": "SamplerCustomAdvanced"
-      },
-      "widgets_values": []
+      }
     },
     {
       "id": 149,
@@ -426,7 +370,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 17,
+      "order": 20,
       "mode": 0,
       "inputs": [
         {
@@ -453,8 +397,7 @@
         "cnr_id": "comfy-core",
         "ver": "0.30.1",
         "Node name for S&R": "BasicGuider"
-      },
-      "widgets_values": []
+      }
     },
     {
       "id": 150,
@@ -489,7 +432,10 @@
       },
       "widgets_values": [
         "euler"
-      ]
+      ],
+      "widgets_values_named": {
+        "sampler_name": "euler"
+      }
     },
     {
       "id": 130,
@@ -505,7 +451,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 15,
+      "order": 18,
       "mode": 0,
       "inputs": [
         {
@@ -589,7 +535,13 @@
         1344,
         768,
         73
-      ]
+      ],
+      "widgets_values_named": {
+        "prompt": "cowgirl, fast, medium shot, eye-level camera viewpoint, a pale-skinned woman with blonde hair in a single braid sits nude atop a man. Her torso and large breasts occupy the upper and center frame, while her spread thighs and the point of penetration are centered in the lower third. The man's torso is partially visible at the very bottom, mostly occluded by the woman's legs. The woman’s vulva features shaved skin and pink, slightly parted labia majora that stretch as she moves. The penis is thick and firm with visible veins running vertically along the shaft; the glans is a darker pink than the shaft with a prominent corona ridge and a visible urethral opening. The motion is fast and forceful as the woman bounces vertically, causing her breasts to sway and jiggle violently while the penis slides rapidly in and out of the vaginal opening. Her skin has a noticeable sheen of sweat, catching the light on her chest and stomach. The audio contains the rhythmic, wet slapping sounds of skin-on-skin contact and the woman’s heavy, breathless moaning. A low male voice says, \"You deserve everything,\" followed by \"You deserve this,\" in a steady, rhythmic tone. The setting is a dimly lit indoor room with warm, directional lighting from the front.\n",
+        "width": 1344,
+        "height": 768,
+        "length": 73
+      }
     },
     {
       "id": 137,
@@ -603,7 +555,7 @@
         208.67168806000245
       ],
       "flags": {},
-      "order": 13,
+      "order": 16,
       "mode": 0,
       "inputs": [
         {
@@ -659,54 +611,21 @@
         {},
         ""
       ],
+      "widgets_values_named": {
+        "divider": {},
+        "PowerLoraLoaderHeaderWidget": {
+          "type": "PowerLoraLoaderHeaderWidget"
+        },
+        "lora_1": {
+          "on": false,
+          "lora": "Your_Character_LoRA_Here.safetensors",
+          "strength": 1,
+          "strengthTwo": null
+        },
+        "➕ Add Lora": ""
+      },
       "color": "#223",
       "bgcolor": "#335"
-    },
-    {
-      "id": 158,
-      "type": "LoraLoaderModelOnly",
-      "pos": [
-        -2643.3321160569353,
-        4957.659045716494
-      ],
-      "size": [
-        428.15337285649343,
-        82
-      ],
-      "flags": {
-        "collapsed": true
-      },
-      "order": 14,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 334
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            310,
-            311
-          ]
-        }
-      ],
-      "title": "Turbo LoRA (Always On, Don't Touch)",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.1",
-        "Node name for S&R": "LoraLoaderModelOnly"
-      },
-      "widgets_values": [
-        "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
-        0.5
-      ],
-      "color": "#322",
-      "bgcolor": "#533"
     },
     {
       "id": 132,
@@ -741,6 +660,9 @@
       "widgets_values": [
         5
       ],
+      "widgets_values_named": {
+        "value": 5
+      },
       "color": "#232",
       "bgcolor": "#353"
     },
@@ -788,120 +710,13 @@
         0.7,
         32
       ],
+      "widgets_values_named": {
+        "aspect_ratio": "9:16 (Portrait Widescreen)",
+        "megapixels": 0.7,
+        "multiple": 32
+      },
       "color": "#232",
       "bgcolor": "#353"
-    },
-    {
-      "id": 174,
-      "type": "2af4e026-3781-4e28-963e-abf80e9930c3",
-      "pos": [
-        -2132.8669832059886,
-        5142.629448028331
-      ],
-      "size": [
-        210,
-        122
-      ],
-      "flags": {
-        "collapsed": true
-      },
-      "order": 10,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "api_key",
-          "type": "STRING",
-          "widget": {
-            "name": "api_key"
-          },
-          "link": 337
-        },
-        {
-          "name": "string_b",
-          "type": "STRING",
-          "widget": {
-            "name": "string_b"
-          },
-          "link": 338
-        },
-        {
-          "label": "a",
-          "name": "values.a",
-          "type": "FLOAT,INT,BOOLEAN",
-          "link": 339
-        },
-        {
-          "name": "input",
-          "type": "*",
-          "link": 340
-        },
-        {
-          "name": "input_1",
-          "type": "*",
-          "link": 341
-        }
-      ],
-      "outputs": [
-        {
-          "name": "Output",
-          "type": "STRING",
-          "links": [
-            342,
-            343
-          ]
-        },
-        {
-          "name": "INT",
-          "type": "INT",
-          "links": [
-            344,
-            345
-          ]
-        }
-      ],
-      "title": "Auto Prompt Writing",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.1",
-        "previewExposures": []
-      },
-      "widgets_values": [
-        "",
-        "one continuous shot, A video from a Woman's perspective, she is looking down at her own body while sitting on a bed, her breasts are very large tucked in a black spaghetti strap top and she wears gray panties, she is slightly chubby and has large inner thighs, her legs are stretched out to the end of the bed, and she has a MacBook Pro resting on her thighs, on a bed, on the screen there is an online video chat, the main focus of the chat is a man, the man is shown from the side and is completely naked, laying on a bed, no face is shown only his side body, the camera is focused on his large thick erect cock, he can heard over the computer asking \"DO you like that?\", on the top right of the screen there's an overlaid video chat rectangle, showing the woman's face and upper body, in the far distance, there's a hint of lightwooden floor"
-      ]
-    },
-    {
-      "id": 160,
-      "type": "Display Any (rgthree)",
-      "pos": [
-        -2141.7523350104752,
-        5187.972873138577
-      ],
-      "size": [
-        214.18171822389104,
-        88
-      ],
-      "flags": {},
-      "order": 11,
-      "mode": 0,
-      "inputs": [
-        {
-          "dir": 3,
-          "name": "source",
-          "type": "*",
-          "link": 342
-        }
-      ],
-      "outputs": [],
-      "title": "Generated Prompt",
-      "properties": {
-        "cnr_id": "rgthree-comfy",
-        "ver": "6b76ee6f2c5a007710b5a16f97c94330d6ecc871",
-        "Node name for S&R": "Display Any (rgthree)"
-      },
-      "widgets_values": [
-        "integrated_multimodal_description: [Shot 1] (0.0-5.0s) A first-person POV shot from a woman's perspective, filmed on an iPhone 15 Pro with a 24mm wide-angle lens, capturing a high-angle view looking down at her own body. She is sitting upright against a headboard on a bed with rumpled white linen sheets. Her physique is soft and curvy with a slightly chubby midsection and thick, heavy inner thighs. She wears a tight black spandex spaghetti strap top that struggles to contain her very large, heavy breasts, creating deep cleavage. Her legs are stretched out straight toward the foot of the bed, clad in simple gray cotton panties. Resting precariously on her thighs is a 14-inch MacBook Pro. The screen displays a full-screen video call. The main feed shows a man from a side-profile view, lying naked on a messy bed; the focus is sharp on his large, thick, throbbing erect cock which he gently strokes. In the top right corner of the laptop screen, a small \"picture-in-picture\" window shows the woman’s own face; she has a flushed, aroused expression, biting her lower lip and breathing heavily as she watches him. The room is dimly lit by the cool blue glow of the laptop screen and a warm bedside lamp, casting soft shadows across her skin. The camera has a slight natural handheld shake, mimicking her breathing and subtle movements.\n\noverall_soundscape: The primary audio is the diegetic sound coming from the laptop speakers. A man’s voice, deep and raspy with a hint of breathlessness, asks, \"Do you like that?\" The sound is slightly tinny, characteristic of built-in computer speakers. Underneath his voice, the rhythmic, wet sound of skin-on-skin friction from his stroking is audible. In the room, the woman’s heavy, shaky breathing and the faint rustle of the bedsheets as she shifts her weight provide a close-up, intimate layer of sound.\n\nnon_diegetic_music: A low-frequency, atmospheric synth pad hums in the background, creating a sense of private, late-night tension and erotic focus."
-      ]
     },
     {
       "id": 173,
@@ -936,6 +751,9 @@
       "widgets_values": [
         ""
       ],
+      "widgets_values_named": {
+        "value": ""
+      },
       "color": "#232",
       "bgcolor": "#353"
     },
@@ -953,7 +771,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 20,
+      "order": 23,
       "mode": 0,
       "inputs": [
         {
@@ -980,8 +798,7 @@
         "cnr_id": "comfy-core",
         "ver": "0.30.1",
         "Node name for S&R": "VAEDecode"
-      },
-      "widgets_values": []
+      }
     },
     {
       "id": 134,
@@ -997,7 +814,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 21,
+      "order": 24,
       "mode": 0,
       "inputs": [
         {
@@ -1024,8 +841,7 @@
         "cnr_id": "comfy-core",
         "ver": "0.30.1",
         "Node name for S&R": "VAEDecodeAudio"
-      },
-      "widgets_values": []
+      }
     },
     {
       "id": 119,
@@ -1036,10 +852,10 @@
       ],
       "size": [
         334.7411177124782,
-        916.157009998334
+        334
       ],
       "flags": {},
-      "order": 22,
+      "order": 25,
       "mode": 0,
       "inputs": [
         {
@@ -1103,14 +919,331 @@
             "fullpath": "/ComfyUI/output/AnimateDiff_00686-audio.mp4"
           }
         }
+      },
+      "widgets_values_named": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 12,
+        "save_metadata": false,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": {
+          "hidden": false,
+          "paused": false,
+          "params": {
+            "filename": "AnimateDiff_00686-audio.mp4",
+            "subfolder": "",
+            "type": "output",
+            "format": "video/h264-mp4",
+            "frame_rate": 24,
+            "workflow": "AnimateDiff_00686.png",
+            "fullpath": "/ComfyUI/output/AnimateDiff_00686-audio.mp4"
+          }
+        }
+      }
+    },
+    {
+      "id": 175,
+      "type": "MarkdownNote",
+      "pos": [
+        -2688.9975434644207,
+        4244.339467046033
+      ],
+      "size": [
+        380.99576041856426,
+        340
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Note: HearmemanAI",
+      "properties": {},
+      "widgets_values": [
+        "## MiniMax H3, by HearmemanAI\n\nI build these workflows and post every one of them in my Discord. That is also the place to ask if something breaks:\n\nhttps://discord.gg/ZVWVhT43GW\n\nYou get this workflow already installed, with the models downloaded and the loaders pointed at them, on my MiniMax RunPod template:\n\nhttps://get.runpod.io/minimax-template\n"
+      ],
+      "widgets_values_named": {
+        "text": "## MiniMax H3, by HearmemanAI\n\nI build these workflows and post every one of them in my Discord. That is also the place to ask if something breaks:\n\nhttps://discord.gg/ZVWVhT43GW\n\nYou get this workflow already installed, with the models downloaded and the loaders pointed at them, on my MiniMax RunPod template:\n\nhttps://get.runpod.io/minimax-template\n"
+      },
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 176,
+      "type": "MarkdownNote",
+      "pos": [
+        -2288.0017830458564,
+        4244.339467046033
+      ],
+      "size": [
+        380.99576041856426,
+        340
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Note: OpenRouter API key",
+      "properties": {},
+      "widgets_values": [
+        "## Paste an OpenRouter key before you run this\n\nThe Auto Prompt group takes your one-line idea and writes the full H3 prompt for you. It calls OpenRouter to do that, so it needs a key. Leave the box empty and no prompt gets written, which means nothing generates.\n\n1. Get a key at https://openrouter.ai/keys\n2. Paste it into the OpenRouter API Key box\n\nEvery so often OpenRouter rejects a prompt. Reword the idea and run it again.\n"
+      ],
+      "widgets_values_named": {
+        "text": "## Paste an OpenRouter key before you run this\n\nThe Auto Prompt group takes your one-line idea and writes the full H3 prompt for you. It calls OpenRouter to do that, so it needs a key. Leave the box empty and no prompt gets written, which means nothing generates.\n\n1. Get a key at https://openrouter.ai/keys\n2. Paste it into the OpenRouter API Key box\n\nEvery so often OpenRouter rejects a prompt. Reword the idea and run it again.\n"
+      },
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 177,
+      "type": "BasicScheduler",
+      "pos": [
+        -1855.1846181613023,
+        4997.467257275628
+      ],
+      "size": [
+        270,
+        106
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 346
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            347
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.34.0",
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "simple",
+        8,
+        1
+      ],
+      "widgets_values_named": {
+        "scheduler": "simple",
+        "steps": 8,
+        "denoise": 1
+      }
+    },
+    {
+      "id": 148,
+      "type": "ExtendIntermediateSigmas",
+      "pos": [
+        -1851.4229850314766,
+        5140.002678964271
+      ],
+      "size": [
+        277.1353515625,
+        130
+      ],
+      "flags": {},
+      "order": 21,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 347
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            316
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.1",
+        "Node name for S&R": "ExtendIntermediateSigmas"
+      },
+      "widgets_values": [
+        2,
+        0.8,
+        0,
+        "linear"
+      ],
+      "widgets_values_named": {
+        "steps": 2,
+        "start_at_sigma": 0.8,
+        "end_at_sigma": 0,
+        "spacing": "linear"
+      }
+    },
+    {
+      "id": 178,
+      "type": "Note",
+      "pos": [
+        -1844.6468955129985,
+        5341.98337351147
+      ],
+      "size": [
+        234.61203972343515,
+        88
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "^ Optional can add more detail"
+      ],
+      "widgets_values_named": {
+        "text": "^ Optional can add more detail"
+      },
+      "color": "#432",
+      "bgcolor": "#653"
+    },
+    {
+      "id": 160,
+      "type": "Display Any (rgthree)",
+      "pos": [
+        -2249.1261836009703,
+        5191.730723364398
+      ],
+      "size": [
+        214.18171822389104,
+        88
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "dir": 3,
+          "name": "source",
+          "type": "*",
+          "link": 342
+        }
+      ],
+      "outputs": [],
+      "title": "Generated Prompt",
+      "properties": {
+        "cnr_id": "rgthree-comfy",
+        "ver": "6b76ee6f2c5a007710b5a16f97c94330d6ecc871",
+        "Node name for S&R": "Display Any (rgthree)"
+      },
+      "widgets_values": [
+        "integrated_multimodal_description: [Shot 1] (0.0-5.0s) A first-person POV shot from a woman's perspective, filmed on an iPhone 15 Pro with a 24mm wide-angle lens, capturing a high-angle view looking down at her own body. She is sitting upright against a headboard on a bed with rumpled white linen sheets. Her physique is soft and curvy with a slightly chubby midsection and thick, heavy inner thighs. She wears a tight black spandex spaghetti strap top that struggles to contain her very large, heavy breasts, creating deep cleavage. Her legs are stretched out straight toward the foot of the bed, clad in simple gray cotton panties. Resting precariously on her thighs is a 14-inch MacBook Pro. The screen displays a full-screen video call. The main feed shows a man from a side-profile view, lying naked on a messy bed; the focus is sharp on his large, thick, throbbing erect cock which he gently strokes. In the top right corner of the laptop screen, a small \"picture-in-picture\" window shows the woman’s own face; she has a flushed, aroused expression, biting her lower lip and breathing heavily as she watches him. The room is dimly lit by the cool blue glow of the laptop screen and a warm bedside lamp, casting soft shadows across her skin. The camera has a slight natural handheld shake, mimicking her breathing and subtle movements.\n\noverall_soundscape: The primary audio is the diegetic sound coming from the laptop speakers. A man’s voice, deep and raspy with a hint of breathlessness, asks, \"Do you like that?\" The sound is slightly tinny, characteristic of built-in computer speakers. Underneath his voice, the rhythmic, wet sound of skin-on-skin friction from his stroking is audible. In the room, the woman’s heavy, shaky breathing and the faint rustle of the bedsheets as she shifts her weight provide a close-up, intimate layer of sound.\n\nnon_diegetic_music: A low-frequency, atmospheric synth pad hums in the background, creating a sense of private, late-night tension and erotic focus."
+      ],
+      "widgets_values_named": {
+        "output": "integrated_multimodal_description: [Shot 1] (0.0-5.0s) A first-person POV shot from a woman's perspective, filmed on an iPhone 15 Pro with a 24mm wide-angle lens, capturing a high-angle view looking down at her own body. She is sitting upright against a headboard on a bed with rumpled white linen sheets. Her physique is soft and curvy with a slightly chubby midsection and thick, heavy inner thighs. She wears a tight black spandex spaghetti strap top that struggles to contain her very large, heavy breasts, creating deep cleavage. Her legs are stretched out straight toward the foot of the bed, clad in simple gray cotton panties. Resting precariously on her thighs is a 14-inch MacBook Pro. The screen displays a full-screen video call. The main feed shows a man from a side-profile view, lying naked on a messy bed; the focus is sharp on his large, thick, throbbing erect cock which he gently strokes. In the top right corner of the laptop screen, a small \"picture-in-picture\" window shows the woman’s own face; she has a flushed, aroused expression, biting her lower lip and breathing heavily as she watches him. The room is dimly lit by the cool blue glow of the laptop screen and a warm bedside lamp, casting soft shadows across her skin. The camera has a slight natural handheld shake, mimicking her breathing and subtle movements.\n\noverall_soundscape: The primary audio is the diegetic sound coming from the laptop speakers. A man’s voice, deep and raspy with a hint of breathlessness, asks, \"Do you like that?\" The sound is slightly tinny, characteristic of built-in computer speakers. Underneath his voice, the rhythmic, wet sound of skin-on-skin friction from his stroking is audible. In the room, the woman’s heavy, shaky breathing and the faint rustle of the bedsheets as she shifts her weight provide a close-up, intimate layer of sound.\n\nnon_diegetic_music: A low-frequency, atmospheric synth pad hums in the background, creating a sense of private, late-night tension and erotic focus."
+      }
+    },
+    {
+      "id": 174,
+      "type": "2af4e026-3781-4e28-963e-abf80e9930c3",
+      "pos": [
+        -2231.990443488715,
+        5143.81745392335
+      ],
+      "size": [
+        210,
+        122
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "api_key",
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": 337
+        },
+        {
+          "name": "string_b",
+          "type": "STRING",
+          "widget": {
+            "name": "string_b"
+          },
+          "link": 338
+        },
+        {
+          "label": "a",
+          "name": "values.a",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 339
+        },
+        {
+          "name": "input",
+          "type": "*",
+          "link": 340
+        },
+        {
+          "name": "input_1",
+          "type": "*",
+          "link": 341
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Output",
+          "type": "STRING",
+          "links": [
+            342,
+            343
+          ]
+        },
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            344,
+            345
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.1",
+        "previewExposures": []
+      },
+      "widgets_values": [
+        "",
+        "one continuous shot, A video from a Woman's perspective, she is looking down at her own body while sitting on a bed, her breasts are very large tucked in a black spaghetti strap top and she wears gray panties, she is slightly chubby and has large inner thighs, her legs are stretched out to the end of the bed, and she has a MacBook Pro resting on her thighs, on a bed, on the screen there is an online video chat, the main focus of the chat is a man, the man is shown from the side and is completely naked, laying on a bed, no face is shown only his side body, the camera is focused on his large thick erect cock, he can heard over the computer asking \"DO you like that?\", on the top right of the screen there's an overlaid video chat rectangle, showing the woman's face and upper body, in the far distance, there's a hint of lightwooden floor"
+      ],
+      "widgets_values_named": {
+        "api_key": "",
+        "string_b": "one continuous shot, A video from a Woman's perspective, she is looking down at her own body while sitting on a bed, her breasts are very large tucked in a black spaghetti strap top and she wears gray panties, she is slightly chubby and has large inner thighs, her legs are stretched out to the end of the bed, and she has a MacBook Pro resting on her thighs, on a bed, on the screen there is an online video chat, the main focus of the chat is a man, the man is shown from the side and is completely naked, laying on a bed, no face is shown only his side body, the camera is focused on his large thick erect cock, he can heard over the computer asking \"DO you like that?\", on the top right of the screen there's an overlaid video chat rectangle, showing the woman's face and upper body, in the far distance, there's a hint of lightwooden floor"
       }
     },
     {
       "id": 161,
       "type": "StringConstant",
       "pos": [
-        -2213.64465726325,
-        5016.299647208912
+        -2264.6757631168675,
+        5028.3422753868335
       ],
       "size": [
         270,
@@ -1119,7 +1252,7 @@
       "flags": {
         "collapsed": false
       },
-      "order": 9,
+      "order": 12,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1139,55 +1272,62 @@
       },
       "widgets_values": [
         ""
-      ]
+      ],
+      "widgets_values_named": {
+        "string": ""
+      },
+      "color": "#232",
+      "bgcolor": "#353"
     },
     {
-      "id": 175,
-      "type": "MarkdownNote",
+      "id": 158,
+      "type": "LoraLoaderModelOnly",
       "pos": [
-        -2688.9975434644207,
-        4244.339467046033
+        -2643.3321160569353,
+        4957.659045716494
       ],
       "size": [
-        380.99576041856426,
-        340
+        428.15337285649343,
+        82
       ],
-      "flags": {},
-      "order": 23,
+      "flags": {
+        "collapsed": true
+      },
+      "order": 17,
       "mode": 0,
-      "inputs": [],
-      "outputs": [],
-      "title": "Note: HearmemanAI",
-      "properties": {},
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 334
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            311,
+            346
+          ]
+        }
+      ],
+      "title": "Turbo LoRA (Always On, Don't Touch)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.1",
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
       "widgets_values": [
-        "## MiniMax H3, by HearmemanAI\n\nI build these workflows and post every one of them in my Discord. That is also the place to ask if something breaks:\n\nhttps://discord.gg/ZVWVhT43GW\n\nYou get this workflow already installed, with the models downloaded and the loaders pointed at them, on my MiniMax RunPod template:\n\nhttps://get.runpod.io/minimax-template\n"
+        "minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+        0.8
       ],
-      "color": "#222",
-      "bgcolor": "#000"
-    },
-    {
-      "id": 176,
-      "type": "MarkdownNote",
-      "pos": [
-        -2288.0017830458564,
-        4244.339467046033
-      ],
-      "size": [
-        380.99576041856426,
-        340
-      ],
-      "flags": {},
-      "order": 24,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [],
-      "title": "Note: OpenRouter API key",
-      "properties": {},
-      "widgets_values": [
-        "## Paste an OpenRouter key before you run this\n\nThe Auto Prompt group takes your one-line idea and writes the full H3 prompt for you. It calls OpenRouter to do that, so it needs a key. Leave the box empty and no prompt gets written, which means nothing generates.\n\n1. Get a key at https://openrouter.ai/keys\n2. Paste it into the OpenRouter API Key box\n\nEvery so often OpenRouter rejects a prompt. Reword the idea and run it again.\n"
-      ],
-      "color": "#432",
-      "bgcolor": "#653"
+      "widgets_values_named": {
+        "lora_name": "minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+        "strength_model": 0.8
+      },
+      "color": "#322",
+      "bgcolor": "#533"
     }
   ],
   "links": [
@@ -1272,14 +1412,6 @@
       "MODEL"
     ],
     [
-      282,
-      147,
-      0,
-      148,
-      0,
-      "SIGMAS"
-    ],
-    [
       284,
       154,
       0,
@@ -1340,14 +1472,6 @@
       135,
       0,
       141,
-      0,
-      "MODEL"
-    ],
-    [
-      310,
-      158,
-      0,
-      147,
       0,
       "MODEL"
     ],
@@ -1446,6 +1570,22 @@
       141,
       2,
       "INT"
+    ],
+    [
+      346,
+      158,
+      0,
+      177,
+      0,
+      "MODEL"
+    ],
+    [
+      347,
+      177,
+      0,
+      148,
+      0,
+      "SIGMAS"
     ]
   ],
   "groups": [
@@ -1517,8 +1657,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 5,
-          "lastNodeId": 174,
-          "lastLinkId": 345,
+          "lastNodeId": 178,
+          "lastLinkId": 347,
           "lastRerouteId": 0
         },
         "revision": 0,
@@ -1743,8 +1883,31 @@
               false,
               0,
               "auto",
-              false
+              false,
+              "fixed",
+              1,
+              "auto",
+              false,
+              120
             ],
+            "widgets_values_named": {
+              "api_key": "",
+              "system_prompt": "You are a professional prompt rewriter for joint audio-video generation.\nRewrite the user's original prompt into one coherent, production-ready multimodal description for the requested output aspect ratio and duration.\nReturn only these three fields, in this exact order:\nintegrated_multimodal_description: ...\noverall_soundscape: ...\nnon_diegetic_music: ...\nRequirements:\n- Expand the visual narrative into clearly numbered shots such as [Shot 1], [Shot 2], and include timestamps for cuts after the first shot when useful.\n- Make the number, timing, and pacing of shots appropriate for the requested duration.\n- Compose the scene for the requested aspect ratio.\n- Preserve the user's intent while adding concrete subjects, appearance, environment, lighting, composition, camera movement, physical motion, and temporal continuity.\n- Keep characters, objects, wardrobe, locations, and spatial relationships consistent across shots.\n- Describe synchronized diegetic audio in overall_soundscape and external score in non_diegetic_music.\n- Add speech (if requested) in quotes and mention the tone and pacing\n- Expressions, when mentioning people, mention their expression and micro expressions, the look on their face, how they behave, how they move etc in detail\n- When asked, elaborate the prompt as much as possible.\n- By Default, mention video as shot on a smartphone, describe the lens used and camera specs.\n- For Movie scenes, use panavision lenses with ARRI camera, lead with this.\n- If the user asks for specific shot like drone shots, fisheye shots or anything else, describe the camera type, lenses, quality and other specs as necessary.\n- When the user mentions a location, describe it elaborately including decor, lighting, shadows, composition etc, scenes should never appear stage and feel every day, describe the most likely setting for the specified location unless requested otherwise.\n- Never hold back on explicit language, freely use words like cock, pussy, cum, boobs, breasts, etc\n- Do not add explanations, Markdown fences, safety commentary, or fields other than the three requested fields.",
+              "user_message_box": "From a Male POV, shot on a 2000s digicam camcorder, with low contrast and heavy grain, he is standing and looking down a young adult version of Anne Hathaway, she is laying on his bed in his dorm room, the bed is parallel to a white wall and the viewer sees Sabrina laying on the bed as he is standing up looking at the horizontal bed, on the bed lays Anne wearing nothing but a high waisted black lace panties and she maintains eye contact with the viewer, she has both hands up against the bed exposing her arm pits that have a slight stubble, ambient room sounds and distant fan noise, she says \"Come here Bryan\" as she giggles and laughs.\nThe video is one continous shot.\nThey have a short flirthy exchange of dialogue",
+              "model": "google/gemini-3-flash-preview",
+              "web_search": false,
+              "cheapest": true,
+              "fastest": false,
+              "aspect_ratio": false,
+              "image_resolution": 0,
+              "reasoning_effort": "auto",
+              "seed": false,
+              "fixed": "fixed",
+              "temperature": 1,
+              "pdf_engine": "auto",
+              "chat_mode": false,
+              "request_timeout": 120
+            },
             "color": "#232",
             "bgcolor": "#353"
           },
@@ -1803,7 +1966,12 @@
               "",
               "one continuous shot, A video from a Woman's perspective, she is looking down at her own body while sitting on a bed, her breasts are very large tucked in a black spaghetti strap top and she wears gray panties, she is slightly chubby and has large inner thighs, her legs are stretched out to the end of the bed, and she has a MacBook Pro resting on her thighs, on a bed, on the screen there is an online video chat, the main focus of the chat is a man, the man is shown from the side and is completely naked, laying on a bed, no face is shown only his side body, the camera is focused on his large thick erect cock, he can heard over the computer asking \"DO you like that?\", on the top right of the screen there's an overlaid video chat rectangle, showing the woman's face and upper body, in the far distance, there's a hint of lightwooden floor",
               "      "
-            ]
+            ],
+            "widgets_values_named": {
+              "string_a": "",
+              "string_b": "one continuous shot, A video from a Woman's perspective, she is looking down at her own body while sitting on a bed, her breasts are very large tucked in a black spaghetti strap top and she wears gray panties, she is slightly chubby and has large inner thighs, her legs are stretched out to the end of the bed, and she has a MacBook Pro resting on her thighs, on a bed, on the screen there is an online video chat, the main focus of the chat is a man, the man is shown from the side and is completely naked, laying on a bed, no face is shown only his side body, the camera is focused on his large thick erect cock, he can heard over the computer asking \"DO you like that?\", on the top right of the screen there's an overlaid video chat rectangle, showing the woman's face and upper body, in the far distance, there's a hint of lightwooden floor",
+              "delimiter": "      "
+            }
           },
           {
             "id": 131,
@@ -1867,7 +2035,10 @@
             },
             "widgets_values": [
               "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17"
-            ]
+            ],
+            "widgets_values_named": {
+              "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17"
+            }
           },
           {
             "id": 165,
@@ -1913,6 +2084,10 @@
               "",
               ""
             ],
+            "widgets_values_named": {
+              "prefix": "",
+              "suffix": ""
+            },
             "color": "#223",
             "bgcolor": "#335"
           },
@@ -1960,6 +2135,10 @@
               "",
               ""
             ],
+            "widgets_values_named": {
+              "prefix": "",
+              "suffix": ""
+            },
             "color": "#223",
             "bgcolor": "#335"
           },
@@ -2007,6 +2186,10 @@
               "",
               ""
             ],
+            "widgets_values_named": {
+              "prefix": "",
+              "suffix": ""
+            },
             "color": "#223",
             "bgcolor": "#335"
           },
@@ -2077,7 +2260,10 @@
             },
             "widgets_values": [
               "Duration: {a}\nWidth: {b}\nHeight: {c}"
-            ]
+            ],
+            "widgets_values_named": {
+              "f_string": "Duration: {a}\nWidth: {b}\nHeight: {c}"
+            }
           }
         ],
         "groups": [],
@@ -2193,16 +2379,16 @@
   },
   "config": {},
   "extra": {
-    "frontendVersion": "1.47.12",
-    "VHS_latentpreview": true,
+    "frontendVersion": "1.49.6",
+    "VHS_latentpreview": false,
     "VHS_latentpreviewrate": 0,
     "VHS_MetadataImage": true,
     "VHS_KeepIntermediate": true,
     "ds": {
-      "scale": 0.853403255033758,
+      "scale": 1.2494677056949255,
       "offset": [
-        4085.3409305774226,
-        -4203.976062162696
+        3098.615254686063,
+        -4476.596110942227
       ]
     }
   },
