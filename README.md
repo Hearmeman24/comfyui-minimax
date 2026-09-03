@@ -16,7 +16,7 @@ Click Edit Template and open the environment variables tab. Set `download_minima
 is off by default, and a pod without it boots a working but empty ComfyUI, so the workflows open
 with blank loader dropdowns and look broken. The full list is in the next section.
 
-Give the pod a network volume of at least 85 GB for the default quantized models. 100 GB is
+Give the pod a network volume of at least 90 GB for the default quantized models. 100 GB is
 comfortable and leaves room for your outputs. Full bf16 is much larger: use at least 180 GB, or
 200 GB to leave comfortable output space.
 
