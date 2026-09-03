@@ -19,6 +19,11 @@
   "url": "https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/main/minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
   "subdir": "loras"
  },
+ "minimax_h3_latent_upscaler_3d_fp16.safetensors": {
+  "url": "https://huggingface.co/LBH-123-AI/Minimax_h3_latent_Upscaler/resolve/main/minimax_h3_latent_upscaler_3d_fp16.safetensors",
+  "subdir": "latent_upscale_models",
+  "min_size_mb": 650
+ },
  "minimax_h3_fl2va_bf16.safetensors": {
   "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/diffusion_models/minimax_h3_fl2va_bf16.safetensors",
   "subdir": "diffusion_models"

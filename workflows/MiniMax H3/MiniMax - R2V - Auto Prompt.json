@@ -1,8 +1,8 @@
 {
   "id": "f6c41c7f-009d-41d6-b0c9-d83b9d8ee121",
   "revision": 0,
-  "last_node_id": 193,
-  "last_link_id": 410,
+  "last_node_id": 194,
+  "last_link_id": 412,
   "nodes": [
     {
       "id": 121,
@@ -43,7 +43,10 @@
       },
       "widgets_values": [
         "minimax_h3_video_vae_fp16.safetensors"
-      ]
+      ],
+      "widgets_values_named": {
+        "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+      }
     },
     {
       "id": 127,
@@ -86,7 +89,12 @@
         "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
         "minimax",
         "default"
-      ]
+      ],
+      "widgets_values_named": {
+        "clip_name": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+        "type": "minimax",
+        "device": "default"
+      }
     },
     {
       "id": 133,
@@ -102,7 +110,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 20,
+      "order": 21,
       "mode": 0,
       "inputs": [
         {
@@ -129,8 +137,7 @@
         "cnr_id": "comfy-core",
         "ver": "0.30.1",
         "Node name for S&R": "VAEDecode"
-      },
-      "widgets_values": []
+      }
     },
     {
       "id": 134,
@@ -146,7 +153,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 21,
+      "order": 22,
       "mode": 0,
       "inputs": [
         {
@@ -173,8 +180,7 @@
         "cnr_id": "comfy-core",
         "ver": "0.30.1",
         "Node name for S&R": "VAEDecodeAudio"
-      },
-      "widgets_values": []
+      }
     },
     {
       "id": 122,
@@ -215,7 +221,10 @@
       },
       "widgets_values": [
         "minimax_h3_audio_vae_fp32.safetensors"
-      ]
+      ],
+      "widgets_values_named": {
+        "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+      }
     },
     {
       "id": 149,
@@ -231,7 +240,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 16,
+      "order": 17,
       "mode": 0,
       "inputs": [
         {
@@ -258,8 +267,7 @@
         "cnr_id": "comfy-core",
         "ver": "0.30.1",
         "Node name for S&R": "BasicGuider"
-      },
-      "widgets_values": []
+      }
     },
     {
       "id": 177,
@@ -275,7 +283,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 9,
+      "order": 10,
       "mode": 0,
       "inputs": [
         {
@@ -319,7 +327,10 @@
       },
       "widgets_values": [
         "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17"
-      ]
+      ],
+      "widgets_values_named": {
+        "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17"
+      }
     },
     {
       "id": 183,
@@ -342,6 +353,9 @@
       "widgets_values": [
         "## MiniMax H3, by HearmemanAI\n\nI build these workflows and post every one of them in my Discord. That is also the place to ask if something breaks:\n\nhttps://discord.gg/ZVWVhT43GW\n\nYou get this workflow already installed, with the models downloaded and the loaders pointed at them, on my MiniMax RunPod template:\n\nhttps://get.runpod.io/minimax-template\n"
       ],
+      "widgets_values_named": {
+        "text": "## MiniMax H3, by HearmemanAI\n\nI build these workflows and post every one of them in my Discord. That is also the place to ask if something breaks:\n\nhttps://discord.gg/ZVWVhT43GW\n\nYou get this workflow already installed, with the models downloaded and the loaders pointed at them, on my MiniMax RunPod template:\n\nhttps://get.runpod.io/minimax-template\n"
+      },
       "color": "#222",
       "bgcolor": "#000"
     },
@@ -359,7 +373,7 @@
       "flags": {
         "collapsed": true
       },
-      "order": 13,
+      "order": 14,
       "mode": 0,
       "inputs": [
         {
@@ -563,7 +577,14 @@
         768,
         124,
         "max"
-      ]
+      ],
+      "widgets_values_named": {
+        "prompt": "subject_definitions:\n<Subject 1> is the woman in <Picture 1>, maintaining her facial structure, blue eyes, high-ponytail brunette hair, and the distinct small tattoos visible on her fingers and wrist.\n<Subject 2> is the laundromat interior, a narrow urban space with rows of dark, metallic washing machines and a laminate counter.\n<Video 1> is the camera and editing reference, supplying a rapid push-in pattern and a mid-video jump cut.\n<Audio 2> is the voice-timbre reference for <Subject 1> (S1), providing a soft, calm, feminine vocal quality with a light rasp.\n\nsummary:\n[reference generation + audio reference] The woman from <Picture 1> stands in a dimly lit, closed laundromat at night, wearing a heavy wool coat. The camera follows the aggressive push-in and cutting rhythm of <Video 1>, moving from a medium shot to a tight close-up. She delivers a tired, flat line in the voice timbre of <Audio 2> before the final cut.\n\nretention_analysis:\n<Subject 1> (appears in [Shot 1], [Shot 2]): fully_preserved - features, hair, and tattoos are identical to <Picture 1>; wardrobe is newly generated.\n<Subject 2> (appears in [Shot 1], [Shot 2]): attribute_transfer - the dark, shadowed setting replaces the bright room in <Video 1> while keeping the spatial layout.\n<Video 1> (appears in [Shot 1], [Shot 2]): attribute_transfer - camera motion and cut timing are preserved; all visual content is discarded.\n<Audio 2>: reference - voice timbre and delivery pace are matched for the spoken line.\n\ndetailed_description:\nCinematic live-action. The scene is characterized by deep shadows and a single, cool-toned fluorescent light source flickering slightly behind a service counter, casting long shadows across the floor.\n[Shot 1] The woman <Subject 1> stands centered in the frame, her face pale under the harsh light. She wears a thick charcoal wool coat with a visible coarse grain, buttoned to the top, with a grey cotton t-shirt collar peeking through. Her skin shows fine pores and a natural matte texture. The camera pushes in with large amplitude at fast speed toward her face, mimicking the motion of <Video 1>. As the camera closes the distance, the fine flyaway hairs of her ponytail become backlit against the darkness. The dark silhouettes of dormant washing machines line the walls behind her. At 00:03.500, the camera reaches a tight close-up on her eyes.\n[Shot 2] At 00:03.550, the shot transitions to a slightly different angle, a jump cut closer to her mouth. The woman (S1) says with a tired, flat expression: <d>[English] I don't think they're coming back for these.</d> Her lips move with a heavy, slow cadence, and her breath is visible as a faint mist in the cold air. The camera continues to shake slightly as it holds on her exhausted, unblinking gaze. The light catches the silver jewelry on her ears and the small ink markings on her knuckles as she adjusts the heavy lapel of her coat.\n\noverall_soundscape:\nThe low, steady hum of a distant refrigerator and the faint buzz of the fluorescent tube. The heavy, muffled rustle of wool fabric as she moves. Her breathing is shallow and audible in the quiet space.\n\nnon_diegetic_music:\nN/A",
+        "width": 1344,
+        "height": 768,
+        "length": 124,
+        "ref_image_size": "max"
+      }
     },
     {
       "id": 141,
@@ -579,7 +600,7 @@
       "flags": {
         "collapsed": false
       },
-      "order": 11,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
@@ -626,7 +647,16 @@
         5,
         "taeh3.safetensors",
         ""
-      ]
+      ],
+      "widgets_values_named": {
+        "max_resolution": 1024,
+        "jpeg_quality": 92,
+        "suppress_default_preview": true,
+        "preview_frames": 120,
+        "preview_fps": 5,
+        "tiny_vae": "taeh3.safetensors",
+        "preview": ""
+      }
     },
     {
       "id": 135,
@@ -667,7 +697,11 @@
       "widgets_values": [
         "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
         "default"
-      ]
+      ],
+      "widgets_values_named": {
+        "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      }
     },
     {
       "id": 186,
@@ -681,7 +715,7 @@
         585.5188890389163
       ],
       "flags": {},
-      "order": 12,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
@@ -701,7 +735,10 @@
       },
       "widgets_values": [
         ""
-      ]
+      ],
+      "widgets_values_named": {
+        "output": ""
+      }
     },
     {
       "id": 119,
@@ -712,10 +749,10 @@
       ],
       "size": [
         697.8874926365747,
-        1364.831238954862
+        334
       ],
       "flags": {},
-      "order": 22,
+      "order": 23,
       "mode": 0,
       "inputs": [
         {
@@ -765,43 +802,22 @@
         "save_metadata": false,
         "trim_to_audio": false,
         "pingpong": false,
-        "save_output": true
+        "save_output": true,
+        "videopreview": ""
+      },
+      "widgets_values_named": {
+        "frame_rate": 24,
+        "loop_count": 0,
+        "filename_prefix": "AnimateDiff",
+        "format": "video/h264-mp4",
+        "pix_fmt": "yuv420p",
+        "crf": 12,
+        "save_metadata": false,
+        "trim_to_audio": false,
+        "pingpong": false,
+        "save_output": true,
+        "videopreview": ""
       }
-    },
-    {
-      "id": 150,
-      "type": "KSamplerSelect",
-      "pos": [
-        -1172.294785690542,
-        4813.149870307268
-      ],
-      "size": [
-        370,
-        70
-      ],
-      "flags": {
-        "collapsed": false
-      },
-      "order": 5,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "SAMPLER",
-          "type": "SAMPLER",
-          "links": [
-            286
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.1",
-        "Node name for S&R": "KSamplerSelect"
-      },
-      "widgets_values": [
-        "seeds_2"
-      ]
     },
     {
       "id": 115,
@@ -815,7 +831,7 @@
         127.05421216136529
       ],
       "flags": {},
-      "order": 6,
+      "order": 5,
       "mode": 0,
       "showAdvanced": true,
       "inputs": [],
@@ -847,6 +863,11 @@
         0.7,
         32
       ],
+      "widgets_values_named": {
+        "aspect_ratio": "2:3 (Portrait Photo)",
+        "megapixels": 0.7,
+        "multiple": 32
+      },
       "color": "#232",
       "bgcolor": "#353"
     },
@@ -864,7 +885,7 @@
       "flags": {
         "collapsed": false
       },
-      "order": 7,
+      "order": 6,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -884,7 +905,11 @@
       "widgets_values": [
         703673408085144,
         "fixed"
-      ]
+      ],
+      "widgets_values_named": {
+        "noise_seed": 703673408085144,
+        "control_after_generate": "fixed"
+      }
     },
     {
       "id": 132,
@@ -898,7 +923,7 @@
         70
       ],
       "flags": {},
-      "order": 8,
+      "order": 7,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -920,72 +945,11 @@
       "widgets_values": [
         5
       ],
+      "widgets_values_named": {
+        "value": 5
+      },
       "color": "#232",
       "bgcolor": "#353"
-    },
-    {
-      "id": 137,
-      "type": "Power Lora Loader (rgthree)",
-      "pos": [
-        -2939.38939087844,
-        4690.9824129893805
-      ],
-      "size": [
-        344.17640671064385,
-        286
-      ],
-      "flags": {},
-      "order": 14,
-      "mode": 0,
-      "inputs": [
-        {
-          "dir": 3,
-          "name": "model",
-          "type": "MODEL",
-          "link": 278
-        },
-        {
-          "dir": 3,
-          "name": "clip",
-          "type": "CLIP",
-          "link": 258
-        }
-      ],
-      "outputs": [
-        {
-          "dir": 4,
-          "name": "MODEL",
-          "shape": 3,
-          "type": "MODEL",
-          "links": [
-            334
-          ]
-        },
-        {
-          "dir": 4,
-          "name": "CLIP",
-          "shape": 3,
-          "type": "CLIP",
-          "links": []
-        }
-      ],
-      "properties": {
-        "cnr_id": "rgthree-comfy",
-        "ver": "6b76ee6f2c5a007710b5a16f97c94330d6ecc871",
-        "Show Strengths": "Single Strength",
-        "Match": "",
-        "aux_id": "rgthree/rgthree-comfy"
-      },
-      "widgets_values": [
-        {},
-        {
-          "type": "PowerLoraLoaderHeaderWidget"
-        },
-        {},
-        ""
-      ],
-      "color": "#223",
-      "bgcolor": "#335"
     },
     {
       "id": 153,
@@ -999,7 +963,7 @@
         140
       ],
       "flags": {},
-      "order": 19,
+      "order": 20,
       "mode": 0,
       "inputs": [
         {
@@ -1047,97 +1011,7 @@
         "cnr_id": "comfy-core",
         "ver": "0.30.1",
         "Node name for S&R": "SamplerCustomAdvanced"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 158,
-      "type": "LoraLoaderModelOnly",
-      "pos": [
-        -2909.9914992317536,
-        5054.869781502247
-      ],
-      "size": [
-        428.15337285649343,
-        82
-      ],
-      "flags": {
-        "collapsed": true
-      },
-      "order": 15,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 334
-        }
-      ],
-      "outputs": [
-        {
-          "name": "MODEL",
-          "type": "MODEL",
-          "links": [
-            311,
-            409
-          ]
-        }
-      ],
-      "title": "Turbo LoRA (Always On, Don't Touch)",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.1",
-        "Node name for S&R": "LoraLoaderModelOnly"
-      },
-      "widgets_values": [
-        "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
-        0.85
-      ],
-      "color": "#322",
-      "bgcolor": "#533"
-    },
-    {
-      "id": 190,
-      "type": "BetaSamplingScheduler",
-      "pos": [
-        -1162.5164532921524,
-        4981.832281339876
-      ],
-      "size": [
-        270,
-        106
-      ],
-      "flags": {
-        "collapsed": false
-      },
-      "order": 17,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "model",
-          "type": "MODEL",
-          "link": 409
-        }
-      ],
-      "outputs": [
-        {
-          "name": "SIGMAS",
-          "type": "SIGMAS",
-          "links": [
-            404
-          ]
-        }
-      ],
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.30.1",
-        "Node name for S&R": "BetaSamplingScheduler"
-      },
-      "widgets_values": [
-        4,
-        0.6,
-        0.6
-      ]
+      }
     },
     {
       "id": 189,
@@ -1153,13 +1027,13 @@
       "flags": {
         "collapsed": false
       },
-      "order": 18,
+      "order": 19,
       "mode": 0,
       "inputs": [
         {
           "name": "sigmas",
           "type": "SIGMAS",
-          "link": 404
+          "link": 412
         }
       ],
       "outputs": [
@@ -1181,7 +1055,13 @@
         0.8,
         0,
         "linear"
-      ]
+      ],
+      "widgets_values_named": {
+        "steps": 2,
+        "start_at_sigma": 0.8,
+        "end_at_sigma": 0,
+        "spacing": "linear"
+      }
     },
     {
       "id": 185,
@@ -1195,11 +1075,12 @@
         1342
       ],
       "flags": {},
-      "order": 10,
+      "order": 11,
       "mode": 0,
       "inputs": [
         {
           "name": "openrouter_api_key",
+          "shape": 7,
           "type": "STRING",
           "widget": {
             "name": "openrouter_api_key"
@@ -1394,22 +1275,111 @@
         1280,
         720,
         8,
-        2048
-      ]
+        2048,
+        ""
+      ],
+      "widgets_values_named": {
+        "direction": "The woman from <Picture 1> appears in the scene from <Video 1>, keeping her own face and clothes. One continuous shot, handheld, natural light.",
+        "references_json": "{\"references\":[]}",
+        "system_prompt": "",
+        "prompt_provider": "openrouter",
+        "openrouter_api_key": "",
+        "openrouter_model": "google/gemini-3-flash-preview",
+        "reasoning_effort": "none",
+        "api_base": "",
+        "local_model_slug": "",
+        "job_type": "auto",
+        "width": 1280,
+        "height": 720,
+        "length_seconds": 8,
+        "max_reference_edge": 2048,
+        "mmrp_block": ""
+      }
+    },
+    {
+      "id": 137,
+      "type": "Power Lora Loader (rgthree)",
+      "pos": [
+        -2944.438110489696,
+        4689.746552341111
+      ],
+      "size": [
+        333.1635151560796,
+        149.55640716957078
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "dir": 3,
+          "name": "model",
+          "type": "MODEL",
+          "link": 278
+        },
+        {
+          "dir": 3,
+          "name": "clip",
+          "type": "CLIP",
+          "link": 258
+        }
+      ],
+      "outputs": [
+        {
+          "dir": 4,
+          "name": "MODEL",
+          "shape": 3,
+          "type": "MODEL",
+          "links": [
+            334
+          ]
+        },
+        {
+          "dir": 4,
+          "name": "CLIP",
+          "shape": 3,
+          "type": "CLIP",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "rgthree-comfy",
+        "ver": "6b76ee6f2c5a007710b5a16f97c94330d6ecc871",
+        "Show Strengths": "Single Strength",
+        "Match": "",
+        "aux_id": "rgthree/rgthree-comfy"
+      },
+      "widgets_values": [
+        {},
+        {
+          "type": "PowerLoraLoaderHeaderWidget"
+        },
+        {},
+        ""
+      ],
+      "widgets_values_named": {
+        "divider": {},
+        "PowerLoraLoaderHeaderWidget": {
+          "type": "PowerLoraLoaderHeaderWidget"
+        },
+        "➕ Add Lora": ""
+      },
+      "color": "#223",
+      "bgcolor": "#335"
     },
     {
       "id": 193,
       "type": "PrimitiveString",
       "pos": [
-        -2902.5871105610154,
-        4714.741023125211
+        -2901.113232306414,
+        4900.536651176467
       ],
       "size": [
         210,
         58
       ],
       "flags": {},
-      "order": 23,
+      "order": 8,
       "mode": 0,
       "inputs": [],
       "outputs": [
@@ -1429,7 +1399,144 @@
       },
       "widgets_values": [
         ""
-      ]
+      ],
+      "widgets_values_named": {
+        "value": ""
+      }
+    },
+    {
+      "id": 158,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -2909.9914992317536,
+        5054.869781502247
+      ],
+      "size": [
+        428.15337285649343,
+        82
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 334
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            311,
+            411
+          ]
+        }
+      ],
+      "title": "Turbo LoRA (Always On, Don't Touch)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.1",
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+        0.85
+      ],
+      "widgets_values_named": {
+        "lora_name": "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+        "strength_model": 0.85
+      },
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 150,
+      "type": "KSamplerSelect",
+      "pos": [
+        -1172.294785690542,
+        4813.149870307268
+      ],
+      "size": [
+        370,
+        70
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "SAMPLER",
+          "type": "SAMPLER",
+          "links": [
+            286
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.1",
+        "Node name for S&R": "KSamplerSelect"
+      },
+      "widgets_values": [
+        "euler"
+      ],
+      "widgets_values_named": {
+        "sampler_name": "euler"
+      }
+    },
+    {
+      "id": 194,
+      "type": "BasicScheduler",
+      "pos": [
+        -1155.2954226515255,
+        4979.697844268334
+      ],
+      "size": [
+        270,
+        106
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 411
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            412
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.34.0",
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "simple",
+        8,
+        1
+      ],
+      "widgets_values_named": {
+        "scheduler": "simple",
+        "steps": 8,
+        "denoise": 1
+      }
     }
   ],
   "links": [
@@ -1810,14 +1917,6 @@
       "FLOAT"
     ],
     [
-      404,
-      190,
-      0,
-      189,
-      0,
-      "SIGMAS"
-    ],
-    [
       408,
       189,
       0,
@@ -1826,20 +1925,28 @@
       "SIGMAS"
     ],
     [
-      409,
-      158,
-      0,
-      190,
-      0,
-      "MODEL"
-    ],
-    [
       410,
       193,
       0,
       185,
       0,
       "STRING"
+    ],
+    [
+      411,
+      158,
+      0,
+      194,
+      0,
+      "MODEL"
+    ],
+    [
+      412,
+      194,
+      0,
+      189,
+      0,
+      "SIGMAS"
     ]
   ],
   "groups": [
@@ -1906,16 +2013,16 @@
   ],
   "config": {},
   "extra": {
-    "frontendVersion": "1.48.7",
+    "frontendVersion": "1.49.6",
     "VHS_latentpreview": false,
     "VHS_latentpreviewrate": 0,
     "VHS_MetadataImage": true,
     "VHS_KeepIntermediate": true,
     "ds": {
-      "scale": 0.8534032550338363,
+      "scale": 0.7052919463089558,
       "offset": [
-        4610.799325502651,
-        -5314.712393249588
+        4563.379359097616,
+        -4071.304665021353
       ]
     }
   },
