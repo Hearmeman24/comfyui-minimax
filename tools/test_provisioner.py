@@ -39,19 +39,21 @@ BF16_MODELS = {
     "ref2va": "minimax_h3_ref2va_bf16.safetensors",
 }
 
-# The refreshed workflows use the 8-step 768p builds. These six alternates are
-# still bundled for dropdown switching, so they download only through
-# template.json's extra_models.
-KJ_TURBO = "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors"
+# The refreshed workflows use the two 8-step 768p builds. The 4-step v1.2
+# build is bundled as a manual dropdown alternative. All three stay explicit
+# in template.json's extra_models contract.
 BUNDLED_LORAS = [
-    KJ_TURBO,
-    "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
+    "minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16.safetensors",
     "minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
-    "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
-    "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
     "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
 ]
 TURBO_LORAS = BUNDLED_LORAS
+REMOVED_TURBO_LORAS = {
+    "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
+    "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
+    "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
+    "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+}
 LATENT_UPSCALER = "minimax_h3_latent_upscaler_3d_fp16.safetensors"
 LATENT_UPSCALER_URL = (
     "https://huggingface.co/LBH-123-AI/Minimax_h3_latent_Upscaler/resolve/"
@@ -338,17 +340,21 @@ def main() -> int:
             f"{b}: subdir is {registry[b]['subdir']}, expected loras"
         )
     for b in BUNDLED_LORAS:
-        if b == KJ_TURBO:
-            assert registry[b]["url"] == (
-                "https://huggingface.co/Kijai/MiniMax-H3_comfy/resolve/main/"
-                f"loras/{b}"
-            ), f"{b}: unexpected Kijai URL {registry[b]['url']}"
-            continue
         assert registry[b]["url"] == (
             "https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/main/"
             f"{b}"
         ), f"{b}: unexpected LightX2V URL {registry[b]['url']}"
     flag = template["flags"]["download_minimax_h3"]
+    removed_from_registry = REMOVED_TURBO_LORAS & set(registry)
+    assert not removed_from_registry, (
+        f"retired Turbo LoRAs remain registered: {sorted(removed_from_registry)}"
+    )
+    removed_from_extras = REMOVED_TURBO_LORAS & set(
+        flag.get("extra_models", [])
+    )
+    assert not removed_from_extras, (
+        f"retired Turbo LoRAs remain bundled: {sorted(removed_from_extras)}"
+    )
     assert LATENT_UPSCALER in registry, "latent upscaler missing from registry"
     assert registry[LATENT_UPSCALER] == {
         "url": LATENT_UPSCALER_URL,
