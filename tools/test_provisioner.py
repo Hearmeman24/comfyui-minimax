@@ -458,21 +458,51 @@ def main() -> int:
 
     assert "refmods" in template.get("extra_model_paths", []), "RefMods must persist on the volume"
 
-    # Exercise the actual sourced hook twice, including a path with spaces.
-    with tempfile.TemporaryDirectory() as hook_tmp:
-        root = Path(hook_tmp) / "persistent volume" / "ComfyUI"
-        env = dict(os.environ, PERSIST_ROOT=str(root))
-        for iteration in range(2):
-            subprocess.run(["bash", "-c", 'source "$1"', "hook",
-                            str(REPO / "src/hooks/pre_launch.sh")],
-                           env=env, check=True)
-            assert (root / "input/refmod_images").is_dir()
-            assert (root / "input/refmod_video").is_dir()
-            marker = root / "input/refmod_images/keep.txt"
-            if iteration:
-                assert marker.read_text() == "user reference"
-            marker.write_text("user reference")
-    print("✅ RefMod input folders survive repeated boot hooks")
+    # Run the real hook against an isolated filesystem. Only absolute path
+    # probes and mkdir are redirected; branch selection remains in the hook.
+    hook_driver = r"""
+        test() {
+            if [[ "$1" == "-d" && "$2" == "/workspace" ]]; then
+                builtin test -d "$TEST_FS/workspace"
+            else
+                builtin test "$@"
+            fi
+        }
+        mkdir() {
+            local args=() arg
+            for arg in "$@"; do
+                if [[ "$arg" == /* ]]; then
+                    args+=("$TEST_FS$arg")
+                else
+                    args+=("$arg")
+                fi
+            done
+            command mkdir "${args[@]}"
+        }
+        source "$1"
+    """
+    for workspace_exists in (False, True):
+        with tempfile.TemporaryDirectory() as hook_tmp:
+            fs = Path(hook_tmp) / "test filesystem"
+            fs.mkdir()
+            if workspace_exists:
+                (fs / "workspace").mkdir()
+            root = fs / ("workspace/ComfyUI" if workspace_exists else "ComfyUI")
+            env = dict(os.environ, TEST_FS=str(fs))
+            env.pop("PERSIST_ROOT", None)
+            for iteration in range(2):
+                subprocess.run(["bash", "-c", hook_driver, "hook",
+                                str(REPO / "src/hooks/pre_launch.sh")],
+                               env=env, check=True)
+                assert (root / "input/refmod_images").is_dir()
+                assert (root / "input/refmod_video").is_dir()
+                marker = root / "input/refmod_images/keep.txt"
+                if iteration:
+                    assert marker.read_text() == "user reference"
+                marker.write_text("user reference")
+            other = fs / ("ComfyUI" if workspace_exists else "workspace")
+            assert not other.exists(), "hook wrote into the wrong root"
+    print("✅ RefMod input folders exist with/without workspace and survive repeated boots")
 
     provisioner = runtime_dir() / "src" / "provisioner.py"
     assert provisioner.is_file(), f"no provisioner at {provisioner}"

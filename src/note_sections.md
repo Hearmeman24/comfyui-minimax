@@ -28,8 +28,9 @@ before running, or first create one using MiniMax H3/RefMod Studio:
 - RefMod - Audio: an uploaded audio reference, using the H3 audio VAE.
 
 The RefMod node pack is installed automatically. The image and video input
-folders are input/refmod_images and input/refmod_video; Jupyter opens on your
-volume so you can upload there. RefMods save in models/refmods on that same
+folders are input/refmod_images and input/refmod_video. Deployment creates
+them under /workspace/ComfyUI when /workspace exists, or /ComfyUI otherwise.
+Jupyter opens on your volume so you can upload there. RefMods save in models/refmods on that same
 volume. Creation needs a VAE, not the diffusion model. Voice identity transfer
 is not validated. Refresh RefMods in the loader after saving a new reference.
 These references preserve appearance and other content; they do not train H3.
