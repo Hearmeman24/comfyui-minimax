@@ -1,0 +1,555 @@
+{
+  "id": "03409dc8-1aeb-4e47-99b6-e6146008c78e",
+  "revision": 0,
+  "last_node_id": 9,
+  "last_link_id": 3,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "Note",
+      "pos": [
+        50,
+        40
+      ],
+      "size": [
+        1410,
+        165
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "REFMOD STUDIO / AUDIO",
+      "properties": {},
+      "widgets_values": [
+        "REFERENCE FROM AUDIO\n01 Upload audio  \u2192  02 Name your RefMod  \u2192  03 Run to save\nFor music, ambience, sound effects or speech references. Speaker identity transfer is not validated."
+      ],
+      "widgets_values_named": {
+        "text": "REFERENCE FROM AUDIO\n01 Upload audio  \u2192  02 Name your RefMod  \u2192  03 Run to save\nFor music, ambience, sound effects or speech references. Speaker identity transfer is not validated."
+      },
+      "color": "#29333c",
+      "bgcolor": "#1e272f"
+    },
+    {
+      "id": 3,
+      "type": "Note",
+      "pos": [
+        53.51585937499996,
+        614.3796093750001
+      ],
+      "size": [
+        400,
+        230
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "CHOOSE A CLEAN EXCERPT",
+      "properties": {},
+      "widgets_values": [
+        "Upload a short, clean recording with the button above.\nThe default uses at most the first 30 seconds.\nFor speech: avoid music and other voices.\nFor music or ambience: choose a useful excerpt.\nThis is a reference, not a voice-cloning guarantee."
+      ],
+      "widgets_values_named": {
+        "text": "Upload a short, clean recording with the button above.\nThe default uses at most the first 30 seconds.\nFor speech: avoid music and other voices.\nFor music or ambience: choose a useful excerpt.\nThis is a reference, not a voice-cloning guarantee."
+      },
+      "color": "#29333c",
+      "bgcolor": "#1e272f"
+    },
+    {
+      "id": 4,
+      "type": "VAELoader",
+      "pos": [
+        53.51585937499996,
+        899.3796093750001
+      ],
+      "size": [
+        400,
+        95
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "vae_name",
+          "name": "vae_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "vae_name"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "VAE",
+          "name": "VAE",
+          "type": "VAE",
+          "slot_index": 0,
+          "links": [
+            2
+          ]
+        }
+      ],
+      "title": "H3 AUDIO VAE / already selected",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.34.0",
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "minimax_h3_audio_vae_fp32.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+      },
+      "color": "#243b48",
+      "bgcolor": "#182730"
+    },
+    {
+      "id": 6,
+      "type": "Note",
+      "pos": [
+        532.098721590909,
+        872.7840909090908
+      ],
+      "size": [
+        450,
+        230
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "NAME & DESCRIBE",
+      "properties": {},
+      "widgets_values": [
+        "Use a unique name for each version.\nChoose a label: voice, singing, music_style,\nsound_fx or ambience. Labels are metadata.\nmax_seconds limits the excerpt from its beginning.\nBudget policy = error stops on overflow.\nThe Save node on the right writes the file."
+      ],
+      "widgets_values_named": {
+        "text": "Use a unique name for each version.\nChoose a label: voice, singing, music_style,\nsound_fx or ambience. Labels are metadata.\nmax_seconds limits the excerpt from its beginning.\nBudget policy = error stops on overflow.\nThe Save node on the right writes the file."
+      },
+      "color": "#29333c",
+      "bgcolor": "#1e272f"
+    },
+    {
+      "id": 8,
+      "type": "Note",
+      "pos": [
+        1064.197443181819,
+        552.0276988636364
+      ],
+      "size": [
+        390,
+        220
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "YOUR SAVED FILE",
+      "properties": {},
+      "widgets_values": [
+        "/workspace/ComfyUI/models/refmods/audio/\n\nFilename comes from the Create node's name.\nKeep filename_prefix blank to avoid doubling names.\nSame name + folder replaces the previous file.\nUse _v1, _v2, etc. to keep separate versions."
+      ],
+      "widgets_values_named": {
+        "text": "/workspace/ComfyUI/models/refmods/audio/\n\nFilename comes from the Create node's name.\nKeep filename_prefix blank to avoid doubling names.\nSame name + folder replaces the previous file.\nUse _v1, _v2, etc. to keep separate versions."
+      },
+      "color": "#29333c",
+      "bgcolor": "#1e272f"
+    },
+    {
+      "id": 9,
+      "type": "Note",
+      "pos": [
+        1064.197443181819,
+        832.0276988636364
+      ],
+      "size": [
+        390,
+        200
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "USE IT IN A GENERATION",
+      "properties": {},
+      "widgets_values": [
+        "Load H3 RefMods \u2192 Refresh RefMods.\nChoose your saved reference from the dropdown.\nConnect to Apply H3 RefMod in your H3 workflow.\nStart with strength 1.0 and copies 1.\nCreation needs only the VAE."
+      ],
+      "widgets_values_named": {
+        "text": "Load H3 RefMods \u2192 Refresh RefMods.\nChoose your saved reference from the dropdown.\nConnect to Apply H3 RefMod in your H3 workflow.\nStart with strength 1.0 and copies 1.\nCreation needs only the VAE."
+      },
+      "color": "#29333c",
+      "bgcolor": "#1e272f"
+    },
+    {
+      "id": 7,
+      "type": "MiniMaxH3RefModSave",
+      "pos": [
+        1064.197443181819,
+        332.02769886363643
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "mods",
+          "name": "mods",
+          "type": "H3_REF_MODS",
+          "link": 3
+        },
+        {
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "subfolder",
+          "name": "subfolder",
+          "type": "STRING",
+          "widget": {
+            "name": "subfolder"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "mods",
+          "name": "mods",
+          "type": "H3_REF_MODS",
+          "slot_index": 0,
+          "links": null
+        },
+        {
+          "localized_name": "saved_paths",
+          "name": "saved_paths",
+          "type": "STRING",
+          "slot_index": 1,
+          "links": null
+        }
+      ],
+      "title": "Save / final RefMod",
+      "properties": {
+        "cnr_id": "ComfyUI-MiniMaxH3Mod",
+        "ver": "22ca77e247375dd47fc7340286b5f391887d3410",
+        "Node name for S&R": "MiniMaxH3RefModSave"
+      },
+      "widgets_values": [
+        "",
+        "audio"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "",
+        "subfolder": "audio"
+      },
+      "color": "#243b48",
+      "bgcolor": "#182730"
+    },
+    {
+      "id": 5,
+      "type": "MiniMaxH3RefModAudioExtract",
+      "pos": [
+        532.098721590909,
+        332.78409090909105
+      ],
+      "size": [
+        450,
+        470
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 1
+        },
+        {
+          "localized_name": "audio_vae",
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 2
+        },
+        {
+          "localized_name": "name",
+          "name": "name",
+          "type": "STRING",
+          "widget": {
+            "name": "name"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_seconds",
+          "name": "max_seconds",
+          "type": "FLOAT",
+          "widget": {
+            "name": "max_seconds"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_tokens",
+          "name": "max_tokens",
+          "type": "INT",
+          "widget": {
+            "name": "max_tokens"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "budget_policy",
+          "name": "budget_policy",
+          "type": "COMBO",
+          "widget": {
+            "name": "budget_policy"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "concept_type",
+          "name": "concept_type",
+          "type": "COMBO",
+          "widget": {
+            "name": "concept_type"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "description",
+          "name": "description",
+          "type": "STRING",
+          "widget": {
+            "name": "description"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "subfolder",
+          "name": "subfolder",
+          "type": "STRING",
+          "widget": {
+            "name": "subfolder"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "save",
+          "name": "save",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "save"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "H3_REF_MODS",
+          "name": "H3_REF_MODS",
+          "type": "H3_REF_MODS",
+          "slot_index": 0,
+          "links": [
+            3
+          ]
+        }
+      ],
+      "title": "Create / audio reference",
+      "properties": {
+        "cnr_id": "ComfyUI-MiniMaxH3Mod",
+        "ver": "22ca77e247375dd47fc7340286b5f391887d3410",
+        "Node name for S&R": "MiniMaxH3RefModAudioExtract"
+      },
+      "widgets_values": [
+        "audio_reference_v1",
+        30,
+        5120,
+        "error",
+        "ambience",
+        "",
+        "",
+        false
+      ],
+      "widgets_values_named": {
+        "name": "audio_reference_v1",
+        "max_seconds": 30,
+        "max_tokens": 5120,
+        "budget_policy": "error",
+        "concept_type": "ambience",
+        "description": "",
+        "subfolder": "",
+        "save": false
+      },
+      "color": "#243b48",
+      "bgcolor": "#182730"
+    },
+    {
+      "id": 2,
+      "type": "LoadAudio",
+      "pos": [
+        53.51585937499996,
+        334.3796093750003
+      ],
+      "size": [
+        400,
+        230
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "COMBO",
+          "widget": {
+            "name": "audio"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "audioUI",
+          "name": "audioUI",
+          "type": "AUDIO_UI",
+          "widget": {
+            "name": "audioUI"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "choose file to upload",
+          "name": "upload",
+          "type": "AUDIOUPLOAD",
+          "widget": {
+            "name": "upload"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "AUDIO",
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "slot_index": 0,
+          "links": [
+            1
+          ]
+        }
+      ],
+      "title": "Upload / choose your audio",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.34.0",
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": [
+        "",
+        null,
+        ""
+      ],
+      "widgets_values_named": {
+        "audio": "",
+        "upload": ""
+      },
+      "color": "#243b48",
+      "bgcolor": "#182730"
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      5,
+      0,
+      "AUDIO"
+    ],
+    [
+      2,
+      4,
+      0,
+      5,
+      1,
+      "VAE"
+    ],
+    [
+      3,
+      5,
+      0,
+      7,
+      0,
+      "H3_REF_MODS"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "01 / REFERENCES",
+      "bounding": [
+        30,
+        250,
+        450,
+        820
+      ],
+      "color": "#8a619a",
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "02 / CREATE",
+      "bounding": [
+        510,
+        250,
+        500,
+        1060
+      ],
+      "color": "#8a619a",
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "03 / SAVE & REUSE",
+      "bounding": [
+        1040,
+        250,
+        440,
+        820
+      ],
+      "color": "#8a619a",
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.8264462809917354,
+      "offset": [
+        913.1182552083337,
+        107.45670702048935
+      ]
+    },
+    "workflowRendererVersion": "LG"
+  },
+  "version": 0.4
+}

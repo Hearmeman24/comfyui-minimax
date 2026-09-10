@@ -50,9 +50,13 @@
   "custom_nodes": {
     "target": "image",
     "repos": [
-      "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git|d7c01b9011f2e8439493f6c02c29995a27df276f"
+      "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git|d7c01b9011f2e8439493f6c02c29995a27df276f",
+      "https://github.com/Luisacaotica/ComfyUI-MiniMaxH3Mod.git|22ca77e247375dd47fc7340286b5f391887d3410"
     ]
   },
   "sage": true,
-  "comfy_extra_args": "--disable-dynamic-vram"
+  "comfy_extra_args": "--disable-dynamic-vram",
+  "extra_model_paths": [
+    "refmods"
+  ]
 }

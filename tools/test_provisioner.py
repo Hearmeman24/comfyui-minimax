@@ -91,6 +91,9 @@ UPSCALING_WORKFLOWS = {
     "MiniMax - T2V - Auto Prompt - Upscaling.json",
     "MiniMax - T2V - Custom Prompt - Upscaling.json",
 }
+REFMOD_NODE = "https://github.com/Luisacaotica/ComfyUI-MiniMaxH3Mod.git|22ca77e247375dd47fc7340286b5f391887d3410"
+REFMOD_WORKFLOWS = {"MiniMax - RefMod.json"} | {f"RefMod Studio/RefMod - {kind}.json" for kind in ("Images", "Video", "Audio")}
+
 CHARACTER_LORA_PLACEHOLDER = "Your_Character_LoRA_Here.safetensors"
 
 # label, minimax_quant, expected profile, expected warning fragment. The false
@@ -235,7 +238,7 @@ def assert_source_workflows(registry: dict) -> None:
     workflow_files = sorted(workflow_root.rglob("*.json"))
     expected_workflows = set(SOURCE_WORKFLOW_DEFAULTS) | {
         f"Upscaling/{name}" for name in UPSCALING_WORKFLOWS
-    } | {"video_minimax_h3_r2v.json"}
+    } | {"video_minimax_h3_r2v.json"} | REFMOD_WORKFLOWS
     found_workflows = {
         workflow_file.relative_to(workflow_root).as_posix()
         for workflow_file in workflow_files
@@ -359,7 +362,7 @@ def assert_source_workflows(registry: dict) -> None:
                 "your_input_image.png", "image"
             ], f"{name}: stale local image default remains"
 
-    print("✅ all eleven workflow graphs have internally consistent links")
+    print("✅ all fifteen workflow graphs have internally consistent links")
     print("✅ five refreshed workflows use the int8 defaults and 8-step Turbo")
     print("✅ five upscaling workflows use the pinned 2x latent upscaler")
 
@@ -448,10 +451,28 @@ def main() -> int:
 
     custom_nodes = template["custom_nodes"]
     assert custom_nodes["target"] == "image", custom_nodes
-    assert custom_nodes.get("repos") == [LATENT_UPSCALER_NODE], (
+    assert custom_nodes.get("repos") == [LATENT_UPSCALER_NODE, REFMOD_NODE], (
         f"latent upscaler node must be reproducibly pinned, got {custom_nodes}"
     )
     print("✅ latent upscaler model destination and custom-node pin are exact")
+
+    assert "refmods" in template.get("extra_model_paths", []), "RefMods must persist on the volume"
+
+    # Exercise the actual sourced hook twice, including a path with spaces.
+    with tempfile.TemporaryDirectory() as hook_tmp:
+        root = Path(hook_tmp) / "persistent volume" / "ComfyUI"
+        env = dict(os.environ, PERSIST_ROOT=str(root))
+        for iteration in range(2):
+            subprocess.run(["bash", "-c", 'source "$1"', "hook",
+                            str(REPO / "src/hooks/pre_launch.sh")],
+                           env=env, check=True)
+            assert (root / "input/refmod_images").is_dir()
+            assert (root / "input/refmod_video").is_dir()
+            marker = root / "input/refmod_images/keep.txt"
+            if iteration:
+                assert marker.read_text() == "user reference"
+            marker.write_text("user reference")
+    print("✅ RefMod input folders survive repeated boot hooks")
 
     provisioner = runtime_dir() / "src" / "provisioner.py"
     assert provisioner.is_file(), f"no provisioner at {provisioner}"
@@ -492,6 +513,8 @@ def main() -> int:
                 f"{sorted(deployed_upscalers)}, expected "
                 f"{sorted(UPSCALING_WORKFLOWS)}"
             )
+            for relative in REFMOD_WORKFLOWS:
+                assert (dst / "MiniMax H3" / relative).is_file(), f"{label}: missing {relative}"
             downloaded = {l.split("\t")[1].rsplit("/", 1)[1] for l in lines}
             destinations = {
                 Path(line.split("\t")[1]).name:

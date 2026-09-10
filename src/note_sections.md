@@ -5,7 +5,7 @@ soundtrack in one pass. Dialogue, footsteps, music and room tone come
 out of the same generation, with nothing to sync afterwards. Clips are
 768p, 4 to 15 seconds, at 24 fps.
 
-It comes with eleven workflows. These are the six standard workflows:
+It comes with fifteen workflows. These are the six standard workflows:
 
 - MiniMax - T2V - Custom Prompt: text to video and audio.
 - MiniMax - T2V - Auto Prompt: same, but writes the full H3 prompt for
@@ -19,6 +19,20 @@ It comes with eleven workflows. These are the six standard workflows:
 
 The MiniMax H3/Upscaling folder adds five 2x latent-upscaling variants
 of the curated T2V, I2V and R2V workflows.
+
+MiniMax - RefMod generates with saved RefMods. Select one in Load H3 RefMods
+before running, or first create one using MiniMax H3/RefMod Studio:
+
+- RefMod - Images: a folder of portraits, using the H3 video VAE.
+- RefMod - Video: one clip, using the H3 video VAE.
+- RefMod - Audio: an uploaded audio reference, using the H3 audio VAE.
+
+The RefMod node pack is installed automatically. The image and video input
+folders are input/refmod_images and input/refmod_video; Jupyter opens on your
+volume so you can upload there. RefMods save in models/refmods on that same
+volume. Creation needs a VAE, not the diffusion model. Voice identity transfer
+is not validated. Refresh RefMods in the loader after saving a new reference.
+These references preserve appearance and other content; they do not train H3.
 
 The three Auto Prompt workflows need an OpenRouter key. Set the LLM_KEY
 variable to your key, or paste it into the OpenRouter API Key node in

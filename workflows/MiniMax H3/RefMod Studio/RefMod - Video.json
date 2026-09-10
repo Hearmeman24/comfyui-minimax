@@ -1,0 +1,719 @@
+{
+  "id": "c07cf0c9-b42f-4dd3-9b1e-965334e26c7b",
+  "revision": 0,
+  "last_node_id": 9,
+  "last_link_id": 3,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "Note",
+      "pos": [
+        50,
+        40
+      ],
+      "size": [
+        1410,
+        165
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "REFMOD STUDIO / VIDEO",
+      "properties": {},
+      "widgets_values": [
+        "REFERENCE FROM VIDEO\n01 Add one clip  \u2192  02 Name your RefMod  \u2192  03 Run to save\nPreserves sampled appearance and motion. It does not isolate motion from the subject or scene."
+      ],
+      "widgets_values_named": {
+        "text": "REFERENCE FROM VIDEO\n01 Add one clip  \u2192  02 Name your RefMod  \u2192  03 Run to save\nPreserves sampled appearance and motion. It does not isolate motion from the subject or scene."
+      },
+      "color": "#29333c",
+      "bgcolor": "#1e272f"
+    },
+    {
+      "id": 3,
+      "type": "Note",
+      "pos": [
+        51.125000000000014,
+        613.8593749999999
+      ],
+      "size": [
+        400,
+        220
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "ADD YOUR FILES",
+      "properties": {},
+      "widgets_values": [
+        "Open Jupyter \u2192 ComfyUI/input/refmod_video.\nPut ONE short video in this folder.\nThe loader samples up to 49 frames across it.\nUse a short, clear clip of the action you want.\nAudio from the clip is not included here."
+      ],
+      "widgets_values_named": {
+        "text": "Open Jupyter \u2192 ComfyUI/input/refmod_video.\nPut ONE short video in this folder.\nThe loader samples up to 49 frames across it.\nUse a short, clear clip of the action you want.\nAudio from the clip is not included here."
+      },
+      "color": "#29333c",
+      "bgcolor": "#1e272f"
+    },
+    {
+      "id": 4,
+      "type": "VAELoader",
+      "pos": [
+        51.125000000000014,
+        908.8593749999999
+      ],
+      "size": [
+        400,
+        95
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "vae_name",
+          "name": "vae_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "vae_name"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "VAE",
+          "name": "VAE",
+          "type": "VAE",
+          "slot_index": 0,
+          "links": [
+            2
+          ]
+        }
+      ],
+      "title": "H3 VIDEO VAE / already selected",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.34.0",
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "minimax_h3_video_vae_fp16.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+      },
+      "color": "#243b48",
+      "bgcolor": "#182730"
+    },
+    {
+      "id": 6,
+      "type": "Note",
+      "pos": [
+        534.5833333333336,
+        1096.348958333333
+      ],
+      "size": [
+        450,
+        190
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "ONLY CHANGE WHAT YOU NEED",
+      "properties": {},
+      "widgets_values": [
+        "Name: use a unique name for each version.\nFull Reference is the quality baseline.\nBudget policy = error: no silent frame dropping.\nIf over budget, reduce resolution or frame count.\nPool size and Refinement Steps are inactive here.\nBackground retention needs a connected mask.\nThe Save node on the right writes the file."
+      ],
+      "widgets_values_named": {
+        "text": "Name: use a unique name for each version.\nFull Reference is the quality baseline.\nBudget policy = error: no silent frame dropping.\nIf over budget, reduce resolution or frame count.\nPool size and Refinement Steps are inactive here.\nBackground retention needs a connected mask.\nThe Save node on the right writes the file."
+      },
+      "color": "#29333c",
+      "bgcolor": "#1e272f"
+    },
+    {
+      "id": 8,
+      "type": "Note",
+      "pos": [
+        1064.2187499999998,
+        554.3072916666667
+      ],
+      "size": [
+        390,
+        220
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "YOUR SAVED FILE",
+      "properties": {},
+      "widgets_values": [
+        "/workspace/ComfyUI/models/refmods/video/\n\nFilename comes from the Create node's name.\nKeep filename_prefix blank to avoid doubling names.\nSame name + folder replaces the previous file.\nUse _v1, _v2, etc. to keep separate versions."
+      ],
+      "widgets_values_named": {
+        "text": "/workspace/ComfyUI/models/refmods/video/\n\nFilename comes from the Create node's name.\nKeep filename_prefix blank to avoid doubling names.\nSame name + folder replaces the previous file.\nUse _v1, _v2, etc. to keep separate versions."
+      },
+      "color": "#29333c",
+      "bgcolor": "#1e272f"
+    },
+    {
+      "id": 9,
+      "type": "Note",
+      "pos": [
+        1064.2187499999998,
+        834.3072916666667
+      ],
+      "size": [
+        390,
+        200
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "USE IT IN A GENERATION",
+      "properties": {},
+      "widgets_values": [
+        "Load H3 RefMods \u2192 Refresh RefMods.\nChoose your saved reference from the dropdown.\nConnect to Apply H3 RefMod in your H3 workflow.\nStart with strength 1.0 and copies 1.\nCreation needs only the VAE."
+      ],
+      "widgets_values_named": {
+        "text": "Load H3 RefMods \u2192 Refresh RefMods.\nChoose your saved reference from the dropdown.\nConnect to Apply H3 RefMod in your H3 workflow.\nStart with strength 1.0 and copies 1.\nCreation needs only the VAE."
+      },
+      "color": "#29333c",
+      "bgcolor": "#1e272f"
+    },
+    {
+      "id": 2,
+      "type": "MiniMaxH3RefModFolderLoader",
+      "pos": [
+        51.125000000000014,
+        343.85937500000006
+      ],
+      "size": [
+        400,
+        220
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "folder",
+          "name": "folder",
+          "type": "STRING",
+          "widget": {
+            "name": "folder"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_items",
+          "name": "max_items",
+          "type": "INT",
+          "widget": {
+            "name": "max_items"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_frames",
+          "name": "max_frames",
+          "type": "INT",
+          "widget": {
+            "name": "max_frames"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_edge",
+          "name": "max_edge",
+          "type": "INT",
+          "widget": {
+            "name": "max_edge"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "refs",
+          "name": "refs",
+          "type": "H3_REF_LIST",
+          "slot_index": 0,
+          "links": [
+            1
+          ]
+        },
+        {
+          "localized_name": "count",
+          "name": "count",
+          "type": "INT",
+          "slot_index": 1,
+          "links": null
+        }
+      ],
+      "title": "One video clip",
+      "properties": {
+        "cnr_id": "ComfyUI-MiniMaxH3Mod",
+        "ver": "22ca77e247375dd47fc7340286b5f391887d3410",
+        "Node name for S&R": "MiniMaxH3RefModFolderLoader"
+      },
+      "widgets_values": [
+        "refmod_video",
+        1,
+        49,
+        1024
+      ],
+      "widgets_values_named": {
+        "folder": "/workspace/ComfyUI/input/refmod_video",
+        "max_items": 1,
+        "max_frames": 49,
+        "max_edge": 1024
+      },
+      "color": "#243b48",
+      "bgcolor": "#182730"
+    },
+    {
+      "id": 5,
+      "type": "MiniMaxH3RefModExtract",
+      "pos": [
+        534.5833333333336,
+        326.34895833333326
+      ],
+      "size": [
+        450,
+        720
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "ref_image_0",
+          "localized_name": "refs_image.ref_image_0",
+          "name": "refs_image.ref_image_0",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "label": "ref_video_0",
+          "localized_name": "refs_video.ref_video_0",
+          "name": "refs_video.ref_video_0",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "localized_name": "refs_bundle",
+          "name": "refs_bundle",
+          "shape": 7,
+          "type": "H3_REF_LIST",
+          "link": 1
+        },
+        {
+          "localized_name": "mask",
+          "name": "mask",
+          "shape": 7,
+          "type": "MASK",
+          "link": null
+        },
+        {
+          "localized_name": "av_encoder",
+          "name": "av_encoder",
+          "shape": 7,
+          "type": "MINIMAX_H3_AV_ENCODER",
+          "link": null
+        },
+        {
+          "localized_name": "vae",
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": 2
+        },
+        {
+          "localized_name": "name",
+          "name": "name",
+          "type": "STRING",
+          "widget": {
+            "name": "name"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "mode",
+          "name": "mode",
+          "type": "COMBO",
+          "widget": {
+            "name": "mode"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "concept_type",
+          "name": "concept_type",
+          "type": "COMBO",
+          "widget": {
+            "name": "concept_type"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "background_retention",
+          "name": "background_retention",
+          "type": "FLOAT",
+          "widget": {
+            "name": "background_retention"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "ref_resolution",
+          "name": "ref_resolution",
+          "type": "INT",
+          "widget": {
+            "name": "ref_resolution"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "pool_h",
+          "name": "pool_h",
+          "type": "INT",
+          "widget": {
+            "name": "pool_h"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "pool_w",
+          "name": "pool_w",
+          "type": "INT",
+          "widget": {
+            "name": "pool_w"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "latent_frames",
+          "name": "latent_frames",
+          "type": "INT",
+          "widget": {
+            "name": "latent_frames"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "identity",
+          "name": "identity",
+          "type": "INT",
+          "widget": {
+            "name": "identity"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "merge",
+          "name": "merge",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "merge"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "motion_only",
+          "name": "motion_only",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "motion_only"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "multiplier",
+          "name": "multiplier",
+          "type": "INT",
+          "widget": {
+            "name": "multiplier"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "max_tokens",
+          "name": "max_tokens",
+          "type": "INT",
+          "widget": {
+            "name": "max_tokens"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "description",
+          "name": "description",
+          "type": "STRING",
+          "widget": {
+            "name": "description"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "save",
+          "name": "save",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "save"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "extraction_preset",
+          "name": "extraction_preset",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "extraction_preset"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "subfolder",
+          "name": "subfolder",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "subfolder"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "budget_policy",
+          "name": "budget_policy",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "budget_policy"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "mods",
+          "name": "mods",
+          "type": "H3_REF_MODS",
+          "slot_index": 0,
+          "links": [
+            3
+          ]
+        }
+      ],
+      "title": "Create / video reference",
+      "properties": {
+        "cnr_id": "ComfyUI-MiniMaxH3Mod",
+        "ver": "22ca77e247375dd47fc7340286b5f391887d3410",
+        "Node name for S&R": "MiniMaxH3RefModExtract"
+      },
+      "widgets_values": [
+        "video_reference_v1",
+        "Full Reference",
+        "pose_motion",
+        0,
+        768,
+        16,
+        16,
+        49,
+        0,
+        false,
+        false,
+        1,
+        32768,
+        "",
+        false,
+        "manual",
+        "",
+        "error"
+      ],
+      "widgets_values_named": {
+        "name": "video_reference_v1",
+        "mode": "Full Reference",
+        "concept_type": "pose_motion",
+        "background_retention": 0,
+        "ref_resolution": 768,
+        "pool_h": 16,
+        "pool_w": 16,
+        "latent_frames": 49,
+        "identity": 0,
+        "merge": false,
+        "motion_only": false,
+        "multiplier": 1,
+        "max_tokens": 32768,
+        "description": "",
+        "save": false,
+        "extraction_preset": "manual",
+        "subfolder": "",
+        "budget_policy": "error"
+      },
+      "color": "#243b48",
+      "bgcolor": "#182730"
+    },
+    {
+      "id": 7,
+      "type": "MiniMaxH3RefModSave",
+      "pos": [
+        1064.2187499999998,
+        334.30729166666663
+      ],
+      "size": [
+        390,
+        160
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "mods",
+          "name": "mods",
+          "type": "H3_REF_MODS",
+          "link": 3
+        },
+        {
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "widget": {
+            "name": "filename_prefix"
+          },
+          "link": null
+        },
+        {
+          "localized_name": "subfolder",
+          "name": "subfolder",
+          "type": "STRING",
+          "widget": {
+            "name": "subfolder"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "mods",
+          "name": "mods",
+          "type": "H3_REF_MODS",
+          "slot_index": 0,
+          "links": null
+        },
+        {
+          "localized_name": "saved_paths",
+          "name": "saved_paths",
+          "type": "STRING",
+          "slot_index": 1,
+          "links": null
+        }
+      ],
+      "title": "Save / final RefMod",
+      "properties": {
+        "cnr_id": "ComfyUI-MiniMaxH3Mod",
+        "ver": "22ca77e247375dd47fc7340286b5f391887d3410",
+        "Node name for S&R": "MiniMaxH3RefModSave"
+      },
+      "widgets_values": [
+        "",
+        "video"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "",
+        "subfolder": "video"
+      },
+      "color": "#243b48",
+      "bgcolor": "#182730"
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      5,
+      2,
+      "H3_REF_LIST"
+    ],
+    [
+      2,
+      4,
+      0,
+      5,
+      5,
+      "VAE"
+    ],
+    [
+      3,
+      5,
+      0,
+      7,
+      0,
+      "H3_REF_MODS"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "01 / REFERENCES",
+      "bounding": [
+        30,
+        250,
+        450,
+        820
+      ],
+      "color": "#596da6",
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "02 / CREATE",
+      "bounding": [
+        510,
+        250,
+        500,
+        1060
+      ],
+      "color": "#596da6",
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "03 / SAVE & REUSE",
+      "bounding": [
+        1040,
+        250,
+        440,
+        820
+      ],
+      "color": "#596da6",
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.75,
+      "offset": [
+        862.4687500000001,
+        139.67187500000003
+      ]
+    },
+    "workflowRendererVersion": "LG"
+  },
+  "version": 0.4
+}

@@ -36,7 +36,7 @@ FYI: this template is built for CUDA 13.0 and above.
 
 | Variable | Default | What it does |
 |---|---|---|
-| `download_minimax_h3` | false | Downloads the models and installs all eleven workflows. Set it to true. |
+| `download_minimax_h3` | false | Downloads the models and installs all fifteen workflows. Set it to true. |
 | `minimax_quant` | int8 | Which build to download: int8, fp8, nvfp4, or false for full bf16. You can leave this alone. |
 | `LLM_KEY` | empty | Your OpenRouter key. Only the three Auto Prompt workflows use it. |
 | `civitai_token` | empty | Your CivitAI API token |
