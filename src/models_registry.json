@@ -57,5 +57,20 @@
   "subdir": "vae_approx",
   "min_size_mb": 5,
   "upstream_url": "https://huggingface.co/Kijai/MiniMax-H3-TAE/resolve/main/vae_approx/taeh3.safetensors"
+ },
+ "Viggle-Animate-pruned_rank8_bf16.safetensors": {
+  "url": "https://huggingface.co/DeepBeepMeep/MiniMax-H3/resolve/main/Viggle-Animate-pruned_rank8_bf16.safetensors",
+  "subdir": "diffusion_models",
+  "min_size_mb": 38000
+ },
+ "viggle_animate_dmd_lora.safetensors": {
+  "url": "https://huggingface.co/drbaph/Viggle-Animate-ComfyUI/resolve/main/loras/viggle_animate_dmd_lora.safetensors",
+  "subdir": "loras",
+  "min_size_mb": 3500
+ },
+ "fixed_embed_fwd_anyframe.safetensors": {
+  "url": "https://huggingface.co/drbaph/Viggle-Animate-ComfyUI/resolve/main/text_cond/fixed_embed_fwd_anyframe.safetensors",
+  "subdir": "text_cond",
+  "min_size_mb": 3
  }
 }

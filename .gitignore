@@ -28,3 +28,5 @@ CHANGELOG.md
 # notes. git is NOT a backup for any of it; anything that must survive belongs
 # in ~/brain.
 docs/
+
+/internal_docs/

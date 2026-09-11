@@ -451,8 +451,9 @@ def main() -> int:
 
     custom_nodes = template["custom_nodes"]
     assert custom_nodes["target"] == "image", custom_nodes
-    assert custom_nodes.get("repos") == [LATENT_UPSCALER_NODE, REFMOD_NODE], (
-        f"latent upscaler node must be reproducibly pinned, got {custom_nodes}"
+    from test_viggle_provisioner import VIGGLE_NODE
+    assert custom_nodes.get("repos") == [LATENT_UPSCALER_NODE, REFMOD_NODE, VIGGLE_NODE], (
+        f"template custom-node list must preserve exact pins, got {custom_nodes}"
     )
     print("✅ latent upscaler model destination and custom-node pin are exact")
 
@@ -506,6 +507,8 @@ def main() -> int:
 
     provisioner = runtime_dir() / "src" / "provisioner.py"
     assert provisioner.is_file(), f"no provisioner at {provisioner}"
+    from test_viggle_provisioner import check as check_viggle
+    check_viggle(provisioner)
 
     manifests: dict = {}
     with tempfile.TemporaryDirectory() as tmpdir:

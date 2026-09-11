@@ -13,6 +13,16 @@
         "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
         "minimax_h3_latent_upscaler_3d_fp16.safetensors"
       ]
+    },
+    "download_viggle_animate": {
+      "default": false,
+      "folders": [],
+      "extra_models": [
+        "Viggle-Animate-pruned_rank8_bf16.safetensors",
+        "viggle_animate_dmd_lora.safetensors",
+        "fixed_embed_fwd_anyframe.safetensors",
+        "minimax_h3_video_vae_fp16.safetensors"
+      ]
     }
   },
   "swap_groups": [
@@ -51,12 +61,14 @@
     "target": "image",
     "repos": [
       "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git|d7c01b9011f2e8439493f6c02c29995a27df276f",
-      "https://github.com/Luisacaotica/ComfyUI-MiniMaxH3Mod.git|22ca77e247375dd47fc7340286b5f391887d3410"
+      "https://github.com/Luisacaotica/ComfyUI-MiniMaxH3Mod.git|22ca77e247375dd47fc7340286b5f391887d3410",
+      "https://github.com/Saganaki22/ComfyUI-Viggle-Animate-H3.git|77425b6f955e98e96c5e0dc6ca199dc62e63ad8a"
     ]
   },
   "sage": true,
   "comfy_extra_args": "--disable-dynamic-vram",
   "extra_model_paths": [
-    "refmods"
+    "refmods",
+    "text_cond"
   ]
 }
