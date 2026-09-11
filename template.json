@@ -21,7 +21,8 @@
         "Viggle-Animate-pruned_rank8_bf16.safetensors",
         "viggle_animate_dmd_lora.safetensors",
         "fixed_embed_fwd_anyframe.safetensors",
-        "minimax_h3_video_vae_fp16.safetensors"
+        "minimax_h3_video_vae_fp16.safetensors",
+        "rife426.pth"
       ]
     }
   },

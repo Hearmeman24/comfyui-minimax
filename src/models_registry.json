@@ -72,5 +72,10 @@
   "url": "https://huggingface.co/drbaph/Viggle-Animate-ComfyUI/resolve/main/text_cond/fixed_embed_fwd_anyframe.safetensors",
   "subdir": "text_cond",
   "min_size_mb": 3
+ },
+ "rife426.pth": {
+  "url": "https://github.com/Fannovel16/ComfyUI-Frame-Interpolation/releases/download/models/rife426.pth",
+  "subdir": "frame_interpolation",
+  "min_size_mb": 20
  }
 }
