@@ -945,10 +945,10 @@
       "title": "Note: OpenRouter API key",
       "properties": {},
       "widgets_values": [
-        "## Paste an OpenRouter key before you run this\n\nThe Auto Prompt group takes your one-line idea and writes the full H3 prompt for you. It calls OpenRouter to do that, so it needs a key. Leave the box empty and no prompt gets written, which means nothing generates.\n\n1. Get a key at https://openrouter.ai/keys\n2. Paste it into the OpenRouter API Key box\n\nEvery so often OpenRouter rejects a prompt. Reword the idea and run it again.\n"
+        "## OpenRouter Simple setup\n\nSet OPENROUTER_API_KEY in the Runpod environment before starting ComfyUI. The existing LLM_KEY variable is also supported. Get a key at https://openrouter.ai/keys.\n\nThe Auto Prompt group uses OpenRouter Simple to turn your idea into an H3 prompt. Open the group to select the model or adjust generation controls. Keys are read from the environment, so there is no key box in the workflow.\n"
       ],
       "widgets_values_named": {
-        "text": "## Paste an OpenRouter key before you run this\n\nThe Auto Prompt group takes your one-line idea and writes the full H3 prompt for you. It calls OpenRouter to do that, so it needs a key. Leave the box empty and no prompt gets written, which means nothing generates.\n\n1. Get a key at https://openrouter.ai/keys\n2. Paste it into the OpenRouter API Key box\n\nEvery so often OpenRouter rejects a prompt. Reword the idea and run it again.\n"
+        "text": "## OpenRouter Simple setup\n\nSet OPENROUTER_API_KEY in the Runpod environment before starting ComfyUI. The existing LLM_KEY variable is also supported. Get a key at https://openrouter.ai/keys.\n\nThe Auto Prompt group uses OpenRouter Simple to turn your idea into an H3 prompt. Open the group to select the model or adjust generation controls. Keys are read from the environment, so there is no key box in the workflow.\n"
       },
       "color": "#432",
       "bgcolor": "#653"
@@ -1091,14 +1091,6 @@
       "mode": 0,
       "inputs": [
         {
-          "name": "api_key",
-          "type": "STRING",
-          "widget": {
-            "name": "api_key"
-          },
-          "link": 337
-        },
-        {
           "name": "string_b",
           "type": "STRING",
           "widget": {
@@ -1152,11 +1144,9 @@
         "previewExposures": []
       },
       "widgets_values": [
-        "",
         "one continuous shot, A video from a Woman's perspective, she is looking down at her own body while sitting on a bed, her breasts are very large tucked in a black spaghetti strap top and she wears gray panties, she is slightly chubby and has large inner thighs, her legs are stretched out to the end of the bed, and she has a MacBook Pro resting on her thighs, on a bed, on the screen there is an online video chat, the main focus of the chat is a man, the man is shown from the side and is completely naked, laying on a bed, no face is shown only his side body, the camera is focused on his large thick erect cock, he can heard over the computer asking \"DO you like that?\", on the top right of the screen there's an overlaid video chat rectangle, showing the woman's face and upper body, in the far distance, there's a hint of lightwooden floor"
       ],
       "widgets_values_named": {
-        "api_key": "",
         "string_b": "one continuous shot, A video from a Woman's perspective, she is looking down at her own body while sitting on a bed, her breasts are very large tucked in a black spaghetti strap top and she wears gray panties, she is slightly chubby and has large inner thighs, her legs are stretched out to the end of the bed, and she has a MacBook Pro resting on her thighs, on a bed, on the screen there is an online video chat, the main focus of the chat is a man, the man is shown from the side and is completely naked, laying on a bed, no face is shown only his side body, the camera is focused on his large thick erect cock, he can heard over the computer asking \"DO you like that?\", on the top right of the screen there's an overlaid video chat rectangle, showing the woman's face and upper body, in the far distance, there's a hint of lightwooden floor"
       }
     },
@@ -1195,47 +1185,6 @@
       "widgets_values_named": {
         "output": "integrated_multimodal_description: Shot on a smartphone with a wide-angle lens, 4K resolution, 60fps. The scene is a vertical 9:16 composition set in a luxury rooftop infinity pool at sunset, with the golden city skyline blurred in the background. [Shot 1] POV perspective looking down at a stunning blonde woman with large, enhanced breasts squeezed into a tiny black string bikini. She is kneeling in the shallow water between the man's legs. Her long blonde hair is loose, and she wears large gold hoop earrings. Her face is full of desire, eyes locked onto the man's as she reaches out with her pink-manicured hand to firmly grip his large, throbbing cock. She slowly leans her head forward, her lips parting and glistening with saliva. [Shot 2, 00:02] Close-up tracking shot as she opens her mouth wide, sliding her tongue along the underside of the glans before taking the entire head of his cock into her mouth. Her cheeks hollow out as she begins a deep, rhythmic sucking motion. Her eyes roll back slightly in pleasure, and her large breasts bounce subtly with the movement of her head. The golden hour light reflects off the rippling pool water and her tanned, wet skin.\n\noverall_soundscape: The wet, rhythmic sounds of deep sucking and licking, punctuated by the woman's muffled moans and heavy breathing through her nose. The gentle splashing of pool water against the infinity edge and the distant, low hum of the city below.\n\nnon_diegetic_music: A low-fidelity, sensual chill-hop beat with a deep, pulsing bassline and slow tempo to emphasize the intimate and carnal atmosphere."
       }
-    },
-    {
-      "id": 161,
-      "type": "StringConstant",
-      "pos": [
-        -2642.4432861678047,
-        5270.135114347776
-      ],
-      "size": [
-        270,
-        58
-      ],
-      "flags": {
-        "collapsed": false
-      },
-      "order": 11,
-      "mode": 0,
-      "inputs": [],
-      "outputs": [
-        {
-          "name": "STRING",
-          "type": "STRING",
-          "links": [
-            337
-          ]
-        }
-      ],
-      "title": "OpenRouter API Key",
-      "properties": {
-        "cnr_id": "comfyui-kjnodes",
-        "ver": "1.4.9",
-        "Node name for S&R": "StringConstant"
-      },
-      "widgets_values": [
-        ""
-      ],
-      "widgets_values_named": {
-        "string": ""
-      },
-      "color": "#232",
-      "bgcolor": "#353"
     },
     {
       "id": 115,
@@ -1549,19 +1498,11 @@
       "MODEL"
     ],
     [
-      337,
-      161,
-      0,
-      174,
-      0,
-      "STRING"
-    ],
-    [
       338,
       173,
       0,
       174,
-      1,
+      0,
       "STRING"
     ],
     [
@@ -1569,7 +1510,7 @@
       132,
       0,
       174,
-      2,
+      1,
       "FLOAT"
     ],
     [
@@ -1577,7 +1518,7 @@
       115,
       0,
       174,
-      3,
+      2,
       "INT"
     ],
     [
@@ -1585,7 +1526,7 @@
       115,
       1,
       174,
-      4,
+      3,
       "INT"
     ],
     [
@@ -1633,7 +1574,7 @@
       175,
       0,
       174,
-      5,
+      4,
       "IMAGE"
     ],
     [
@@ -1748,19 +1689,6 @@
           ]
         },
         "inputs": [
-          {
-            "id": "6ba35437-cb5d-4cee-ab1a-d8ec1d0e8634",
-            "name": "api_key",
-            "type": "STRING",
-            "linkIds": [
-              314
-            ],
-            "localized_name": "api_key",
-            "pos": [
-              -2369.6430098681353,
-              4819.9509309204805
-            ]
-          },
           {
             "id": "a8b58e2f-b3ed-4b81-ac46-932902ea1176",
             "name": "string_b",
@@ -2216,14 +2144,14 @@
           },
           {
             "id": 159,
-            "type": "OpenRouterNode",
+            "type": "OpenRouterSimple",
             "pos": [
               -2285.6430098681353,
               5056.629085779221
             ],
             "size": [
-              386.386328125,
-              538
+              450,
+              620
             ],
             "flags": {
               "collapsed": false
@@ -2232,118 +2160,84 @@
             "mode": 0,
             "inputs": [
               {
-                "localized_name": "pdf_data",
-                "name": "pdf_data",
-                "shape": 7,
-                "type": "*",
-                "link": null
-              },
-              {
-                "localized_name": "user_message_input",
-                "name": "user_message_input",
-                "shape": 7,
-                "type": "STRING",
-                "link": null
-              },
-              {
-                "localized_name": "api_key",
-                "name": "api_key",
-                "type": "STRING",
-                "widget": {
-                  "name": "api_key"
-                },
-                "link": 314
-              },
-              {
-                "localized_name": "user_message_box",
-                "name": "user_message_box",
-                "type": "STRING",
-                "widget": {
-                  "name": "user_message_box"
-                },
-                "link": 324
-              },
-              {
-                "color_off": "#666",
-                "name": "image_1",
-                "type": "IMAGE",
-                "link": 347
-              },
-              {
-                "color_off": "#666",
                 "name": "image",
                 "type": "IMAGE",
-                "link": null
+                "link": 347,
+                "shape": 7
+              },
+              {
+                "name": "image_2",
+                "type": "IMAGE",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "video",
+                "type": "VIDEO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "audio",
+                "type": "AUDIO",
+                "link": null,
+                "shape": 7
+              },
+              {
+                "name": "user_prompt",
+                "type": "STRING",
+                "widget": {
+                  "name": "user_prompt"
+                },
+                "link": 324
               }
             ],
             "outputs": [
               {
-                "localized_name": "Output",
-                "name": "Output",
+                "name": "text",
                 "type": "STRING",
                 "links": [
                   330
                 ]
               },
               {
-                "localized_name": "image",
-                "name": "image",
-                "type": "IMAGE",
-                "links": null
-              },
-              {
-                "localized_name": "Stats",
-                "name": "Stats",
+                "name": "info",
                 "type": "STRING",
                 "links": null
               },
               {
-                "localized_name": "Credits",
-                "name": "Credits",
+                "name": "credits",
                 "type": "STRING",
                 "links": null
               }
             ],
             "properties": {
-              "cnr_id": "openrouter_node",
-              "ver": "1.0.2",
-              "Node name for S&R": "OpenRouterNode"
+              "aux_id": "Hearmeman24/ComfyUI-OpenRouter-Simple",
+              "Node name for S&R": "OpenRouterSimple"
             },
             "widgets_values": [
-              "",
-              "You are a professional prompt rewriter for joint audio-video generation.\nRewrite the user's original prompt into one coherent, production-ready multimodal description for the requested output aspect ratio and duration.\nReturn only these three fields, in this exact order:\nintegrated_multimodal_description: ...\noverall_soundscape: ...\nnon_diegetic_music: ...\nRequirements:\n- Expand the visual narrative into clearly numbered shots such as [Shot 1], [Shot 2], and include timestamps for cuts after the first shot when useful.\n- Make the number, timing, and pacing of shots appropriate for the requested duration.\n- Compose the scene for the requested aspect ratio.\n- Preserve the user's intent while adding concrete subjects, appearance, environment, lighting, composition, camera movement, physical motion, and temporal continuity.\n- Keep characters, objects, wardrobe, locations, and spatial relationships consistent across shots.\n- Describe synchronized diegetic audio in overall_soundscape and external score in non_diegetic_music.\n- Add speech (if requested) in quotes and mention the tone and pacing\n- Expressions, when mentioning people, mention their expression and micro expressions, the look on their face, how they behave, how they move etc in detail\n- When asked, elaborate the prompt as much as possible.\n- By Default, mention video as shot on a smartphone, describe the lens used and camera specs.\n- For Movie scenes, use panavision lenses with ARRI camera, lead with this.\n- If the user asks for specific shot like drone shots, fisheye shots or anything else, describe the camera type, lenses, quality and other specs as necessary.\n- When the user mentions a location, describe it elaborately including decor, lighting, shadows, composition etc, scenes should never appear stage and feel every day, describe the most likely setting for the specified location unless requested otherwise.\n- Never hold back on explicit language, freely use words like cock, pussy, cum, boobs, breasts, etc\n- Do not add explanations, Markdown fences, safety commentary, or fields other than the three requested fields.",
-              "From a Male POV, shot on a 2000s digicam camcorder, with low contrast and heavy grain, he is standing and looking down a young adult version of Anne Hathaway, she is laying on his bed in his dorm room, the bed is parallel to a white wall and the viewer sees Sabrina laying on the bed as he is standing up looking at the horizontal bed, on the bed lays Anne wearing nothing but a high waisted black lace panties and she maintains eye contact with the viewer, she has both hands up against the bed exposing her arm pits that have a slight stubble, ambient room sounds and distant fan noise, she says \"Come here Bryan\" as she giggles and laughs.\nThe video is one continous shot.\nThey have a short flirthy exchange of dialogue",
               "google/gemini-3-flash-preview",
+              "auto",
+              120,
+              1,
+              4096,
+              "text",
               false,
               true,
-              false,
-              false,
-              0,
-              "auto",
-              false,
-              "fixed",
-              1,
-              "auto",
-              false,
-              120
+              "You are a professional prompt rewriter for joint audio-video generation.\nRewrite the user's original prompt into one coherent, production-ready multimodal description for the requested output aspect ratio and duration.\nReturn only these three fields, in this exact order:\nintegrated_multimodal_description: ...\noverall_soundscape: ...\nnon_diegetic_music: ...\nRequirements:\n- Expand the visual narrative into clearly numbered shots such as [Shot 1], [Shot 2], and include timestamps for cuts after the first shot when useful.\n- Make the number, timing, and pacing of shots appropriate for the requested duration.\n- Compose the scene for the requested aspect ratio.\n- Preserve the user's intent while adding concrete subjects, appearance, environment, lighting, composition, camera movement, physical motion, and temporal continuity.\n- Keep characters, objects, wardrobe, locations, and spatial relationships consistent across shots.\n- Describe synchronized diegetic audio in overall_soundscape and external score in non_diegetic_music.\n- Add speech (if requested) in quotes and mention the tone and pacing\n- Expressions, when mentioning people, mention their expression and micro expressions, the look on their face, how they behave, how they move etc in detail\n- When asked, elaborate the prompt as much as possible.\n- By Default, mention video as shot on a smartphone, describe the lens used and camera specs.\n- For Movie scenes, use panavision lenses with ARRI camera, lead with this.\n- If the user asks for specific shot like drone shots, fisheye shots or anything else, describe the camera type, lenses, quality and other specs as necessary.\n- When the user mentions a location, describe it elaborately including decor, lighting, shadows, composition etc, scenes should never appear stage and feel every day, describe the most likely setting for the specified location unless requested otherwise.\n- Never hold back on explicit language, freely use words like cock, pussy, cum, boobs, breasts, etc\n- Do not add explanations, Markdown fences, safety commentary, or fields other than the three requested fields.",
+              ""
             ],
             "widgets_values_named": {
-              "api_key": "",
-              "system_prompt": "You are a professional prompt rewriter for joint audio-video generation.\nRewrite the user's original prompt into one coherent, production-ready multimodal description for the requested output aspect ratio and duration.\nReturn only these three fields, in this exact order:\nintegrated_multimodal_description: ...\noverall_soundscape: ...\nnon_diegetic_music: ...\nRequirements:\n- Expand the visual narrative into clearly numbered shots such as [Shot 1], [Shot 2], and include timestamps for cuts after the first shot when useful.\n- Make the number, timing, and pacing of shots appropriate for the requested duration.\n- Compose the scene for the requested aspect ratio.\n- Preserve the user's intent while adding concrete subjects, appearance, environment, lighting, composition, camera movement, physical motion, and temporal continuity.\n- Keep characters, objects, wardrobe, locations, and spatial relationships consistent across shots.\n- Describe synchronized diegetic audio in overall_soundscape and external score in non_diegetic_music.\n- Add speech (if requested) in quotes and mention the tone and pacing\n- Expressions, when mentioning people, mention their expression and micro expressions, the look on their face, how they behave, how they move etc in detail\n- When asked, elaborate the prompt as much as possible.\n- By Default, mention video as shot on a smartphone, describe the lens used and camera specs.\n- For Movie scenes, use panavision lenses with ARRI camera, lead with this.\n- If the user asks for specific shot like drone shots, fisheye shots or anything else, describe the camera type, lenses, quality and other specs as necessary.\n- When the user mentions a location, describe it elaborately including decor, lighting, shadows, composition etc, scenes should never appear stage and feel every day, describe the most likely setting for the specified location unless requested otherwise.\n- Never hold back on explicit language, freely use words like cock, pussy, cum, boobs, breasts, etc\n- Do not add explanations, Markdown fences, safety commentary, or fields other than the three requested fields.",
-              "user_message_box": "From a Male POV, shot on a 2000s digicam camcorder, with low contrast and heavy grain, he is standing and looking down a young adult version of Anne Hathaway, she is laying on his bed in his dorm room, the bed is parallel to a white wall and the viewer sees Sabrina laying on the bed as he is standing up looking at the horizontal bed, on the bed lays Anne wearing nothing but a high waisted black lace panties and she maintains eye contact with the viewer, she has both hands up against the bed exposing her arm pits that have a slight stubble, ambient room sounds and distant fan noise, she says \"Come here Bryan\" as she giggles and laughs.\nThe video is one continous shot.\nThey have a short flirthy exchange of dialogue",
               "model": "google/gemini-3-flash-preview",
-              "web_search": false,
-              "cheapest": true,
-              "fastest": false,
-              "aspect_ratio": false,
-              "image_resolution": 0,
               "reasoning_effort": "auto",
-              "seed": false,
-              "fixed": "fixed",
+              "timeout_seconds": 120,
               "temperature": 1,
-              "pdf_engine": "auto",
-              "chat_mode": false,
-              "request_timeout": 120
+              "max_tokens": 4096,
+              "response_format": "text",
+              "zdr": false,
+              "regenerate": true,
+              "system_prompt": "You are a professional prompt rewriter for joint audio-video generation.\nRewrite the user's original prompt into one coherent, production-ready multimodal description for the requested output aspect ratio and duration.\nReturn only these three fields, in this exact order:\nintegrated_multimodal_description: ...\noverall_soundscape: ...\nnon_diegetic_music: ...\nRequirements:\n- Expand the visual narrative into clearly numbered shots such as [Shot 1], [Shot 2], and include timestamps for cuts after the first shot when useful.\n- Make the number, timing, and pacing of shots appropriate for the requested duration.\n- Compose the scene for the requested aspect ratio.\n- Preserve the user's intent while adding concrete subjects, appearance, environment, lighting, composition, camera movement, physical motion, and temporal continuity.\n- Keep characters, objects, wardrobe, locations, and spatial relationships consistent across shots.\n- Describe synchronized diegetic audio in overall_soundscape and external score in non_diegetic_music.\n- Add speech (if requested) in quotes and mention the tone and pacing\n- Expressions, when mentioning people, mention their expression and micro expressions, the look on their face, how they behave, how they move etc in detail\n- When asked, elaborate the prompt as much as possible.\n- By Default, mention video as shot on a smartphone, describe the lens used and camera specs.\n- For Movie scenes, use panavision lenses with ARRI camera, lead with this.\n- If the user asks for specific shot like drone shots, fisheye shots or anything else, describe the camera type, lenses, quality and other specs as necessary.\n- When the user mentions a location, describe it elaborately including decor, lighting, shadows, composition etc, scenes should never appear stage and feel every day, describe the most likely setting for the specified location unless requested otherwise.\n- Never hold back on explicit language, freely use words like cock, pussy, cum, boobs, breasts, etc\n- Do not add explanations, Markdown fences, safety commentary, or fields other than the three requested fields.",
+              "user_prompt": ""
             },
             "color": "#232",
             "bgcolor": "#353"
@@ -2356,7 +2250,7 @@
             "origin_id": 170,
             "origin_slot": 0,
             "target_id": 159,
-            "target_slot": 3,
+            "target_slot": 4,
             "type": "STRING"
           },
           {
@@ -2392,17 +2286,9 @@
             "type": "STRING"
           },
           {
-            "id": 314,
-            "origin_id": -10,
-            "origin_slot": 0,
-            "target_id": 159,
-            "target_slot": 2,
-            "type": "STRING"
-          },
-          {
             "id": 336,
             "origin_id": -10,
-            "origin_slot": 1,
+            "origin_slot": 0,
             "target_id": 170,
             "target_slot": 1,
             "type": "STRING"
@@ -2410,7 +2296,7 @@
           {
             "id": 250,
             "origin_id": -10,
-            "origin_slot": 2,
+            "origin_slot": 1,
             "target_id": 131,
             "target_slot": 0,
             "type": "FLOAT"
@@ -2418,7 +2304,7 @@
           {
             "id": 317,
             "origin_id": -10,
-            "origin_slot": 2,
+            "origin_slot": 1,
             "target_id": 165,
             "target_slot": 0,
             "type": "FLOAT"
@@ -2426,7 +2312,7 @@
           {
             "id": 318,
             "origin_id": -10,
-            "origin_slot": 3,
+            "origin_slot": 2,
             "target_id": 166,
             "target_slot": 0,
             "type": "INT"
@@ -2434,7 +2320,7 @@
           {
             "id": 319,
             "origin_id": -10,
-            "origin_slot": 4,
+            "origin_slot": 3,
             "target_id": 167,
             "target_slot": 0,
             "type": "INT"
@@ -2458,9 +2344,9 @@
           {
             "id": 347,
             "origin_id": -10,
-            "origin_slot": 5,
+            "origin_slot": 4,
             "target_id": 159,
-            "target_slot": 4,
+            "target_slot": 0,
             "type": "IMAGE"
           }
         ],

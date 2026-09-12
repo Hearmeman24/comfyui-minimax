@@ -608,6 +608,7 @@ def main() -> int:
             manifests["false-whitespace"]), (
         "false must select bf16 regardless of case or surrounding whitespace"
     )
+    subprocess.run([sys.executable, str(REPO / "tools" / "test_auto_prompt.py")], check=True)
     print("✅ all minimax_quant profiles consistent; fallbacks are safe")
     return 0
 
