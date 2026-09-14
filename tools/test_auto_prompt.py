@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = None
 WIDGETS = ['model', 'reasoning_effort', 'timeout_seconds', 'temperature',
            'max_tokens', 'response_format', 'zdr', 'regenerate',
-           'system_prompt', 'user_prompt']
+           'system_prompt', 'user_prompt', 'api_key']
 
 
 def check_links(test, graph):
@@ -68,24 +68,33 @@ class AutoPromptContract(unittest.TestCase):
                 sockets = {s['name']: s for s in node['inputs']}
                 expected_sockets = (['image', 'image_2', 'video', 'audio', 'user_prompt']
                                     if 'I2V' in path.name else ['image', 'video', 'audio', 'user_prompt'])
-                self.assertEqual(list(sockets), expected_sockets)
+                self.assertEqual(list(sockets), expected_sockets + ['api_key'])
                 self.assertIsNotNone(sockets['user_prompt']['link'])
                 self.assertEqual(sockets['image']['link'] is not None, 'I2V' in path.name)
-                self.assertNotIn('api_key', sockets)
-                self.assertNotIn('api_key', [s['name'] for s in graph['inputs']])
+                self.assertEqual(vals['api_key'], '')
+                internal = next(l for l in graph['links'] if l['id'] == sockets['api_key']['link'])
+                self.assertEqual(internal['origin_id'], -10)
+                self.assertEqual(graph['inputs'][internal['origin_slot']]['name'], 'api_key')
                 self.assertEqual([o['name'] for o in node['outputs']], ['text', 'info', 'credits'])
                 self.assertTrue(node['outputs'][0]['links'])
                 for inst in doc['nodes']:
                     if inst['type'] == graph['id']:
                         self.assertEqual([s['name'] for s in inst['inputs']], [s['name'] for s in graph['inputs']])
-                        self.assertNotIn('api_key', inst.get('widgets_values_named', {}))
+                        self.assertEqual(inst['widgets_values_named']['api_key'], '')
+                        key_input = next(s for s in inst['inputs'] if s['name'] == 'api_key')
+                        link = next(l for l in doc['links'] if l[0] == key_input['link'])
+                        source = next(n for n in doc['nodes'] if n['id'] == link[1])
+                        self.assertEqual(source['type'], 'PrimitiveString')
+                        self.assertEqual(source['title'], 'OpenRouter API Key')
+                        self.assertEqual(source['widgets_values'], [''])
+                        self.assertEqual(source['widgets_values_named']['value'], '')
                 if SCHEMA:
                     required = SCHEMA['input']['required']
                     optional = SCHEMA['input']['optional']
-                    self.assertEqual(WIDGETS, SCHEMA['input_order']['required'])
+                    self.assertEqual(WIDGETS[:-1], SCHEMA['input_order']['required'])
                     self.assertEqual([o['type'] for o in node['outputs']], SCHEMA['output'])
                     for key, val in vals.items():
-                        spec = required[key]
+                        spec = {**required, **optional}[key]
                         if isinstance(spec[0], list):
                             self.assertIn(val, spec[0], key)
                         elif spec[0] in ('INT', 'FLOAT'):
@@ -94,6 +103,21 @@ class AutoPromptContract(unittest.TestCase):
                     for name, socket in sockets.items():
                         self.assertIn(name, {**required, **optional})
                         self.assertEqual(socket['type'], {**required, **optional}[name][0])
+
+    def test_r2v_key_boxes_remain_connected(self):
+        paths = list((ROOT / 'workflows').rglob('*R2V*Auto Prompt*.json'))
+        self.assertEqual(len(paths), 2)
+        for path in paths:
+            with self.subTest(workflow=path.name):
+                doc = json.loads(path.read_text())
+                check_links(self, doc)
+                pack = next(n for n in doc['nodes'] if n['type'] == 'MiniMaxH3ReferencePack')
+                socket = next(s for s in pack['inputs'] if s['name'] == 'openrouter_api_key')
+                link = next(l for l in doc['links'] if l[0] == socket['link'])
+                source = next(n for n in doc['nodes'] if n['id'] == link[1])
+                self.assertEqual(source['type'], 'PrimitiveString')
+                self.assertEqual(source['widgets_values'], [''])
+                self.assertEqual(source['widgets_values_named']['value'], '')
 
 
 if __name__ == '__main__':
