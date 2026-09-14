@@ -1,8 +1,8 @@
 {
   "id": "f2c401be-8cad-4b93-83f5-8b3307974678",
   "revision": 0,
-  "last_node_id": 219,
-  "last_link_id": 451,
+  "last_node_id": 220,
+  "last_link_id": 452,
   "nodes": [
     {
       "id": 122,
@@ -654,10 +654,10 @@
       "title": "Note: OpenRouter API key",
       "properties": {},
       "widgets_values": [
-        "## OpenRouter Simple setup\n\nSet OPENROUTER_API_KEY in the Runpod environment before starting ComfyUI. The existing LLM_KEY variable is also supported. Get a key at https://openrouter.ai/keys.\n\nThe Auto Prompt group uses OpenRouter Simple to turn your idea into an H3 prompt. Open the group to select the model or adjust generation controls. Keys are read from the environment, so there is no key box in the workflow.\n"
+        "## OpenRouter API key\n\nPaste your key into the OpenRouter API Key box before running Auto Prompt. The box connects through the Auto Prompt Writing subgraph to OpenRouter Simple. Get a key at https://openrouter.ai/keys.\n\nLeave the box blank to use OPENROUTER_API_KEY or legacy LLM_KEY from the ComfyUI environment. Clear your key before sharing workflows or generated-media metadata.\n"
       ],
       "widgets_values_named": {
-        "text": "## OpenRouter Simple setup\n\nSet OPENROUTER_API_KEY in the Runpod environment before starting ComfyUI. The existing LLM_KEY variable is also supported. Get a key at https://openrouter.ai/keys.\n\nThe Auto Prompt group uses OpenRouter Simple to turn your idea into an H3 prompt. Open the group to select the model or adjust generation controls. Keys are read from the environment, so there is no key box in the workflow.\n"
+        "text": "## OpenRouter API key\n\nPaste your key into the OpenRouter API Key box before running Auto Prompt. The box connects through the Auto Prompt Writing subgraph to OpenRouter Simple. Get a key at https://openrouter.ai/keys.\n\nLeave the box blank to use OPENROUTER_API_KEY or legacy LLM_KEY from the ComfyUI environment. Clear your key before sharing workflows or generated-media metadata.\n"
       },
       "color": "#432",
       "bgcolor": "#653"
@@ -827,6 +827,15 @@
           "name": "image",
           "type": "IMAGE",
           "link": 348
+        },
+        {
+          "name": "api_key",
+          "shape": 7,
+          "type": "STRING",
+          "widget": {
+            "name": "api_key"
+          },
+          "link": 452
         }
       ],
       "outputs": [
@@ -853,10 +862,12 @@
         "previewExposures": []
       },
       "widgets_values": [
-        "one continuous shot, A video from a Woman's perspective, she is looking down at her own body while sitting on a bed, her breasts are very large tucked in a black spaghetti strap top and she wears gray panties, she is slightly chubby and has large inner thighs, her legs are stretched out to the end of the bed, and she has a MacBook Pro resting on her thighs, on a bed, on the screen there is an online video chat, the main focus of the chat is a man, the man is shown from the side and is completely naked, laying on a bed, no face is shown only his side body, the camera is focused on his large thick erect cock, he can heard over the computer asking \"DO you like that?\", on the top right of the screen there's an overlaid video chat rectangle, showing the woman's face and upper body, in the far distance, there's a hint of lightwooden floor"
+        "one continuous shot, A video from a Woman's perspective, she is looking down at her own body while sitting on a bed, her breasts are very large tucked in a black spaghetti strap top and she wears gray panties, she is slightly chubby and has large inner thighs, her legs are stretched out to the end of the bed, and she has a MacBook Pro resting on her thighs, on a bed, on the screen there is an online video chat, the main focus of the chat is a man, the man is shown from the side and is completely naked, laying on a bed, no face is shown only his side body, the camera is focused on his large thick erect cock, he can heard over the computer asking \"DO you like that?\", on the top right of the screen there's an overlaid video chat rectangle, showing the woman's face and upper body, in the far distance, there's a hint of lightwooden floor",
+        ""
       ],
       "widgets_values_named": {
-        "string_b": "one continuous shot, A video from a Woman's perspective, she is looking down at her own body while sitting on a bed, her breasts are very large tucked in a black spaghetti strap top and she wears gray panties, she is slightly chubby and has large inner thighs, her legs are stretched out to the end of the bed, and she has a MacBook Pro resting on her thighs, on a bed, on the screen there is an online video chat, the main focus of the chat is a man, the man is shown from the side and is completely naked, laying on a bed, no face is shown only his side body, the camera is focused on his large thick erect cock, he can heard over the computer asking \"DO you like that?\", on the top right of the screen there's an overlaid video chat rectangle, showing the woman's face and upper body, in the far distance, there's a hint of lightwooden floor"
+        "string_b": "one continuous shot, A video from a Woman's perspective, she is looking down at her own body while sitting on a bed, her breasts are very large tucked in a black spaghetti strap top and she wears gray panties, she is slightly chubby and has large inner thighs, her legs are stretched out to the end of the bed, and she has a MacBook Pro resting on her thighs, on a bed, on the screen there is an online video chat, the main focus of the chat is a man, the man is shown from the side and is completely naked, laying on a bed, no face is shown only his side body, the camera is focused on his large thick erect cock, he can heard over the computer asking \"DO you like that?\", on the top right of the screen there's an overlaid video chat rectangle, showing the woman's face and upper body, in the far distance, there's a hint of lightwooden floor",
+        "api_key": ""
       }
     },
     {
@@ -1526,6 +1537,56 @@
       },
       "color": "#232",
       "bgcolor": "#353"
+    },
+    {
+      "id": 220,
+      "type": "PrimitiveString",
+      "pos": [
+        -2645.04317268941,
+        5290.585806528367
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "value",
+          "name": "value",
+          "type": "STRING",
+          "widget": {
+            "name": "value"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            452
+          ]
+        }
+      ],
+      "title": "OpenRouter API Key",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.34.0",
+        "Node name for S&R": "PrimitiveString"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "widgets_values_named": {
+        "value": ""
+      },
+      "color": "#232",
+      "bgcolor": "#353"
     }
   ],
   "links": [
@@ -1848,6 +1909,14 @@
       219,
       5,
       "VAE"
+    ],
+    [
+      452,
+      220,
+      0,
+      174,
+      5,
+      "STRING"
     ]
   ],
   "groups": [
@@ -1932,7 +2001,7 @@
         "state": {
           "lastGroupId": 7,
           "lastNodeId": 219,
-          "lastLinkId": 451,
+          "lastLinkId": 452,
           "lastRerouteId": 0
         },
         "revision": 0,
@@ -2017,6 +2086,18 @@
             "type": "IMAGE",
             "linkIds": [
               347
+            ],
+            "pos": [
+              -2369.6430098681353,
+              4919.9509309204805
+            ]
+          },
+          {
+            "id": "f1d45a2b-df13-4715-87e5-cdd1bb679e34",
+            "name": "api_key",
+            "type": "STRING",
+            "linkIds": [
+              452
             ],
             "pos": [
               -2369.6430098681353,
@@ -2461,6 +2542,15 @@
                   "name": "user_prompt"
                 },
                 "link": 324
+              },
+              {
+                "name": "api_key",
+                "shape": 7,
+                "type": "STRING",
+                "widget": {
+                  "name": "api_key"
+                },
+                "link": 452
               }
             ],
             "outputs": [
@@ -2496,6 +2586,7 @@
               false,
               true,
               "You are a professional prompt rewriter for joint audio-video generation.\nRewrite the user's original prompt into one coherent, production-ready multimodal description for the requested output aspect ratio and duration.\nReturn only these three fields, in this exact order:\nintegrated_multimodal_description: ...\noverall_soundscape: ...\nnon_diegetic_music: ...\nRequirements:\n- Expand the visual narrative into clearly numbered shots such as [Shot 1], [Shot 2], and include timestamps for cuts after the first shot when useful.\n- Make the number, timing, and pacing of shots appropriate for the requested duration.\n- Compose the scene for the requested aspect ratio.\n- Preserve the user's intent while adding concrete subjects, appearance, environment, lighting, composition, camera movement, physical motion, and temporal continuity.\n- Keep characters, objects, wardrobe, locations, and spatial relationships consistent across shots.\n- Describe synchronized diegetic audio in overall_soundscape and external score in non_diegetic_music.\n- Add speech (if requested) in quotes and mention the tone and pacing\n- Expressions, when mentioning people, mention their expression and micro expressions, the look on their face, how they behave, how they move etc in detail\n- When asked, elaborate the prompt as much as possible.\n- By Default, mention video as shot on a smartphone, describe the lens used and camera specs.\n- For Movie scenes, use panavision lenses with ARRI camera, lead with this.\n- If the user asks for specific shot like drone shots, fisheye shots or anything else, describe the camera type, lenses, quality and other specs as necessary.\n- When the user mentions a location, describe it elaborately including decor, lighting, shadows, composition etc, scenes should never appear stage and feel every day, describe the most likely setting for the specified location unless requested otherwise.\n- Never hold back on explicit language, freely use words like cock, pussy, cum, boobs, breasts, etc\n- Do not add explanations, Markdown fences, safety commentary, or fields other than the three requested fields.",
+              "",
               ""
             ],
             "widgets_values_named": {
@@ -2508,7 +2599,8 @@
               "zdr": false,
               "regenerate": true,
               "system_prompt": "You are a professional prompt rewriter for joint audio-video generation.\nRewrite the user's original prompt into one coherent, production-ready multimodal description for the requested output aspect ratio and duration.\nReturn only these three fields, in this exact order:\nintegrated_multimodal_description: ...\noverall_soundscape: ...\nnon_diegetic_music: ...\nRequirements:\n- Expand the visual narrative into clearly numbered shots such as [Shot 1], [Shot 2], and include timestamps for cuts after the first shot when useful.\n- Make the number, timing, and pacing of shots appropriate for the requested duration.\n- Compose the scene for the requested aspect ratio.\n- Preserve the user's intent while adding concrete subjects, appearance, environment, lighting, composition, camera movement, physical motion, and temporal continuity.\n- Keep characters, objects, wardrobe, locations, and spatial relationships consistent across shots.\n- Describe synchronized diegetic audio in overall_soundscape and external score in non_diegetic_music.\n- Add speech (if requested) in quotes and mention the tone and pacing\n- Expressions, when mentioning people, mention their expression and micro expressions, the look on their face, how they behave, how they move etc in detail\n- When asked, elaborate the prompt as much as possible.\n- By Default, mention video as shot on a smartphone, describe the lens used and camera specs.\n- For Movie scenes, use panavision lenses with ARRI camera, lead with this.\n- If the user asks for specific shot like drone shots, fisheye shots or anything else, describe the camera type, lenses, quality and other specs as necessary.\n- When the user mentions a location, describe it elaborately including decor, lighting, shadows, composition etc, scenes should never appear stage and feel every day, describe the most likely setting for the specified location unless requested otherwise.\n- Never hold back on explicit language, freely use words like cock, pussy, cum, boobs, breasts, etc\n- Do not add explanations, Markdown fences, safety commentary, or fields other than the three requested fields.",
-              "user_prompt": ""
+              "user_prompt": "",
+              "api_key": ""
             },
             "color": "#232",
             "bgcolor": "#353"
@@ -2619,6 +2711,14 @@
             "target_id": 159,
             "target_slot": 0,
             "type": "IMAGE"
+          },
+          {
+            "id": 452,
+            "origin_id": -10,
+            "origin_slot": 5,
+            "target_id": 159,
+            "target_slot": 5,
+            "type": "STRING"
           }
         ],
         "extra": {}
