@@ -1,0 +1,311 @@
+{
+  "schemaVersion": 1,
+  "workflows": [
+    {
+      "id": "minimax-h3-image-to-video-auto-prompt",
+      "file": "workflows/MiniMax H3/MiniMax - I2V - Auto Prompt.json",
+      "title": "MiniMax H3 image to video · Auto Prompt",
+      "description": "Animate a starting image with an OpenRouter-assisted prompt and generated audio.",
+      "model": "MiniMax H3",
+      "output": "Video",
+      "tags": [
+        "MiniMax H3",
+        "image-to-video",
+        "auto-prompt",
+        "audio",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-08-11T08:28:38Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running.",
+        "Add your OpenRouter API key to use Auto Prompt."
+      ]
+    },
+    {
+      "id": "minimax-h3-image-to-video",
+      "file": "workflows/MiniMax H3/MiniMax - I2V - Custom Prompt.json",
+      "title": "MiniMax H3 image to video",
+      "description": "Animate a starting image using your own scene prompt, with generated audio.",
+      "model": "MiniMax H3",
+      "output": "Video",
+      "tags": [
+        "MiniMax H3",
+        "image-to-video",
+        "audio",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-08-11T08:28:38Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running."
+      ]
+    },
+    {
+      "id": "minimax-h3-reference-to-video-auto-prompt",
+      "file": "workflows/MiniMax H3/MiniMax - R2V - Auto Prompt.json",
+      "title": "MiniMax H3 reference to video · Auto Prompt",
+      "description": "Guide a video with reference media and an OpenRouter-assisted scene prompt.",
+      "model": "MiniMax H3",
+      "output": "Video",
+      "tags": [
+        "MiniMax H3",
+        "reference-to-video",
+        "auto-prompt",
+        "audio",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-08-15T07:15:42Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running.",
+        "Add your OpenRouter API key to use Auto Prompt."
+      ]
+    },
+    {
+      "id": "minimax-h3-refmod",
+      "file": "workflows/MiniMax H3/MiniMax - RefMod.json",
+      "title": "MiniMax H3 RefMod",
+      "description": "Use reference conditioning to guide a MiniMax H3 video and its audio.",
+      "model": "MiniMax H3",
+      "output": "Video",
+      "tags": [
+        "MiniMax H3",
+        "reference-to-video",
+        "RefMod",
+        "audio",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-09-10T18:58:03Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running."
+      ]
+    },
+    {
+      "id": "minimax-h3-text-to-video-auto-prompt",
+      "file": "workflows/MiniMax H3/MiniMax - T2V - Auto Prompt.json",
+      "title": "MiniMax H3 text to video · Auto Prompt",
+      "description": "Expand a scene idea with OpenRouter, then generate video with audio.",
+      "model": "MiniMax H3",
+      "output": "Video",
+      "tags": [
+        "MiniMax H3",
+        "text-to-video",
+        "auto-prompt",
+        "audio",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-08-11T08:28:38Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running.",
+        "Add your OpenRouter API key to use Auto Prompt."
+      ]
+    },
+    {
+      "id": "minimax-h3-text-to-video",
+      "file": "workflows/MiniMax H3/MiniMax - T2V - Custom Prompt.json",
+      "title": "MiniMax H3 text to video",
+      "description": "Generate a video and audio from your own written scene.",
+      "model": "MiniMax H3",
+      "output": "Video",
+      "tags": [
+        "MiniMax H3",
+        "text-to-video",
+        "audio",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-08-11T08:28:38Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running."
+      ]
+    },
+    {
+      "id": "minimax-h3-refmod-audio-pack",
+      "file": "workflows/MiniMax H3/RefMod Studio/RefMod - Audio.json",
+      "title": "MiniMax H3 audio reference pack",
+      "description": "Encode and save an audio reference pack for a compatible MiniMax H3 workflow.",
+      "model": "MiniMax H3",
+      "output": "Reference pack",
+      "tags": [
+        "MiniMax H3",
+        "reference-pack",
+        "audio",
+        "RefMod",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-09-10T18:58:03Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running."
+      ]
+    },
+    {
+      "id": "minimax-h3-refmod-image-pack",
+      "file": "workflows/MiniMax H3/RefMod Studio/RefMod - Images.json",
+      "title": "MiniMax H3 image reference pack",
+      "description": "Encode and save image references for a compatible MiniMax H3 workflow.",
+      "model": "MiniMax H3",
+      "output": "Reference pack",
+      "tags": [
+        "MiniMax H3",
+        "reference-pack",
+        "image-reference",
+        "RefMod",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-09-10T18:58:03Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running."
+      ]
+    },
+    {
+      "id": "minimax-h3-refmod-video-pack",
+      "file": "workflows/MiniMax H3/RefMod Studio/RefMod - Video.json",
+      "title": "MiniMax H3 video reference pack",
+      "description": "Encode and save a video reference pack for a compatible MiniMax H3 workflow.",
+      "model": "MiniMax H3",
+      "output": "Reference pack",
+      "tags": [
+        "MiniMax H3",
+        "reference-pack",
+        "video-reference",
+        "RefMod",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-09-10T18:58:03Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running."
+      ]
+    },
+    {
+      "id": "minimax-h3-image-to-video-auto-prompt-upscale",
+      "file": "workflows/MiniMax H3/Upscaling/MiniMax - I2V - Auto Prompt - Upscaling.json",
+      "title": "MiniMax H3 image to video · Auto Prompt + upscale",
+      "description": "Animate an image with an assisted prompt, then upscale the video in latent space.",
+      "model": "MiniMax H3",
+      "output": "Video",
+      "tags": [
+        "MiniMax H3",
+        "image-to-video",
+        "auto-prompt",
+        "upscale",
+        "audio",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-09-09T16:13:55Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running.",
+        "Add your OpenRouter API key to use Auto Prompt."
+      ]
+    },
+    {
+      "id": "minimax-h3-image-to-video-upscale",
+      "file": "workflows/MiniMax H3/Upscaling/MiniMax - I2V - Custom Prompt - Upscaling.json",
+      "title": "MiniMax H3 image to video + upscale",
+      "description": "Animate a starting image with your own prompt and add latent video upscaling.",
+      "model": "MiniMax H3",
+      "output": "Video",
+      "tags": [
+        "MiniMax H3",
+        "image-to-video",
+        "upscale",
+        "audio",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-09-09T16:13:55Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running."
+      ]
+    },
+    {
+      "id": "minimax-h3-reference-to-video-auto-prompt-upscale",
+      "file": "workflows/MiniMax H3/Upscaling/MiniMax - R2V - Auto Prompt - Upscaling.json",
+      "title": "MiniMax H3 reference to video · Auto Prompt + upscale",
+      "description": "Generate from reference media with an assisted prompt and latent video upscaling.",
+      "model": "MiniMax H3",
+      "output": "Video",
+      "tags": [
+        "MiniMax H3",
+        "reference-to-video",
+        "auto-prompt",
+        "upscale",
+        "audio",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-09-09T16:13:55Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running.",
+        "Add your OpenRouter API key to use Auto Prompt."
+      ]
+    },
+    {
+      "id": "minimax-h3-text-to-video-auto-prompt-upscale",
+      "file": "workflows/MiniMax H3/Upscaling/MiniMax - T2V - Auto Prompt - Upscaling.json",
+      "title": "MiniMax H3 text to video · Auto Prompt + upscale",
+      "description": "Turn a scene idea into video with assisted prompting and latent upscaling.",
+      "model": "MiniMax H3",
+      "output": "Video",
+      "tags": [
+        "MiniMax H3",
+        "text-to-video",
+        "auto-prompt",
+        "upscale",
+        "audio",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-09-09T16:13:55Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running.",
+        "Add your OpenRouter API key to use Auto Prompt."
+      ]
+    },
+    {
+      "id": "minimax-h3-text-to-video-upscale",
+      "file": "workflows/MiniMax H3/Upscaling/MiniMax - T2V - Custom Prompt - Upscaling.json",
+      "title": "MiniMax H3 text to video + upscale",
+      "description": "Generate video from your own scene prompt, then upscale before decoding.",
+      "model": "MiniMax H3",
+      "output": "Video",
+      "tags": [
+        "MiniMax H3",
+        "text-to-video",
+        "upscale",
+        "audio",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-09-09T16:13:55Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running."
+      ]
+    },
+    {
+      "id": "minimax-h3-reference-to-video",
+      "file": "workflows/MiniMax H3/video_minimax_h3_r2v.json",
+      "title": "MiniMax H3 reference to video",
+      "description": "Use reference media and a written prompt to guide video generation with audio.",
+      "model": "MiniMax H3",
+      "output": "Video",
+      "tags": [
+        "MiniMax H3",
+        "reference-to-video",
+        "audio",
+        "ComfyUI"
+      ],
+      "status": "published",
+      "publishedAt": "2026-08-03T17:15:36Z",
+      "notes": [
+        "Replace prompt placeholders and supply your own input images, video or audio before running."
+      ]
+    }
+  ]
+}
