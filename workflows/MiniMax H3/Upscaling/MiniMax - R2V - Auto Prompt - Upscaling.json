@@ -3169,7 +3169,7 @@
               }
             },
             "widgets_values": [
-              "minimax_h3_latent_upscaler_3d_fp16.safetensors",
+              "minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors",
               "scale by multiplier",
               2,
               32,
@@ -3179,7 +3179,7 @@
               "fp16"
             ],
             "widgets_values_named": {
-              "model_name": "minimax_h3_latent_upscaler_3d_fp16.safetensors",
+              "model_name": "minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors",
               "mode": "scale by multiplier",
               "mode.scale": 2,
               "align": 32,

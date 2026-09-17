@@ -54,10 +54,11 @@ REMOVED_TURBO_LORAS = {
     "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
     "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
 }
-LATENT_UPSCALER = "minimax_h3_latent_upscaler_3d_fp16.safetensors"
+LATENT_UPSCALER = "minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors"
 LATENT_UPSCALER_URL = (
     "https://huggingface.co/LBH-123-AI/Minimax_h3_latent_Upscaler/resolve/"
-    "main/minimax_h3_latent_upscaler_3d_fp16.safetensors"
+    "main/minimax_h3_latent_upscaler_3d_conv_v1/"
+    "minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors"
 )
 LATENT_UPSCALER_NODE = (
     "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git|"
@@ -587,6 +588,17 @@ def main() -> int:
                 f"{destinations.get(LATENT_UPSCALER)}, expected "
                 f"{expected_upscaler_path}"
             )
+            assert [LATENT_UPSCALER_URL, str(expected_upscaler_path)] in [
+                line.split("\t")[:2] for line in lines
+            ], (
+                f"{label}: upscaler manifest must use the versioned upstream URL"
+            )
+            for workflow in (dst / "MiniMax H3" / "Upscaling").glob("*.json"):
+                content = workflow.read_text()
+                assert LATENT_UPSCALER in content, f"{workflow.name}: new weight missing"
+                assert "minimax_h3_latent_upscaler_3d_fp16.safetensors" not in content, (
+                    f"{workflow.name}: retired upscaler filename survived provisioning"
+                )
             if warning:
                 assert warning in proc.stdout, (
                     f"{label}: expected warning {warning!r}, got:\n{proc.stdout}"

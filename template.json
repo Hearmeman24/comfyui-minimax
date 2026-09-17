@@ -11,7 +11,7 @@
         "minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16.safetensors",
         "minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
         "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
-        "minimax_h3_latent_upscaler_3d_fp16.safetensors"
+        "minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors"
       ]
     },
     "download_viggle_animate": {
