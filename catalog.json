@@ -4,8 +4,8 @@
     {
       "id": "minimax-h3-image-to-video-auto-prompt",
       "file": "workflows/MiniMax H3/MiniMax - I2V - Auto Prompt.json",
-      "title": "MiniMax H3 image to video \u00b7 Auto Prompt",
-      "description": "Animate a starting image with an OpenRouter-assisted prompt and generated audio.",
+      "title": "MiniMax H3 image to video · Auto Prompt",
+      "description": "Animate any image with MiniMax H3 while AI writes the prompt. Photo-to-video with sound for AI influencers, characters and cartoons.",
       "model": "MiniMax H3",
       "output": "Video",
       "tags": [
@@ -29,13 +29,51 @@
       "outputs": [
         "Video",
         "Audio"
+      ],
+      "body": "MiniMax H3 is an open AI video model that generates video **with sound** in one pass: voices, sound effects and ambience come out already synced to the picture. Load an image and type a short idea. Gemini 3 Flash looks at your image and writes the detailed prompt for you.\n\n**Great for:**\n- Animating AI influencer photos without prompt writing\n- Cartoon and character animation\n- Fast image-to-video tests\n\n### How it works\n1. Add your OpenRouter API key.\n2. Load your image and type a short idea.\n3. Run it and get a video with audio.\n\n### Make it yours with LoRAs\nThis workflow supports LoRAs. Grab character, style, anime or cartoon LoRAs from [CivitAI](https://civitai.com) or [Hugging Face](https://huggingface.co), drop them into the LoRA loader, and keep your AI character looking the same in every shot.",
+      "settings": [
+        {
+          "label": "GPU",
+          "value": [
+            "H100",
+            "H200",
+            "RTX PRO 6000",
+            "RTX 5090"
+          ]
+        },
+        {
+          "label": "Sampler",
+          "value": [
+            "euler",
+            "res_multistep"
+          ]
+        },
+        {
+          "label": "Scheduler",
+          "value": "simple"
+        },
+        {
+          "label": "Turbo LoRA",
+          "value": "LightX2V 8-step turbo LoRA"
+        },
+        {
+          "label": "Steps",
+          "value": [
+            "8 with the turbo LoRA at full strength",
+            "10-12 with the turbo LoRA at lower strength for better quality"
+          ]
+        },
+        {
+          "label": "Shift",
+          "value": "6 when using the turbo LoRA"
+        }
       ]
     },
     {
       "id": "minimax-h3-image-to-video",
       "file": "workflows/MiniMax H3/MiniMax - I2V - Custom Prompt.json",
       "title": "MiniMax H3 image to video",
-      "description": "Animate a starting image using your own scene prompt, with generated audio.",
+      "description": "Turn a photo into an AI video with sound using MiniMax H3 in ComfyUI. Animate your AI influencer, AI character or cartoon image.",
       "model": "MiniMax H3",
       "output": "Video",
       "tags": [
@@ -57,13 +95,51 @@
       "outputs": [
         "Video",
         "Audio"
+      ],
+      "body": "MiniMax H3 is an open AI video model that generates video **with sound** in one pass: voices, sound effects and ambience come out already synced to the picture. Start from an image, so your character keeps the exact look you already made.\n\n**Great for:**\n- Bringing AI influencer photos to life\n- Animating cartoon and anime characters\n- Product and portrait animations\n\n### How it works\n1. Load your image as the first frame.\n2. Describe the motion, dialogue or sound you want.\n3. Run it and get a video with audio.\n\n### Make it yours with LoRAs\nThis workflow supports LoRAs. Grab character, style, anime or cartoon LoRAs from [CivitAI](https://civitai.com) or [Hugging Face](https://huggingface.co), drop them into the LoRA loader, and keep your AI character looking the same in every shot.",
+      "settings": [
+        {
+          "label": "GPU",
+          "value": [
+            "H100",
+            "H200",
+            "RTX PRO 6000",
+            "RTX 5090"
+          ]
+        },
+        {
+          "label": "Sampler",
+          "value": [
+            "euler",
+            "res_multistep"
+          ]
+        },
+        {
+          "label": "Scheduler",
+          "value": "simple"
+        },
+        {
+          "label": "Turbo LoRA",
+          "value": "LightX2V 8-step turbo LoRA"
+        },
+        {
+          "label": "Steps",
+          "value": [
+            "8 with the turbo LoRA at full strength",
+            "10-12 with the turbo LoRA at lower strength for better quality"
+          ]
+        },
+        {
+          "label": "Shift",
+          "value": "6 when using the turbo LoRA"
+        }
       ]
     },
     {
       "id": "minimax-h3-reference-to-video-auto-prompt",
       "file": "workflows/MiniMax H3/MiniMax - R2V - Auto Prompt.json",
-      "title": "MiniMax H3 reference to video \u00b7 Auto Prompt",
-      "description": "Guide a video with reference media and an OpenRouter-assisted scene prompt.",
+      "title": "MiniMax H3 reference to video · Auto Prompt",
+      "description": "Consistent AI characters in video: give MiniMax H3 image, video or audio references and let AI write the prompt. Sound included.",
       "model": "MiniMax H3",
       "output": "Video",
       "tags": [
@@ -88,13 +164,51 @@
       "outputs": [
         "Video",
         "Audio"
+      ],
+      "body": "MiniMax H3 is an open AI video model that generates video **with sound** in one pass: voices, sound effects and ambience come out already synced to the picture. Add images, video or audio of your character as references, type a short idea, and Gemini 3 Flash writes the prompt.\n\n**Great for:**\n- Consistent AI influencer videos across many posts\n- Recurring cartoon and anime characters\n- Reusing a voice or motion from a reference clip\n\n### How it works\n1. Add your OpenRouter API key.\n2. Add your image, video or audio references.\n3. Type a short idea and run it.\n\n### Make it yours with LoRAs\nThis workflow supports LoRAs. Grab character, style, anime or cartoon LoRAs from [CivitAI](https://civitai.com) or [Hugging Face](https://huggingface.co), drop them into the LoRA loader, and keep your AI character looking the same in every shot.",
+      "settings": [
+        {
+          "label": "GPU",
+          "value": [
+            "H100",
+            "H200",
+            "RTX PRO 6000",
+            "RTX 5090"
+          ]
+        },
+        {
+          "label": "Sampler",
+          "value": [
+            "euler",
+            "res_multistep"
+          ]
+        },
+        {
+          "label": "Scheduler",
+          "value": "simple"
+        },
+        {
+          "label": "Turbo LoRA",
+          "value": "LightX2V 8-step turbo LoRA"
+        },
+        {
+          "label": "Steps",
+          "value": [
+            "8 with the turbo LoRA at full strength",
+            "10-12 with the turbo LoRA at lower strength for better quality"
+          ]
+        },
+        {
+          "label": "Shift",
+          "value": "6 when using the turbo LoRA"
+        }
       ]
     },
     {
       "id": "minimax-h3-refmod",
       "file": "workflows/MiniMax H3/MiniMax - RefMod.json",
       "title": "MiniMax H3 RefMod",
-      "description": "Use reference conditioning to guide a MiniMax H3 video and its audio.",
+      "description": "Skip LoRA training: load saved RefMods of your character, video or voice into MiniMax H3 and make consistent AI video with sound.",
       "model": "MiniMax H3",
       "output": "Video",
       "tags": [
@@ -117,13 +231,29 @@
       "outputs": [
         "Video",
         "Audio"
+      ],
+      "body": "A RefMod replaces LoRA training for MiniMax H3. Instead of training a LoRA, you save a reusable reference of a character, a video or a sound in a few minutes, then load it whenever you generate.\n\nThe RefMod pack has four workflows: three that **create** RefMods (from images, video or audio) and the main [MiniMax H3 RefMod](/comfyui-workflows/minimax-h3-refmod/) workflow that **uses** them. For example, feed 24 photos of your AI influencer into the image workflow, save a RefMod, and load it here to generate videos of that exact character.\n\n**Great for:**\n- Consistent AI influencers without training a LoRA\n- Recurring cartoon and anime characters\n- Reusing a motion or a sound across many videos\n\n### How it works\n1. Create RefMods with the [image](/comfyui-workflows/minimax-h3-refmod-image-pack/), [video](/comfyui-workflows/minimax-h3-refmod-video-pack/) or [audio](/comfyui-workflows/minimax-h3-refmod-audio-pack/) workflows.\n2. Load up to eight RefMods here.\n3. Write your scene and run it to get a video with audio.\n\n### Make it yours with LoRAs\nThis workflow supports LoRAs. Grab character, style, anime or cartoon LoRAs from [CivitAI](https://civitai.com) or [Hugging Face](https://huggingface.co), drop them into the LoRA loader, and keep your AI character looking the same in every shot.",
+      "settings": [
+        {
+          "label": "GPU",
+          "value": [
+            "H100",
+            "H200",
+            "RTX PRO 6000",
+            "RTX 5090"
+          ]
+        },
+        {
+          "label": "Settings",
+          "value": "Keep the workflow defaults"
+        }
       ]
     },
     {
       "id": "minimax-h3-text-to-video-auto-prompt",
       "file": "workflows/MiniMax H3/MiniMax - T2V - Auto Prompt.json",
-      "title": "MiniMax H3 text to video \u00b7 Auto Prompt",
-      "description": "Expand a scene idea with OpenRouter, then generate video with audio.",
+      "title": "MiniMax H3 text to video · Auto Prompt",
+      "description": "Text-to-video with MiniMax H3 where AI writes the prompt for you. Give a simple idea and get an AI video with sound in ComfyUI.",
       "model": "MiniMax H3",
       "output": "Video",
       "tags": [
@@ -146,13 +276,51 @@
       "outputs": [
         "Video",
         "Audio"
+      ],
+      "body": "MiniMax H3 is an open AI video model that generates video **with sound** in one pass: voices, sound effects and ambience come out already synced to the picture. Here you only type a short idea. Gemini 3 Flash (through OpenRouter) expands it into the detailed, structured prompt MiniMax H3 needs.\n\n**Great for:**\n- Beginners who don't want to learn prompt formats\n- Quick AI influencer and character video ideas\n- Cartoon and story clips from one sentence\n\n### How it works\n1. Add your OpenRouter API key.\n2. Type a short idea, like \"a cartoon fox dancing in the rain\".\n3. Run it. The prompt is written for you and the video comes out with audio.\n\n### Make it yours with LoRAs\nThis workflow supports LoRAs. Grab character, style, anime or cartoon LoRAs from [CivitAI](https://civitai.com) or [Hugging Face](https://huggingface.co), drop them into the LoRA loader, and keep your AI character looking the same in every shot.",
+      "settings": [
+        {
+          "label": "GPU",
+          "value": [
+            "H100",
+            "H200",
+            "RTX PRO 6000",
+            "RTX 5090"
+          ]
+        },
+        {
+          "label": "Sampler",
+          "value": [
+            "euler",
+            "res_multistep"
+          ]
+        },
+        {
+          "label": "Scheduler",
+          "value": "simple"
+        },
+        {
+          "label": "Turbo LoRA",
+          "value": "LightX2V 8-step turbo LoRA"
+        },
+        {
+          "label": "Steps",
+          "value": [
+            "8 with the turbo LoRA at full strength",
+            "10-12 with the turbo LoRA at lower strength for better quality"
+          ]
+        },
+        {
+          "label": "Shift",
+          "value": "6 when using the turbo LoRA"
+        }
       ]
     },
     {
       "id": "minimax-h3-text-to-video",
       "file": "workflows/MiniMax H3/MiniMax - T2V - Custom Prompt.json",
       "title": "MiniMax H3 text to video",
-      "description": "Generate a video and audio from your own written scene.",
+      "description": "Free ComfyUI workflow for MiniMax H3 text-to-video with built-in audio. Type a prompt and get AI video of your AI influencer, character or cartoon scene.",
       "model": "MiniMax H3",
       "output": "Video",
       "tags": [
@@ -173,13 +341,51 @@
       "outputs": [
         "Video",
         "Audio"
+      ],
+      "body": "MiniMax H3 is an open AI video model that generates video **with sound** in one pass: voices, sound effects and ambience come out already synced to the picture. Describe a scene and this workflow turns it into a short clip, ready to post.\n\n**Great for:**\n- AI influencer clips and talking-head videos\n- Cartoon and animated shorts\n- Social media video ideas you can test fast\n\n### How it works\n1. Write what should happen in the scene, including any dialogue or sound.\n2. Pick a size (vertical 9:16 by default, perfect for Reels and TikTok).\n3. Run it and get a video with audio.\n\n### Make it yours with LoRAs\nThis workflow supports LoRAs. Grab character, style, anime or cartoon LoRAs from [CivitAI](https://civitai.com) or [Hugging Face](https://huggingface.co), drop them into the LoRA loader, and keep your AI character looking the same in every shot.",
+      "settings": [
+        {
+          "label": "GPU",
+          "value": [
+            "H100",
+            "H200",
+            "RTX PRO 6000",
+            "RTX 5090"
+          ]
+        },
+        {
+          "label": "Sampler",
+          "value": [
+            "euler",
+            "res_multistep"
+          ]
+        },
+        {
+          "label": "Scheduler",
+          "value": "simple"
+        },
+        {
+          "label": "Turbo LoRA",
+          "value": "LightX2V 8-step turbo LoRA"
+        },
+        {
+          "label": "Steps",
+          "value": [
+            "8 with the turbo LoRA at full strength",
+            "10-12 with the turbo LoRA at lower strength for better quality"
+          ]
+        },
+        {
+          "label": "Shift",
+          "value": "6 when using the turbo LoRA"
+        }
       ]
     },
     {
       "id": "minimax-h3-refmod-audio-pack",
       "file": "workflows/MiniMax H3/RefMod Studio/RefMod - Audio.json",
       "title": "MiniMax H3 audio reference pack",
-      "description": "Encode and save an audio reference pack for a compatible MiniMax H3 workflow.",
+      "description": "Save a sound or voice clip as a MiniMax H3 RefMod and reuse it in your AI videos. Audio references, no training needed.",
       "model": "MiniMax H3",
       "output": "Reference pack",
       "tags": [
@@ -200,13 +406,29 @@
       ],
       "outputs": [
         "Reference pack"
+      ],
+      "body": "A RefMod replaces LoRA training for MiniMax H3. Instead of training a LoRA, you save a reusable reference of a character, a video or a sound in a few minutes, then load it whenever you generate.\n\nThe RefMod pack has four workflows: three that **create** RefMods (from images, video or audio) and the main [MiniMax H3 RefMod](/comfyui-workflows/minimax-h3-refmod/) workflow that **uses** them. This workflow turns an audio clip, like a voice, music or ambience, into an audio RefMod.\n\n**Great for:**\n- Giving an AI influencer a recurring voice or sound\n- Consistent music or ambience across videos\n- Sound-driven character clips\n\n### How it works\n1. Upload your audio (the first 30 seconds are used).\n2. Run the workflow to save the RefMod.\n3. Load it in the [MiniMax H3 RefMod](/comfyui-workflows/minimax-h3-refmod/) workflow.",
+      "settings": [
+        {
+          "label": "GPU",
+          "value": [
+            "H100",
+            "H200",
+            "RTX PRO 6000",
+            "RTX 5090"
+          ]
+        },
+        {
+          "label": "Settings",
+          "value": "Keep the workflow defaults"
+        }
       ]
     },
     {
       "id": "minimax-h3-refmod-image-pack",
       "file": "workflows/MiniMax H3/RefMod Studio/RefMod - Images.json",
       "title": "MiniMax H3 image reference pack",
-      "description": "Encode and save image references for a compatible MiniMax H3 workflow.",
+      "description": "Save your AI character as a MiniMax H3 RefMod from a few photos. No LoRA training: a fast way to keep AI influencers consistent.",
       "model": "MiniMax H3",
       "output": "Reference pack",
       "tags": [
@@ -227,13 +449,29 @@
       ],
       "outputs": [
         "Reference pack"
+      ],
+      "body": "A RefMod replaces LoRA training for MiniMax H3. Instead of training a LoRA, you save a reusable reference of a character, a video or a sound in a few minutes, then load it whenever you generate.\n\nThe RefMod pack has four workflows: three that **create** RefMods (from images, video or audio) and the main [MiniMax H3 RefMod](/comfyui-workflows/minimax-h3-refmod/) workflow that **uses** them. This workflow turns photos of a person or character into an image RefMod.\n\n**Great for:**\n- AI influencers you want to reuse in many videos\n- Cartoon and anime characters\n- Any character you'd otherwise train a LoRA for\n\n### How it works\n1. Put your character photos in the input folder. 3-5 clear portraits work, and you can use more.\n2. Run the workflow to save the RefMod.\n3. Load it in the [MiniMax H3 RefMod](/comfyui-workflows/minimax-h3-refmod/) workflow.",
+      "settings": [
+        {
+          "label": "GPU",
+          "value": [
+            "H100",
+            "H200",
+            "RTX PRO 6000",
+            "RTX 5090"
+          ]
+        },
+        {
+          "label": "Settings",
+          "value": "Keep the workflow defaults"
+        }
       ]
     },
     {
       "id": "minimax-h3-refmod-video-pack",
       "file": "workflows/MiniMax H3/RefMod Studio/RefMod - Video.json",
       "title": "MiniMax H3 video reference pack",
-      "description": "Encode and save a video reference pack for a compatible MiniMax H3 workflow.",
+      "description": "Save a video clip as a MiniMax H3 RefMod and reuse its look and motion in new AI videos. A free alternative to LoRA training.",
       "model": "MiniMax H3",
       "output": "Reference pack",
       "tags": [
@@ -254,13 +492,29 @@
       ],
       "outputs": [
         "Reference pack"
+      ],
+      "body": "A RefMod replaces LoRA training for MiniMax H3. Instead of training a LoRA, you save a reusable reference of a character, a video or a sound in a few minutes, then load it whenever you generate.\n\nThe RefMod pack has four workflows: three that **create** RefMods (from images, video or audio) and the main [MiniMax H3 RefMod](/comfyui-workflows/minimax-h3-refmod/) workflow that **uses** them. This workflow turns a short video clip into a video RefMod that captures its appearance and motion.\n\n**Great for:**\n- Reusing a dance or movement across AI character videos\n- Keeping a scene's look consistent\n- Building a library of motion references\n\n### How it works\n1. Put your clip in the input folder.\n2. Run the workflow to save the RefMod.\n3. Load it in the [MiniMax H3 RefMod](/comfyui-workflows/minimax-h3-refmod/) workflow.",
+      "settings": [
+        {
+          "label": "GPU",
+          "value": [
+            "H100",
+            "H200",
+            "RTX PRO 6000",
+            "RTX 5090"
+          ]
+        },
+        {
+          "label": "Settings",
+          "value": "Keep the workflow defaults"
+        }
       ]
     },
     {
       "id": "minimax-h3-image-to-video-auto-prompt-upscale",
       "file": "workflows/MiniMax H3/Upscaling/MiniMax - I2V - Auto Prompt - Upscaling.json",
-      "title": "MiniMax H3 image to video \u00b7 Auto Prompt + upscale",
-      "description": "Animate an image with an assisted prompt, then upscale the video in latent space.",
+      "title": "MiniMax H3 image to video · Auto Prompt + upscale",
+      "description": "One-click MiniMax H3 image-to-video: AI writes the prompt, then a 2x upscale sharpens it. Great for AI influencers and cartoons.",
       "model": "MiniMax H3",
       "output": "Video",
       "tags": [
@@ -285,13 +539,51 @@
       "outputs": [
         "Video",
         "Audio"
+      ],
+      "body": "MiniMax H3 is an open AI video model that generates video **with sound** in one pass: voices, sound effects and ambience come out already synced to the picture. Load an image, type a short idea, and Gemini 3 Flash writes the prompt. A 2x upscale pass finishes the clip.\n\n**Great for:**\n- The most hands-off way to animate an AI influencer\n- Cartoon and anime character animation\n- Polished clips for social media\n\n### How it works\n1. Add your OpenRouter API key.\n2. Load your image and type a short idea.\n3. Run it. You get the base video and a 2x upscaled version, both with audio.\n\n### Make it yours with LoRAs\nThis workflow supports LoRAs. Grab character, style, anime or cartoon LoRAs from [CivitAI](https://civitai.com) or [Hugging Face](https://huggingface.co), drop them into the LoRA loader, and keep your AI character looking the same in every shot.",
+      "settings": [
+        {
+          "label": "GPU",
+          "value": [
+            "H100",
+            "H200",
+            "RTX PRO 6000",
+            "RTX 5090"
+          ]
+        },
+        {
+          "label": "Sampler",
+          "value": [
+            "euler",
+            "res_multistep"
+          ]
+        },
+        {
+          "label": "Scheduler",
+          "value": "simple"
+        },
+        {
+          "label": "Turbo LoRA",
+          "value": "LightX2V 8-step turbo LoRA"
+        },
+        {
+          "label": "Steps",
+          "value": [
+            "8 with the turbo LoRA at full strength",
+            "10-12 with the turbo LoRA at lower strength for better quality"
+          ]
+        },
+        {
+          "label": "Shift",
+          "value": "6 when using the turbo LoRA"
+        }
       ]
     },
     {
       "id": "minimax-h3-image-to-video-upscale",
       "file": "workflows/MiniMax H3/Upscaling/MiniMax - I2V - Custom Prompt - Upscaling.json",
       "title": "MiniMax H3 image to video + upscale",
-      "description": "Animate a starting image with your own prompt and add latent video upscaling.",
+      "description": "MiniMax H3 image-to-video with sound and a 2x latent upscale. Animate your AI influencer or cartoon character in sharper quality.",
       "model": "MiniMax H3",
       "output": "Video",
       "tags": [
@@ -314,13 +606,51 @@
       "outputs": [
         "Video",
         "Audio"
+      ],
+      "body": "MiniMax H3 is an open AI video model that generates video **with sound** in one pass: voices, sound effects and ambience come out already synced to the picture. This version starts from your image and adds a 2x latent upscale pass for a sharper result.\n\n**Great for:**\n- High-quality AI influencer animations\n- Crisp cartoon and character clips\n- Portrait and product videos\n\n### How it works\n1. Load your image and describe the motion.\n2. Run the base generation.\n3. The upscale pass saves a sharper second version with audio.\n\n### Make it yours with LoRAs\nThis workflow supports LoRAs. Grab character, style, anime or cartoon LoRAs from [CivitAI](https://civitai.com) or [Hugging Face](https://huggingface.co), drop them into the LoRA loader, and keep your AI character looking the same in every shot.",
+      "settings": [
+        {
+          "label": "GPU",
+          "value": [
+            "H100",
+            "H200",
+            "RTX PRO 6000",
+            "RTX 5090"
+          ]
+        },
+        {
+          "label": "Sampler",
+          "value": [
+            "euler",
+            "res_multistep"
+          ]
+        },
+        {
+          "label": "Scheduler",
+          "value": "simple"
+        },
+        {
+          "label": "Turbo LoRA",
+          "value": "LightX2V 8-step turbo LoRA"
+        },
+        {
+          "label": "Steps",
+          "value": [
+            "8 with the turbo LoRA at full strength",
+            "10-12 with the turbo LoRA at lower strength for better quality"
+          ]
+        },
+        {
+          "label": "Shift",
+          "value": "6 when using the turbo LoRA"
+        }
       ]
     },
     {
       "id": "minimax-h3-reference-to-video-auto-prompt-upscale",
       "file": "workflows/MiniMax H3/Upscaling/MiniMax - R2V - Auto Prompt - Upscaling.json",
-      "title": "MiniMax H3 reference to video \u00b7 Auto Prompt + upscale",
-      "description": "Generate from reference media with an assisted prompt and latent video upscaling.",
+      "title": "MiniMax H3 reference to video · Auto Prompt + upscale",
+      "description": "MiniMax H3 reference-to-video with auto prompting and a 2x upscale. Keep your AI character consistent in sharp AI video with sound.",
       "model": "MiniMax H3",
       "output": "Video",
       "tags": [
@@ -346,13 +676,51 @@
       "outputs": [
         "Video",
         "Audio"
+      ],
+      "body": "MiniMax H3 is an open AI video model that generates video **with sound** in one pass: voices, sound effects and ambience come out already synced to the picture. Give it references of your character, let AI write the prompt, and get a sharper 2x upscaled clip at the end.\n\n**Great for:**\n- High-quality, consistent AI influencer videos\n- Recurring cartoon characters in polished clips\n- Longer 7-second scenes\n\n### How it works\n1. Add your OpenRouter API key.\n2. Add your references and type a short idea.\n3. Run it. You get the base video and a 2x upscaled version, both with audio.\n\n### Make it yours with LoRAs\nThis workflow supports LoRAs. Grab character, style, anime or cartoon LoRAs from [CivitAI](https://civitai.com) or [Hugging Face](https://huggingface.co), drop them into the LoRA loader, and keep your AI character looking the same in every shot.",
+      "settings": [
+        {
+          "label": "GPU",
+          "value": [
+            "H100",
+            "H200",
+            "RTX PRO 6000",
+            "RTX 5090"
+          ]
+        },
+        {
+          "label": "Sampler",
+          "value": [
+            "euler",
+            "res_multistep"
+          ]
+        },
+        {
+          "label": "Scheduler",
+          "value": "simple"
+        },
+        {
+          "label": "Turbo LoRA",
+          "value": "LightX2V 8-step turbo LoRA"
+        },
+        {
+          "label": "Steps",
+          "value": [
+            "8 with the turbo LoRA at full strength",
+            "10-12 with the turbo LoRA at lower strength for better quality"
+          ]
+        },
+        {
+          "label": "Shift",
+          "value": "6 when using the turbo LoRA"
+        }
       ]
     },
     {
       "id": "minimax-h3-text-to-video-auto-prompt-upscale",
       "file": "workflows/MiniMax H3/Upscaling/MiniMax - T2V - Auto Prompt - Upscaling.json",
-      "title": "MiniMax H3 text to video \u00b7 Auto Prompt + upscale",
-      "description": "Turn a scene idea into video with assisted prompting and latent upscaling.",
+      "title": "MiniMax H3 text to video · Auto Prompt + upscale",
+      "description": "The easiest MiniMax H3 text-to-video: AI writes your prompt, then a 2x upscale sharpens the AI video. Audio included.",
       "model": "MiniMax H3",
       "output": "Video",
       "tags": [
@@ -376,13 +744,51 @@
       "outputs": [
         "Video",
         "Audio"
+      ],
+      "body": "MiniMax H3 is an open AI video model that generates video **with sound** in one pass: voices, sound effects and ambience come out already synced to the picture. Type a short idea, let Gemini 3 Flash write the full prompt, and get an upscaled clip at the end.\n\n**Great for:**\n- Polished AI influencer and character clips with minimal effort\n- Cartoon and animated shorts\n- Testing many video ideas quickly\n\n### How it works\n1. Add your OpenRouter API key.\n2. Type a short idea.\n3. Run it. You get the base video and a sharper 2x upscaled version, both with audio.\n\n### Make it yours with LoRAs\nThis workflow supports LoRAs. Grab character, style, anime or cartoon LoRAs from [CivitAI](https://civitai.com) or [Hugging Face](https://huggingface.co), drop them into the LoRA loader, and keep your AI character looking the same in every shot.",
+      "settings": [
+        {
+          "label": "GPU",
+          "value": [
+            "H100",
+            "H200",
+            "RTX PRO 6000",
+            "RTX 5090"
+          ]
+        },
+        {
+          "label": "Sampler",
+          "value": [
+            "euler",
+            "res_multistep"
+          ]
+        },
+        {
+          "label": "Scheduler",
+          "value": "simple"
+        },
+        {
+          "label": "Turbo LoRA",
+          "value": "LightX2V 8-step turbo LoRA"
+        },
+        {
+          "label": "Steps",
+          "value": [
+            "8 with the turbo LoRA at full strength",
+            "10-12 with the turbo LoRA at lower strength for better quality"
+          ]
+        },
+        {
+          "label": "Shift",
+          "value": "6 when using the turbo LoRA"
+        }
       ]
     },
     {
       "id": "minimax-h3-text-to-video-upscale",
       "file": "workflows/MiniMax H3/Upscaling/MiniMax - T2V - Custom Prompt - Upscaling.json",
       "title": "MiniMax H3 text to video + upscale",
-      "description": "Generate video from your own scene prompt, then upscale before decoding.",
+      "description": "MiniMax H3 text-to-video with sound, plus a 2x latent upscale for sharper AI video. Built for AI influencer, character and cartoon content.",
       "model": "MiniMax H3",
       "output": "Video",
       "tags": [
@@ -404,35 +810,44 @@
       "outputs": [
         "Video",
         "Audio"
-      ]
-    },
-    {
-      "id": "minimax-h3-reference-to-video",
-      "file": "workflows/MiniMax H3/video_minimax_h3_r2v.json",
-      "title": "MiniMax H3 reference to video",
-      "description": "Use reference media and a written prompt to guide video generation with audio.",
-      "model": "MiniMax H3",
-      "output": "Video",
-      "tags": [
-        "MiniMax H3",
-        "reference-to-video",
-        "audio",
-        "ComfyUI"
       ],
-      "status": "published",
-      "publishedAt": "2026-08-03T17:15:36Z",
-      "notes": [
-        "Replace prompt placeholders and supply your own input images, video or audio before running."
-      ],
-      "difficulty": "Advanced",
-      "inputs": [
-        "Image",
-        "Video",
-        "Text"
-      ],
-      "outputs": [
-        "Video",
-        "Audio"
+      "body": "MiniMax H3 is an open AI video model that generates video **with sound** in one pass: voices, sound effects and ambience come out already synced to the picture. This version adds a 2x latent upscale pass, so you get the normal clip and a sharper upscaled one.\n\n**Great for:**\n- Higher-quality AI influencer videos\n- Cartoon and animated shorts that need crisp detail\n- Clips you want to post in better resolution\n\n### How it works\n1. Write your scene prompt.\n2. Run the base generation.\n3. The upscale pass refines it and saves both versions with audio.\n\n### Make it yours with LoRAs\nThis workflow supports LoRAs. Grab character, style, anime or cartoon LoRAs from [CivitAI](https://civitai.com) or [Hugging Face](https://huggingface.co), drop them into the LoRA loader, and keep your AI character looking the same in every shot.",
+      "settings": [
+        {
+          "label": "GPU",
+          "value": [
+            "H100",
+            "H200",
+            "RTX PRO 6000",
+            "RTX 5090"
+          ]
+        },
+        {
+          "label": "Sampler",
+          "value": [
+            "euler",
+            "res_multistep"
+          ]
+        },
+        {
+          "label": "Scheduler",
+          "value": "simple"
+        },
+        {
+          "label": "Turbo LoRA",
+          "value": "LightX2V 8-step turbo LoRA"
+        },
+        {
+          "label": "Steps",
+          "value": [
+            "8 with the turbo LoRA at full strength",
+            "10-12 with the turbo LoRA at lower strength for better quality"
+          ]
+        },
+        {
+          "label": "Shift",
+          "value": "6 when using the turbo LoRA"
+        }
       ]
     }
   ]
