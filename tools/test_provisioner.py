@@ -239,7 +239,7 @@ def assert_source_workflows(registry: dict) -> None:
     workflow_files = sorted(workflow_root.rglob("*.json"))
     expected_workflows = set(SOURCE_WORKFLOW_DEFAULTS) | {
         f"Upscaling/{name}" for name in UPSCALING_WORKFLOWS
-    } | {"video_minimax_h3_r2v.json"} | REFMOD_WORKFLOWS
+    } | REFMOD_WORKFLOWS
     found_workflows = {
         workflow_file.relative_to(workflow_root).as_posix()
         for workflow_file in workflow_files

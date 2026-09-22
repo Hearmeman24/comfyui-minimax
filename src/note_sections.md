@@ -14,8 +14,6 @@ It comes with fifteen workflows. These are the six standard workflows:
 - MiniMax - I2V - Auto Prompt: same, with the prompt written for you.
 - MiniMax - R2V - Auto Prompt: reference-driven, with the reference
   manager and the prompt written for you. See below.
-- video_minimax_h3_r2v: the stock reference graph, up to 9 images, 3
-  video clips and 3 audio clips.
 
 The MiniMax H3/Upscaling folder adds five 2x latent-upscaling variants
 of the curated T2V, I2V and R2V workflows.
