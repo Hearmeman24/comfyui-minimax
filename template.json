@@ -37,21 +37,25 @@
         "int8": {
           "fl2va": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
           "ref2va": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+          "hyperflow": "minimax_h3_hyperflow_8step_v1.0_comfyui_pruned_bf16.safetensors",
           "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
         },
         "fp8": {
           "fl2va": "minimax_h3_fl2va_pruned_fp8_scaled.safetensors",
           "ref2va": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+          "hyperflow": "minimax_h3_hyperflow_8step_v1.0_comfyui_pruned_bf16.safetensors",
           "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
         },
         "nvfp4": {
           "fl2va": "minimax_h3_fl2va_pruned_fp8_scaled.safetensors",
           "ref2va": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
+          "hyperflow": "minimax_h3_hyperflow_8step_v1.0_comfyui_pruned_bf16.safetensors",
           "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
         },
         "false": {
           "fl2va": "minimax_h3_fl2va_bf16.safetensors",
           "ref2va": "minimax_h3_ref2va_bf16.safetensors",
+          "hyperflow": "minimax_h3_hyperflow_8step_v1.0_comfyui_bf16.safetensors",
           "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
         }
       }

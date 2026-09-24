@@ -11,6 +11,16 @@
   "url": "https://huggingface.co/lightx2v/Minimax-h3-Turbo/resolve/main/minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
   "subdir": "loras"
  },
+ "minimax_h3_hyperflow_8step_v1.0_comfyui_bf16.safetensors": {
+  "url": "https://huggingface.co/drbaph/MiniMax-H3-Turbo-Lora-ComfyUI/resolve/bb2bc497cbaca89dadd0bcf1856eed4f8275be20/minimax_h3_hyperflow_8step_v1.0_comfyui_bf16.safetensors",
+  "subdir": "loras",
+  "min_size_mb": 3700
+ },
+ "minimax_h3_hyperflow_8step_v1.0_comfyui_pruned_bf16.safetensors": {
+  "url": "https://huggingface.co/drbaph/MiniMax-H3-Turbo-Lora-ComfyUI/resolve/bb2bc497cbaca89dadd0bcf1856eed4f8275be20/minimax_h3_hyperflow_8step_v1.0_comfyui_pruned_bf16.safetensors",
+  "subdir": "loras",
+  "min_size_mb": 3700
+ },
  "minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors": {
   "url": "https://huggingface.co/LBH-123-AI/Minimax_h3_latent_Upscaler/resolve/main/minimax_h3_latent_upscaler_3d_conv_v1/minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors",
   "subdir": "latent_upscale_models",
