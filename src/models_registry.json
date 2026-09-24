@@ -21,6 +21,11 @@
   "subdir": "loras",
   "min_size_mb": 3700
  },
+ "custom_node_hyperflow_8step_v1.0_comfyui.safetensors": {
+  "url": "https://huggingface.co/drbaph/Hyperflow-Comfyui/resolve/2cea953918c1f800e4d6d15304d65947b220ddc7/custom_node_hyperflow_8step_v1.0_comfyui.safetensors",
+  "subdir": "hyperflow",
+  "min_size_mb": 3700
+ },
  "minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors": {
   "url": "https://huggingface.co/LBH-123-AI/Minimax_h3_latent_Upscaler/resolve/main/minimax_h3_latent_upscaler_3d_conv_v1/minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors",
   "subdir": "latent_upscale_models",

@@ -56,6 +56,14 @@
           "fl2va": "minimax_h3_fl2va_bf16.safetensors",
           "ref2va": "minimax_h3_ref2va_bf16.safetensors",
           "hyperflow": "minimax_h3_hyperflow_8step_v1.0_comfyui_bf16.safetensors",
+          "hyperflow_node": "custom_node_hyperflow_8step_v1.0_comfyui.safetensors",
+          "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
+        },
+        "bf16": {
+          "fl2va": "minimax_h3_fl2va_bf16.safetensors",
+          "ref2va": "minimax_h3_ref2va_bf16.safetensors",
+          "hyperflow": "minimax_h3_hyperflow_8step_v1.0_comfyui_bf16.safetensors",
+          "hyperflow_node": "custom_node_hyperflow_8step_v1.0_comfyui.safetensors",
           "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
         }
       }
@@ -68,11 +76,22 @@
       "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git|d7c01b9011f2e8439493f6c02c29995a27df276f",
       "https://github.com/Luisacaotica/ComfyUI-MiniMaxH3Mod.git|22ca77e247375dd47fc7340286b5f391887d3410",
       "https://github.com/Saganaki22/ComfyUI-Viggle-Animate-H3.git|77425b6f955e98e96c5e0dc6ca199dc62e63ad8a"
-    ]
+    ],
+    "profile_repos": {
+      "minimax_quant": {
+        "false": [
+          "https://github.com/jalberty2018/ComfyUI-Hyperflow.git|90fac72fe147007c6fdfdeb10d5b9068f8eaf919"
+        ],
+        "bf16": [
+          "https://github.com/jalberty2018/ComfyUI-Hyperflow.git|90fac72fe147007c6fdfdeb10d5b9068f8eaf919"
+        ]
+      }
+    }
   },
   "sage": true,
   "comfy_extra_args": "--disable-dynamic-vram",
   "extra_model_paths": [
+    "hyperflow",
     "refmods",
     "text_cond"
   ]

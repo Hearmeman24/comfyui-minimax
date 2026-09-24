@@ -66,11 +66,22 @@ LATENT_UPSCALER_NODE = (
 )
 HYPERFLOW_FULL = "minimax_h3_hyperflow_8step_v1.0_comfyui_bf16.safetensors"
 HYPERFLOW_PRUNED = "minimax_h3_hyperflow_8step_v1.0_comfyui_pruned_bf16.safetensors"
+HYPERFLOW_NODE_WEIGHT = "custom_node_hyperflow_8step_v1.0_comfyui.safetensors"
+HYPERFLOW_NODE = (
+    "https://github.com/jalberty2018/ComfyUI-Hyperflow.git|"
+    "90fac72fe147007c6fdfdeb10d5b9068f8eaf919"
+)
+HYPERFLOW_NODE_URL = (
+    "https://huggingface.co/drbaph/Hyperflow-Comfyui/resolve/"
+    "2cea953918c1f800e4d6d15304d65947b220ddc7/"
+    + HYPERFLOW_NODE_WEIGHT
+)
 HYPERFLOW_BY_PROFILE = {
     "int8": HYPERFLOW_PRUNED,
     "fp8": HYPERFLOW_PRUNED,
     "nvfp4": HYPERFLOW_PRUNED,
     "false": HYPERFLOW_FULL,
+    "bf16": HYPERFLOW_FULL,
 }
 HYPERFLOW_URL_BASE = (
     "https://huggingface.co/drbaph/MiniMax-H3-Turbo-Lora-ComfyUI/resolve/"
@@ -118,6 +129,8 @@ CASES = [
     ("FP8", "FP8", "fp8", None),
     ("nvfp4", "nvfp4", "nvfp4", None),
     ("false", "false", "false", None),
+    ("bf16", "bf16", "bf16", None),
+    ("BF16", "BF16", "bf16", None),
     ("FALSE", "FALSE", "false", None),
     ("false-whitespace", " false ", "false", None),
     ("invalid-quant", "not-a-quant", "int8",
@@ -394,7 +407,7 @@ def main() -> int:
     assert group["env"] == "minimax_quant", group["env"]
     assert group["default"] == "int8", group["default"]
     profiles = group["profiles"]
-    assert set(profiles) == {"int8", "fp8", "nvfp4", "false"}, profiles
+    assert set(profiles) == {"int8", "fp8", "nvfp4", "false", "bf16"}, profiles
     quantized = {
         p[role] for p in profiles.values()
         for role in ("fl2va", "ref2va", "text_encoder")
@@ -441,10 +454,21 @@ def main() -> int:
             "subdir": "loras",
             "min_size_mb": 3700,
         }, f"unexpected HyperFlow registry entry: {basename}"
+    assert registry[HYPERFLOW_NODE_WEIGHT] == {
+        "url": HYPERFLOW_NODE_URL,
+        "subdir": "hyperflow",
+        "min_size_mb": 3700,
+    }, "node-specific HyperFlow weight must go in models/hyperflow"
+    for quant in ("false", "bf16"):
+        assert profiles[quant]["hyperflow_node"] == HYPERFLOW_NODE_WEIGHT, (
+            f"{quant}: full base must queue the node-specific weight")
+    for quant in ("int8", "fp8", "nvfp4"):
+        assert "hyperflow_node" not in profiles[quant], (
+            f"{quant}: pruned base must not queue the full node weight")
     assert all(
         basename not in workflow.read_text()
         for workflow in (REPO / "workflows").rglob("*.json")
-        for basename in (HYPERFLOW_FULL, HYPERFLOW_PRUNED)
+        for basename in (HYPERFLOW_FULL, HYPERFLOW_PRUNED, HYPERFLOW_NODE_WEIGHT)
     ), "ghost HyperFlow model must not appear in shipped workflows"
 
     for b in TURBO_LORAS:
@@ -487,6 +511,11 @@ def main() -> int:
     assert custom_nodes.get("repos") == [LATENT_UPSCALER_NODE, REFMOD_NODE, VIGGLE_NODE], (
         f"template custom-node list must preserve exact pins, got {custom_nodes}"
     )
+    assert custom_nodes.get("profile_repos") == {"minimax_quant": {
+        "false": [HYPERFLOW_NODE], "bf16": [HYPERFLOW_NODE]}}, (
+        "HyperFlow node must only be selected for full BF16 profiles")
+    assert "hyperflow" in template.get("extra_model_paths", []), (
+        "HyperFlow model folder must be visible to ComfyUI")
     print("✅ latent upscaler model destination and custom-node pin are exact")
 
     assert "refmods" in template.get("extra_model_paths", []), "RefMods must persist on the volume"
@@ -624,6 +653,17 @@ def main() -> int:
                     str(destinations[selected_hyperflow]), "3700"] in [
                 line.split("\t") for line in lines
             ], f"{label}: HyperFlow manifest URL or size floor drifted"
+            if key in ("false", "bf16"):
+                assert destinations.get(HYPERFLOW_NODE_WEIGHT) == (
+                    tmp / f"models-{slug}" / "hyperflow" / HYPERFLOW_NODE_WEIGHT
+                ), f"{label}: node weight missing from models/hyperflow"
+                assert [HYPERFLOW_NODE_URL,
+                        str(destinations[HYPERFLOW_NODE_WEIGHT]), "3700"] in [
+                    line.split("\t") for line in lines
+                ], f"{label}: node weight URL or size floor drifted"
+            else:
+                assert HYPERFLOW_NODE_WEIGHT not in downloaded, (
+                    f"{label}: node weight must only queue for full BF16")
             expected_upscaler_path = (
                 tmp / f"models-{slug}" / "latent_upscale_models" /
                 LATENT_UPSCALER
@@ -665,6 +705,8 @@ def main() -> int:
             manifests["false-whitespace"]), (
         "false must select bf16 regardless of case or surrounding whitespace"
     )
+    assert manifests["bf16"] == manifests["BF16"] == manifests["false"], (
+        "bf16 and false must queue identical model URLs")
     subprocess.run([sys.executable, str(REPO / "tools" / "test_auto_prompt.py")], check=True)
     print("✅ all minimax_quant profiles consistent; fallbacks are safe")
     return 0
