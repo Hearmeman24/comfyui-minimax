@@ -38,7 +38,7 @@ FYI: this template is built for CUDA 13.0 and above.
 |---|---|---|
 | `download_minimax_h3` | false | Downloads the models and installs all fifteen workflows. Set it to true. |
 | `download_viggle_animate` | false | Downloads the pruned BF16 Viggle-Animate model, original full DMD LoRA, frozen conditioning, video VAE and RIFE 4.26 interpolation weights (`models/frame_interpolation`); no workflows. Works independently of `download_minimax_h3`. The pinned Viggle node pack installs at boot regardless of this flag. |
-| `minimax_quant` | int8 | Which build to download: int8, fp8, nvfp4, or false for full bf16. You can leave this alone. |
+| `minimax_quant` | int8 | Which build to download: int8, fp8, nvfp4, or bf16 (also accepted as false) for the full base. You can leave this alone. |
 | `LLM_KEY` | empty | Optional fallback when the OpenRouter API Key box is blank. I2V/T2V use OpenRouter Simple: box value, then `OPENROUTER_API_KEY`, then `LLM_KEY`. R2V keeps its Reference Pack key box. |
 | `civitai_token` | empty | Your CivitAI API token |
 | `CIVITAI_LORAS` | empty | Comma-separated CivitAI version IDs. They go to `models/loras`. |
@@ -48,11 +48,12 @@ FYI: this template is built for CUDA 13.0 and above.
 About `minimax_quant`: the default int8 runs natively on every GPU RunPod rents and the workflows
 are already set up for it. fp8 is native on 4090, L40, H100, H200 and RTX 50xx cards and emulated
 on anything older, which makes it slower there. nvfp4 downloads the same files as fp8 and only
-accelerates on RTX 50xx. Set `minimax_quant` to false to download the full
-`minimax_h3_fl2va_bf16.safetensors` and `minimax_h3_ref2va_bf16.safetensors` diffusion models
-instead. The text encoder, VAEs, and bundled Turbo LoRAs stay the same. Only the profile you ask
-for is downloaded and the workflows are pointed at those files for you, so you never touch a
-dropdown.
+accelerates on RTX 50xx. Set `minimax_quant` to `bf16` (or the existing `false` value) to download
+the full `minimax_h3_fl2va_bf16.safetensors` and `minimax_h3_ref2va_bf16.safetensors` diffusion models
+instead. This profile also stages the HyperFlow custom node and its full-base weight under
+`models/hyperflow/` for manual testing; no workflow uses it yet. The text encoder, VAEs, and bundled
+Turbo LoRAs stay the same. Only the profile you ask for is downloaded and the workflows are pointed
+at those files for you, so you never touch a dropdown.
 
 The template also installs the
 [MiniMax H3 Latent Upscaler nodes](https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler).
