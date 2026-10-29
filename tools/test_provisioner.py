@@ -66,19 +66,14 @@ LATENT_UPSCALER_NODE = (
     "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git|"
     "d7c01b9011f2e8439493f6c02c29995a27df276f"
 )
-REMOVED_HYPERFLOW_LORAS = {
+REMOVED_HYPERFLOW = {
     "minimax_h3_hyperflow_8step_v1.0_comfyui_bf16.safetensors",
     "minimax_h3_hyperflow_8step_v1.0_comfyui_pruned_bf16.safetensors",
+    "custom_node_hyperflow_8step_v1.0_comfyui.safetensors",
 }
-HYPERFLOW_NODE_WEIGHT = "custom_node_hyperflow_8step_v1.0_comfyui.safetensors"
 HYPERFLOW_NODE = (
     "https://github.com/jalberty2018/ComfyUI-Hyperflow.git|"
     "90fac72fe147007c6fdfdeb10d5b9068f8eaf919"
-)
-HYPERFLOW_NODE_URL = (
-    "https://huggingface.co/drbaph/Hyperflow-Comfyui/resolve/"
-    "2cea953918c1f800e4d6d15304d65947b220ddc7/"
-    + HYPERFLOW_NODE_WEIGHT
 )
 SOL_VAE = "minimax_h3_sol_vae_int8_convrot.safetensors"
 SOL_VAE_URL = (
@@ -454,31 +449,18 @@ def main() -> int:
         assert "hyperflow" not in profile, (
             f"{quant}: HyperFlow LoRA must not be queued"
         )
-    leftover_hyperflow = REMOVED_HYPERFLOW_LORAS & set(registry)
+    leftover_hyperflow = REMOVED_HYPERFLOW & set(registry)
     assert not leftover_hyperflow, (
-        f"HyperFlow LoRAs remain registered: {sorted(leftover_hyperflow)}"
+        f"HyperFlow files remain registered: {sorted(leftover_hyperflow)}"
     )
     assert all(
-        basename not in workflow.read_text()
-        for workflow in (REPO / "workflows").rglob("*.json")
-        for basename in REMOVED_HYPERFLOW_LORAS
-    ), "retired HyperFlow LoRA must not appear in shipped workflows"
-    assert registry[HYPERFLOW_NODE_WEIGHT] == {
-        "url": HYPERFLOW_NODE_URL,
-        "subdir": "hyperflow",
-        "min_size_mb": 3700,
-    }, "node-specific HyperFlow weight must go in models/hyperflow"
-    for quant in ("false", "bf16"):
-        assert profiles[quant]["hyperflow_node"] == HYPERFLOW_NODE_WEIGHT, (
-            f"{quant}: full base must queue the node-specific weight")
-    for quant in ("int8", "fp8", "nvfp4"):
-        assert "hyperflow_node" not in profiles[quant], (
-            f"{quant}: pruned base must not queue the full node weight")
+        "hyperflow_node" not in profile for profile in profiles.values()
+    ), "HyperFlow node weight must not be queued"
     assert all(
         basename not in workflow.read_text()
         for workflow in (REPO / "workflows").rglob("*.json")
-        for basename in (HYPERFLOW_NODE_WEIGHT,)
-    ), "HyperFlow node weight must not appear in shipped workflows"
+        for basename in REMOVED_HYPERFLOW
+    ), "retired HyperFlow files must not appear in shipped workflows"
 
     for b in TURBO_LORAS:
         assert b in registry, f"turbo LoRA missing from registry: {b}"
@@ -532,11 +514,12 @@ def main() -> int:
     ], (
         f"template custom-node list must preserve exact pins, got {custom_nodes}"
     )
-    assert custom_nodes.get("profile_repos") == {"minimax_quant": {
-        "false": [HYPERFLOW_NODE], "bf16": [HYPERFLOW_NODE]}}, (
-        "HyperFlow node must only be selected for full BF16 profiles")
-    assert "hyperflow" in template.get("extra_model_paths", []), (
-        "HyperFlow model folder must be visible to ComfyUI")
+    assert "profile_repos" not in custom_nodes, (
+        "HyperFlow profile node pack must be removed")
+    assert HYPERFLOW_NODE not in custom_nodes.get("repos", []), (
+        "HyperFlow node must not install on every boot")
+    assert "hyperflow" not in template.get("extra_model_paths", []), (
+        "HyperFlow model folder must not be registered")
     print("✅ latent upscaler model destination and custom-node pin are exact")
 
     assert "refmods" in template.get("extra_model_paths", []), "RefMods must persist on the volume"
@@ -663,8 +646,8 @@ def main() -> int:
                 f"{label}: turbo LoRAs missing from manifest: "
                 f"{sorted(set(TURBO_LORAS) - downloaded)}"
             )
-            assert not (downloaded & REMOVED_HYPERFLOW_LORAS), (
-                f"{label}: retired HyperFlow LoRA was queued"
+            assert not (downloaded & REMOVED_HYPERFLOW), (
+                f"{label}: retired HyperFlow file was queued"
             )
             assert destinations.get(SOL_VAE) == (
                 tmp / f"models-{slug}" / "vae" / SOL_VAE
@@ -672,17 +655,6 @@ def main() -> int:
             assert [SOL_VAE_URL, str(destinations[SOL_VAE]), "1800"] in [
                 line.split("\t") for line in lines
             ], f"{label}: Sol VAE manifest URL or size floor drifted"
-            if key in ("false", "bf16"):
-                assert destinations.get(HYPERFLOW_NODE_WEIGHT) == (
-                    tmp / f"models-{slug}" / "hyperflow" / HYPERFLOW_NODE_WEIGHT
-                ), f"{label}: node weight missing from models/hyperflow"
-                assert [HYPERFLOW_NODE_URL,
-                        str(destinations[HYPERFLOW_NODE_WEIGHT]), "3700"] in [
-                    line.split("\t") for line in lines
-                ], f"{label}: node weight URL or size floor drifted"
-            else:
-                assert HYPERFLOW_NODE_WEIGHT not in downloaded, (
-                    f"{label}: node weight must only queue for full BF16")
             expected_upscaler_path = (
                 tmp / f"models-{slug}" / "latent_upscale_models" /
                 LATENT_UPSCALER

@@ -50,9 +50,7 @@ are already set up for it. fp8 is native on 4090, L40, H100, H200 and RTX 50xx c
 on anything older, which makes it slower there. nvfp4 downloads the same files as fp8 and only
 accelerates on RTX 50xx. Set `minimax_quant` to `bf16` (or the existing `false` value) to download
 the full `minimax_h3_fl2va_bf16.safetensors` and `minimax_h3_ref2va_bf16.safetensors` diffusion models
-instead. This profile also stages the HyperFlow custom node and its full-base weight under
-`models/hyperflow/` for manual testing; no workflow uses it yet. The text encoder, VAEs, and bundled
-Turbo LoRAs stay the same. Only the profile you ask for is downloaded and the workflows are pointed
+instead. The text encoder, VAEs, and bundled Turbo LoRAs stay the same. Only the profile you ask for is downloaded and the workflows are pointed
 at those files for you, so you never touch a dropdown.
 
 The template also installs the
