@@ -137,14 +137,23 @@ from lightx2v. The template downloads the three builds listed below.
 | LoRA in the dropdown | Steps | Strength | Sigma shift |
 |---|---|---|---|
 | minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16 | 4 | Check upstream guidance | Check upstream guidance |
-| minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16 | 8 | 1.0 | 6 video / 3 audio |
-| minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16 | 8 | 1.0 | 6 video / 3 audio |
+| minimax_h3_fl2v_turbo_8step_v1.1_768p_comfyui_bf16 | 8 | 1.0 | 6 video / 3 audio |
+| minimax_h3_ref2v_turbo_8step_v1.1_768p_comfyui_bf16 | 8 | 1.0 | 6 video / 3 audio |
 
 The five curated T2V, I2V and R2V workflows keep their tuned 8-step 768p
 defaults. The 4-step v1.2 build is downloaded as a manual T2V/I2V option,
 but no bundled workflow selects it. LightX2V has not yet added v1.2 to its
 published settings table, so confirm its strength and shift guidance before
 switching.
+
+## Sol video decoder
+
+With download_minimax_h3 set to true, the template also downloads
+minimax_h3_sol_vae_int8_convrot.safetensors into models/vae. It is an
+int8 Sol-H3 decoder, faster than the stock H3 video VAE. The bundled
+workflows keep minimax_h3_video_vae_fp16 on the VAE loader, because
+image-to-video and RefMod still encode with that file. Pick the Sol
+file in the VAE dropdown when you only need a faster decode.
 
 ## Latent upscaling
 

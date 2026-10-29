@@ -56,10 +56,20 @@ Turbo LoRAs stay the same. Only the profile you ask for is downloaded and the wo
 at those files for you, so you never touch a dropdown.
 
 The template also installs the
-[MiniMax H3 Latent Upscaler nodes](https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler).
-When `download_minimax_h3` is true, its 3D fp16 weight is downloaded to
-`models/latent_upscale_models`. Five ready-to-run latent-upscaling workflows are installed under
-`MiniMax H3/Upscaling`; the six standard workflows remain unchanged.
+[MiniMax H3 Latent Upscaler nodes](https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler),
+[RES4LYF](https://github.com/ClownsharkBatwing/RES4LYF), and the
+[ComfyUI Nvidia VFX nodes](https://github.com/Comfy-Org/ComfyUI_Nvidia_VFX_Nodes)
+(the pack previously published as Nvidia RTX Nodes). None of the shipped workflows use RES4LYF or
+the Nvidia nodes until you add them yourself. When `download_minimax_h3` is true, the latent
+upscaler's 3D fp16 weight is downloaded to `models/latent_upscale_models`. Five ready-to-run
+latent-upscaling workflows are installed under `MiniMax H3/Upscaling`; the six standard workflows
+remain unchanged.
+
+The same download also fetches Comfy-Org's int8 Sol video decoder,
+`minimax_h3_sol_vae_int8_convrot.safetensors` (about 1.85 GB), into `models/vae`. The bundled
+workflows stay on `minimax_h3_video_vae_fp16.safetensors`, because image-to-video and RefMod still
+encode with that VAE. Select the Sol file in the VAE dropdown when you want the faster decoder.
+The default 8-step turbo LoRAs are the LightX2V v1.1 768p builds.
 
 ## Once it is up
 
