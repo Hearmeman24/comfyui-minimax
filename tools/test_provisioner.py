@@ -507,9 +507,8 @@ def main() -> int:
 
     custom_nodes = template["custom_nodes"]
     assert custom_nodes["target"] == "image", custom_nodes
-    from test_viggle_provisioner import VIGGLE_NODE
     assert custom_nodes.get("repos") == [
-        LATENT_UPSCALER_NODE, REFMOD_NODE, VIGGLE_NODE,
+        LATENT_UPSCALER_NODE, REFMOD_NODE,
         RES4LYF_NODE, NVIDIA_VFX_NODE,
     ], (
         f"template custom-node list must preserve exact pins, got {custom_nodes}"

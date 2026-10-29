@@ -69,7 +69,6 @@
     "repos": [
       "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git|d7c01b9011f2e8439493f6c02c29995a27df276f",
       "https://github.com/Luisacaotica/ComfyUI-MiniMaxH3Mod.git|22ca77e247375dd47fc7340286b5f391887d3410",
-      "https://github.com/Saganaki22/ComfyUI-Viggle-Animate-H3.git|77425b6f955e98e96c5e0dc6ca199dc62e63ad8a",
       "https://github.com/ClownsharkBatwing/RES4LYF.git|56e44755d866c87ff9cb4b6608c8e42155db6ecc",
       "https://github.com/Comfy-Org/ComfyUI_Nvidia_VFX_Nodes.git|38d790ded00650681fa3645362efe28c8560cf40"
     ]

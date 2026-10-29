@@ -37,7 +37,7 @@ FYI: this template is built for CUDA 13.0 and above.
 | Variable | Default | What it does |
 |---|---|---|
 | `download_minimax_h3` | false | Downloads the models and installs all fifteen workflows. Set it to true. |
-| `download_viggle_animate` | false | Downloads the pruned BF16 Viggle-Animate model, original full DMD LoRA, frozen conditioning, video VAE and RIFE 4.26 interpolation weights (`models/frame_interpolation`); no workflows. Works independently of `download_minimax_h3`. The pinned Viggle node pack installs at boot regardless of this flag. |
+| `download_viggle_animate` | false | Downloads the pruned BF16 Viggle-Animate model, original full DMD LoRA, frozen conditioning, video VAE and RIFE 4.26 interpolation weights (`models/frame_interpolation`). No workflows ship for it, and this template does not install the Viggle node pack. Works independently of `download_minimax_h3`. |
 | `minimax_quant` | int8 | Which build to download: int8, fp8, nvfp4, or bf16 (also accepted as false) for the full base. You can leave this alone. |
 | `LLM_KEY` | empty | Optional fallback when the OpenRouter API Key box is blank. I2V/T2V use OpenRouter Simple: box value, then `OPENROUTER_API_KEY`, then `LLM_KEY`. R2V keeps its Reference Pack key box. |
 | `civitai_token` | empty | Your CivitAI API token |
