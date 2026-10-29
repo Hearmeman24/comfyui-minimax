@@ -28,7 +28,7 @@ def check(provisioner):
         'url': RIFE_URL, 'subdir': 'frame_interpolation', 'min_size_mb': 20,
     }
     assert 'text_cond' in template['extra_model_paths']
-    assert VIGGLE_NODE in template['custom_nodes']['repos']
+    assert VIGGLE_NODE not in template['custom_nodes']['repos']
     # A 3.7 MB frozen embedding must not inherit the default 10 MB skip floor.
     assert 0 < registry['fixed_embed_fwd_anyframe.safetensors']['min_size_mb'] < 3.5
     with tempfile.TemporaryDirectory() as tmp:

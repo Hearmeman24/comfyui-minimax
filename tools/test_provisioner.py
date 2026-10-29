@@ -39,20 +39,22 @@ BF16_MODELS = {
     "ref2va": "minimax_h3_ref2va_bf16.safetensors",
 }
 
-# The refreshed workflows use the two 8-step 768p builds. The 4-step v1.2
-# build is bundled as a manual dropdown alternative. All three stay explicit
-# in template.json's extra_models contract.
+# The refreshed workflows use the two 8-step 768p v1.1 builds. The 4-step
+# v1.2 build is bundled as a manual dropdown alternative. All three stay
+# explicit in template.json's extra_models contract.
 BUNDLED_LORAS = [
     "minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16.safetensors",
-    "minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
-    "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
+    "minimax_h3_fl2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors",
+    "minimax_h3_ref2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors",
 ]
 TURBO_LORAS = BUNDLED_LORAS
 REMOVED_TURBO_LORAS = {
     "minimax_h3_fl2v_lightx2v_turbo_4step_v0.1_comfy.safetensors",
     "minimax_h3_fl2v_turbo_4step_v1.0_768p_comfyui_bf16.safetensors",
+    "minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
     "minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16.safetensors",
     "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+    "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
 }
 LATENT_UPSCALER = "minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors"
 LATENT_UPSCALER_URL = (
@@ -64,37 +66,36 @@ LATENT_UPSCALER_NODE = (
     "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git|"
     "d7c01b9011f2e8439493f6c02c29995a27df276f"
 )
-HYPERFLOW_FULL = "minimax_h3_hyperflow_8step_v1.0_comfyui_bf16.safetensors"
-HYPERFLOW_PRUNED = "minimax_h3_hyperflow_8step_v1.0_comfyui_pruned_bf16.safetensors"
-HYPERFLOW_NODE_WEIGHT = "custom_node_hyperflow_8step_v1.0_comfyui.safetensors"
+REMOVED_HYPERFLOW = {
+    "minimax_h3_hyperflow_8step_v1.0_comfyui_bf16.safetensors",
+    "minimax_h3_hyperflow_8step_v1.0_comfyui_pruned_bf16.safetensors",
+    "custom_node_hyperflow_8step_v1.0_comfyui.safetensors",
+}
 HYPERFLOW_NODE = (
     "https://github.com/jalberty2018/ComfyUI-Hyperflow.git|"
     "90fac72fe147007c6fdfdeb10d5b9068f8eaf919"
 )
-HYPERFLOW_NODE_URL = (
-    "https://huggingface.co/drbaph/Hyperflow-Comfyui/resolve/"
-    "2cea953918c1f800e4d6d15304d65947b220ddc7/"
-    + HYPERFLOW_NODE_WEIGHT
+SOL_VAE = "minimax_h3_sol_vae_int8_convrot.safetensors"
+SOL_VAE_URL = (
+    "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/vae/"
+    + SOL_VAE
 )
-HYPERFLOW_BY_PROFILE = {
-    "int8": HYPERFLOW_PRUNED,
-    "fp8": HYPERFLOW_PRUNED,
-    "nvfp4": HYPERFLOW_PRUNED,
-    "false": HYPERFLOW_FULL,
-    "bf16": HYPERFLOW_FULL,
-}
-HYPERFLOW_URL_BASE = (
-    "https://huggingface.co/drbaph/MiniMax-H3-Turbo-Lora-ComfyUI/resolve/"
-    "bb2bc497cbaca89dadd0bcf1856eed4f8275be20/"
-)
-EXTRA_MODELS = BUNDLED_LORAS + [LATENT_UPSCALER]
+EXTRA_MODELS = BUNDLED_LORAS + [LATENT_UPSCALER, SOL_VAE]
 FL2VA_INT8 = "minimax_h3_fl2va_pruned_int8_convrot.safetensors"
 REF2VA_INT8 = "minimax_h3_ref2va_pruned_int8_convrot.safetensors"
 FL2VA_TURBO_8STEP = (
-    "minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors"
+    "minimax_h3_fl2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors"
 )
 REF2VA_TURBO_8STEP = (
-    "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors"
+    "minimax_h3_ref2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors"
+)
+RES4LYF_NODE = (
+    "https://github.com/ClownsharkBatwing/RES4LYF.git|"
+    "56e44755d866c87ff9cb4b6608c8e42155db6ecc"
+)
+NVIDIA_VFX_NODE = (
+    "https://github.com/Comfy-Org/ComfyUI_Nvidia_VFX_Nodes.git|"
+    "38d790ded00650681fa3645362efe28c8560cf40"
 )
 SOURCE_WORKFLOW_DEFAULTS = {
     "MiniMax - I2V - Auto Prompt.json":
@@ -444,32 +445,22 @@ def main() -> int:
     assert not strays, f"registry carries unused text encoders: {sorted(strays)}"
     print(f"✅ every model profile loads {TEXT_ENCODER}")
 
-    for quant, basename in HYPERFLOW_BY_PROFILE.items():
-        assert profiles[quant]["hyperflow"] == basename, (
-            f"{quant}: HyperFlow must match the selected base layout"
+    for quant, profile in profiles.items():
+        assert "hyperflow" not in profile, (
+            f"{quant}: HyperFlow LoRA must not be queued"
         )
-    for basename in (HYPERFLOW_FULL, HYPERFLOW_PRUNED):
-        assert registry[basename] == {
-            "url": HYPERFLOW_URL_BASE + basename,
-            "subdir": "loras",
-            "min_size_mb": 3700,
-        }, f"unexpected HyperFlow registry entry: {basename}"
-    assert registry[HYPERFLOW_NODE_WEIGHT] == {
-        "url": HYPERFLOW_NODE_URL,
-        "subdir": "hyperflow",
-        "min_size_mb": 3700,
-    }, "node-specific HyperFlow weight must go in models/hyperflow"
-    for quant in ("false", "bf16"):
-        assert profiles[quant]["hyperflow_node"] == HYPERFLOW_NODE_WEIGHT, (
-            f"{quant}: full base must queue the node-specific weight")
-    for quant in ("int8", "fp8", "nvfp4"):
-        assert "hyperflow_node" not in profiles[quant], (
-            f"{quant}: pruned base must not queue the full node weight")
+    leftover_hyperflow = REMOVED_HYPERFLOW & set(registry)
+    assert not leftover_hyperflow, (
+        f"HyperFlow files remain registered: {sorted(leftover_hyperflow)}"
+    )
+    assert all(
+        "hyperflow_node" not in profile for profile in profiles.values()
+    ), "HyperFlow node weight must not be queued"
     assert all(
         basename not in workflow.read_text()
         for workflow in (REPO / "workflows").rglob("*.json")
-        for basename in (HYPERFLOW_FULL, HYPERFLOW_PRUNED, HYPERFLOW_NODE_WEIGHT)
-    ), "ghost HyperFlow model must not appear in shipped workflows"
+        for basename in REMOVED_HYPERFLOW
+    ), "retired HyperFlow files must not appear in shipped workflows"
 
     for b in TURBO_LORAS:
         assert b in registry, f"turbo LoRA missing from registry: {b}"
@@ -492,6 +483,15 @@ def main() -> int:
     assert not removed_from_extras, (
         f"retired Turbo LoRAs remain bundled: {sorted(removed_from_extras)}"
     )
+    assert registry[SOL_VAE] == {
+        "url": SOL_VAE_URL,
+        "subdir": "vae",
+        "min_size_mb": 1800,
+    }, f"unexpected Sol VAE registry entry: {registry.get(SOL_VAE)}"
+    assert all(
+        SOL_VAE not in workflow.read_text()
+        for workflow in (REPO / "workflows").rglob("*.json")
+    ), "bundled workflows must keep the stock video VAE selected"
     assert LATENT_UPSCALER in registry, "latent upscaler missing from registry"
     assert registry[LATENT_UPSCALER] == {
         "url": LATENT_UPSCALER_URL,
@@ -507,15 +507,18 @@ def main() -> int:
 
     custom_nodes = template["custom_nodes"]
     assert custom_nodes["target"] == "image", custom_nodes
-    from test_viggle_provisioner import VIGGLE_NODE
-    assert custom_nodes.get("repos") == [LATENT_UPSCALER_NODE, REFMOD_NODE, VIGGLE_NODE], (
+    assert custom_nodes.get("repos") == [
+        LATENT_UPSCALER_NODE, REFMOD_NODE,
+        RES4LYF_NODE, NVIDIA_VFX_NODE,
+    ], (
         f"template custom-node list must preserve exact pins, got {custom_nodes}"
     )
-    assert custom_nodes.get("profile_repos") == {"minimax_quant": {
-        "false": [HYPERFLOW_NODE], "bf16": [HYPERFLOW_NODE]}}, (
-        "HyperFlow node must only be selected for full BF16 profiles")
-    assert "hyperflow" in template.get("extra_model_paths", []), (
-        "HyperFlow model folder must be visible to ComfyUI")
+    assert "profile_repos" not in custom_nodes, (
+        "HyperFlow profile node pack must be removed")
+    assert HYPERFLOW_NODE not in custom_nodes.get("repos", []), (
+        "HyperFlow node must not install on every boot")
+    assert "hyperflow" not in template.get("extra_model_paths", []), (
+        "HyperFlow model folder must not be registered")
     print("✅ latent upscaler model destination and custom-node pin are exact")
 
     assert "refmods" in template.get("extra_model_paths", []), "RefMods must persist on the volume"
@@ -642,28 +645,15 @@ def main() -> int:
                 f"{label}: turbo LoRAs missing from manifest: "
                 f"{sorted(set(TURBO_LORAS) - downloaded)}"
             )
-            selected_hyperflow = HYPERFLOW_BY_PROFILE[key]
-            assert downloaded & {HYPERFLOW_FULL, HYPERFLOW_PRUNED} == {
-                selected_hyperflow
-            }, f"{label}: queued the wrong HyperFlow variant"
-            assert destinations[selected_hyperflow] == (
-                tmp / f"models-{slug}" / "loras" / selected_hyperflow
-            ), f"{label}: HyperFlow destination must be models/loras"
-            assert [HYPERFLOW_URL_BASE + selected_hyperflow,
-                    str(destinations[selected_hyperflow]), "3700"] in [
+            assert not (downloaded & REMOVED_HYPERFLOW), (
+                f"{label}: retired HyperFlow file was queued"
+            )
+            assert destinations.get(SOL_VAE) == (
+                tmp / f"models-{slug}" / "vae" / SOL_VAE
+            ), f"{label}: Sol VAE destination must be models/vae"
+            assert [SOL_VAE_URL, str(destinations[SOL_VAE]), "1800"] in [
                 line.split("\t") for line in lines
-            ], f"{label}: HyperFlow manifest URL or size floor drifted"
-            if key in ("false", "bf16"):
-                assert destinations.get(HYPERFLOW_NODE_WEIGHT) == (
-                    tmp / f"models-{slug}" / "hyperflow" / HYPERFLOW_NODE_WEIGHT
-                ), f"{label}: node weight missing from models/hyperflow"
-                assert [HYPERFLOW_NODE_URL,
-                        str(destinations[HYPERFLOW_NODE_WEIGHT]), "3700"] in [
-                    line.split("\t") for line in lines
-                ], f"{label}: node weight URL or size floor drifted"
-            else:
-                assert HYPERFLOW_NODE_WEIGHT not in downloaded, (
-                    f"{label}: node weight must only queue for full BF16")
+            ], f"{label}: Sol VAE manifest URL or size floor drifted"
             expected_upscaler_path = (
                 tmp / f"models-{slug}" / "latent_upscale_models" /
                 LATENT_UPSCALER

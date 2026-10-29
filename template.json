@@ -9,9 +9,10 @@
       ],
       "extra_models": [
         "minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16.safetensors",
-        "minimax_h3_fl2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
-        "minimax_h3_ref2v_turbo_8step_v1.0_768p_comfyui_bf16.safetensors",
-        "minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors"
+        "minimax_h3_fl2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors",
+        "minimax_h3_ref2v_turbo_8step_v1.1_768p_comfyui_bf16.safetensors",
+        "minimax_h3_latent_upscaler_3d_conv_v1_fp16.safetensors",
+        "minimax_h3_sol_vae_int8_convrot.safetensors"
       ]
     },
     "download_viggle_animate": {
@@ -37,33 +38,26 @@
         "int8": {
           "fl2va": "minimax_h3_fl2va_pruned_int8_convrot.safetensors",
           "ref2va": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
-          "hyperflow": "minimax_h3_hyperflow_8step_v1.0_comfyui_pruned_bf16.safetensors",
           "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
         },
         "fp8": {
           "fl2va": "minimax_h3_fl2va_pruned_fp8_scaled.safetensors",
           "ref2va": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
-          "hyperflow": "minimax_h3_hyperflow_8step_v1.0_comfyui_pruned_bf16.safetensors",
           "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
         },
         "nvfp4": {
           "fl2va": "minimax_h3_fl2va_pruned_fp8_scaled.safetensors",
           "ref2va": "minimax_h3_ref2va_pruned_fp8_scaled.safetensors",
-          "hyperflow": "minimax_h3_hyperflow_8step_v1.0_comfyui_pruned_bf16.safetensors",
           "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
         },
         "false": {
           "fl2va": "minimax_h3_fl2va_bf16.safetensors",
           "ref2va": "minimax_h3_ref2va_bf16.safetensors",
-          "hyperflow": "minimax_h3_hyperflow_8step_v1.0_comfyui_bf16.safetensors",
-          "hyperflow_node": "custom_node_hyperflow_8step_v1.0_comfyui.safetensors",
           "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
         },
         "bf16": {
           "fl2va": "minimax_h3_fl2va_bf16.safetensors",
           "ref2va": "minimax_h3_ref2va_bf16.safetensors",
-          "hyperflow": "minimax_h3_hyperflow_8step_v1.0_comfyui_bf16.safetensors",
-          "hyperflow_node": "custom_node_hyperflow_8step_v1.0_comfyui.safetensors",
           "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
         }
       }
@@ -75,23 +69,13 @@
     "repos": [
       "https://github.com/LBH-123-AI/Comfyui_Minimax_h3_latent_Upscaler.git|d7c01b9011f2e8439493f6c02c29995a27df276f",
       "https://github.com/Luisacaotica/ComfyUI-MiniMaxH3Mod.git|22ca77e247375dd47fc7340286b5f391887d3410",
-      "https://github.com/Saganaki22/ComfyUI-Viggle-Animate-H3.git|77425b6f955e98e96c5e0dc6ca199dc62e63ad8a"
-    ],
-    "profile_repos": {
-      "minimax_quant": {
-        "false": [
-          "https://github.com/jalberty2018/ComfyUI-Hyperflow.git|90fac72fe147007c6fdfdeb10d5b9068f8eaf919"
-        ],
-        "bf16": [
-          "https://github.com/jalberty2018/ComfyUI-Hyperflow.git|90fac72fe147007c6fdfdeb10d5b9068f8eaf919"
-        ]
-      }
-    }
+      "https://github.com/ClownsharkBatwing/RES4LYF.git|56e44755d866c87ff9cb4b6608c8e42155db6ecc",
+      "https://github.com/Comfy-Org/ComfyUI_Nvidia_VFX_Nodes.git|38d790ded00650681fa3645362efe28c8560cf40"
+    ]
   },
   "sage": true,
   "comfy_extra_args": "--disable-dynamic-vram",
   "extra_model_paths": [
-    "hyperflow",
     "refmods",
     "text_cond"
   ]
