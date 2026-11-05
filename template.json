@@ -28,7 +28,9 @@
     },
     "download_p_h3_image": {
       "default": false,
-      "folders": [],
+      "folders": [
+        "P-H3 Image"
+      ],
       "extra_models": [
         "p-h3-image_int8_convrot.safetensors",
         "p-h3-image_text_encoder_int8_convrot.safetensors",
