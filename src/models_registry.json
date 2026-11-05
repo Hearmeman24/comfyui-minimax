@@ -82,5 +82,21 @@
   "url": "https://github.com/Fannovel16/ComfyUI-Frame-Interpolation/releases/download/models/rife426.pth",
   "subdir": "frame_interpolation",
   "min_size_mb": 20
+ },
+ "p-h3-image_int8_convrot.safetensors": {
+  "url": "https://huggingface.co/PrunaAI/P-H3-Image-Comfy/resolve/main/diffusion_models/p-h3-image_int8_convrot.safetensors",
+  "subdir": "diffusion_models"
+ },
+ "p-h3-image_text_encoder_int8_convrot.safetensors": {
+  "url": "https://huggingface.co/PrunaAI/P-H3-Image-Comfy/resolve/main/text_encoders/p-h3-image_text_encoder_int8_convrot.safetensors",
+  "subdir": "text_encoders"
+ },
+ "p-h3-image_vae_int8_convrot.safetensors": {
+  "url": "https://huggingface.co/PrunaAI/P-H3-Image-Comfy/resolve/main/vae/p-h3-image_vae_int8_convrot.safetensors",
+  "subdir": "vae"
+ },
+ "p-h3-image_prompt_upsampler_int8_convrot.safetensors": {
+  "url": "https://huggingface.co/PrunaAI/P-H3-Image-Comfy/resolve/main/text_encoders/p-h3-image_prompt_upsampler_int8_convrot.safetensors",
+  "subdir": "text_encoders"
  }
 }

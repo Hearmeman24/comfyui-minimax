@@ -6,33 +6,18 @@
 # The base owns: python 3.12 + /opt/venv (on PATH), the pinned torch trio +
 # /torch-constraint.txt applied via ENV PIP_CONSTRAINT, pip tooling, pyyaml/
 # gdown/triton/jupyterlab, huggingface_hub + hf_xet, opencv-python, ComfyUI
-# v0.42.1 (63be2f9b) with /comfyui-approved-ref, ComfyUI-Manager, both
+# v0.44.0 (2c75dc1b) with /comfyui-approved-ref, ComfyUI-Manager, both
 # SageAttention wheels under /opt/sage/, the CivitAI downloader, and ENV
 # ORT_INDEX_ARGS (the per-CUDA-variant onnxruntime index nuance).
 #
-# The FROM image still bakes that v0.42.1 checkout. The next RUN moves it to
-# 0df1646, which adds Sol-H3-VAE support, and rewrites /comfyui-approved-ref
-# so COMFYUI_VERSION=approved stays there. The shared base image is unchanged.
+# The base supplies the approved ComfyUI checkout and its requirements.
 #
 # This layer adds ONLY the minimax node set, the onnxruntime-gpu reassert, and
 # the entrypoint. BASE_IMAGE is passed by CI from pins.json's "base_image";
 # the default below mirrors that pin so a plain build stays coherent.
 # ============================================================================
-ARG BASE_IMAGE=hearmeman/comfyui-base:cu130-comfy0.42.1-63be2f9b-torch2.11.0
+ARG BASE_IMAGE=hearmeman/comfyui-base:cu130-comfy0.44.0-2c75dc1b-torch2.11.0
 FROM ${BASE_IMAGE}
-
-# Master tip that includes "Support MiniMax Sol-H3-VAE" (#17411). No release
-# tag contains it yet (v0.43.0 is older). Fetch that commit onto the base
-# checkout and make it the approved restore target. PIP_CONSTRAINT keeps
-# torch where the base pinned it. This pip install stays above the
-# CUDAExecutionProvider assertion below.
-ARG COMFYUI_REF=0df1646a9cd71d4c990a87014fb37797a2956ead
-RUN --mount=type=cache,target=/root/.cache/pip \
-    git -C /ComfyUI fetch --depth=1 origin ${COMFYUI_REF} \
-    && git -C /ComfyUI checkout --detach FETCH_HEAD \
-    && test "$(git -C /ComfyUI rev-parse HEAD)" = "${COMFYUI_REF}" \
-    && git -C /ComfyUI rev-parse HEAD > /comfyui-approved-ref \
-    && pip install -r /ComfyUI/requirements.txt
 
 # The minimax node set, culled 2026-08-13 to the packs the shipped workflows
 # actually resolve nodes from. Five packs ARE load-bearing. Four for the

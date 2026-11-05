@@ -697,6 +697,7 @@ def main() -> int:
     )
     assert manifests["bf16"] == manifests["BF16"] == manifests["false"], (
         "bf16 and false must queue identical model URLs")
+    subprocess.run([sys.executable, str(REPO / "tools" / "test_ph3_provisioner.py")], check=True)
     subprocess.run([sys.executable, str(REPO / "tools" / "test_auto_prompt.py")], check=True)
     print("✅ all minimax_quant profiles consistent; fallbacks are safe")
     return 0
