@@ -18,7 +18,7 @@
 # the entrypoint. BASE_IMAGE is passed by CI from pins.json's "base_image";
 # the default below mirrors that pin so a plain build stays coherent.
 # ============================================================================
-ARG BASE_IMAGE=hearmeman/comfyui-base:cu130-comfy0.42.1-63be2f9b-torch2.11.0
+ARG BASE_IMAGE=hearmeman/comfyui-base:cu130-comfy0.44.0-2c75dc1b-torch2.11.0
 FROM ${BASE_IMAGE}
 
 # Master tip that includes "Support MiniMax Sol-H3-VAE" (#17411). No release
