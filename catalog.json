@@ -849,6 +849,62 @@
           "value": "6 when using the turbo LoRA"
         }
       ]
+    },
+    {
+      "id": "p-h3-image-text-to-image",
+      "file": "workflows/P-H3 Image/p-h3-image_text_to_image.json",
+      "title": "P-H3 Image text to image",
+      "description": "Generate an image from a text prompt with P-H3 Image.",
+      "model": "P-H3 Image",
+      "output": "Image",
+      "status": "published",
+      "publishedAt": "2026-11-05T14:42:39Z",
+      "difficulty": "Beginner",
+      "outputs": [
+        "Image"
+      ],
+      "tags": [
+        "P-H3 Image",
+        "text-to-image",
+        "ComfyUI"
+      ],
+      "notes": [
+        "Enable download_p_h3_image to install the workflow and models.",
+        "Requires ComfyUI 0.44.0 or newer.",
+        "The prompt upsampler runs locally and does not require API credentials."
+      ],
+      "inputs": [
+        "Text"
+      ]
+    },
+    {
+      "id": "p-h3-image-editing",
+      "file": "workflows/P-H3 Image/p-h3-image_edit.json",
+      "title": "P-H3 Image editing with reference",
+      "description": "Edit an image using a text instruction and a second reference image with P-H3 Image.",
+      "model": "P-H3 Image",
+      "output": "Image",
+      "status": "published",
+      "publishedAt": "2026-11-05T14:42:39Z",
+      "difficulty": "Beginner",
+      "outputs": [
+        "Image"
+      ],
+      "tags": [
+        "P-H3 Image",
+        "image-editing",
+        "ComfyUI"
+      ],
+      "notes": [
+        "Enable download_p_h3_image to install the workflow and models.",
+        "Requires ComfyUI 0.44.0 or newer.",
+        "Upload the image to edit and a second reference image before running.",
+        "The prompt upsampler runs locally and does not require API credentials."
+      ],
+      "inputs": [
+        "Image",
+        "Text"
+      ]
     }
   ]
 }
