@@ -37,6 +37,7 @@ FYI: this template is built for CUDA 13.0 and above.
 | Variable | Default | What it does |
 |---|---|---|
 | `download_minimax_h3` | false | Downloads the models and installs all fifteen workflows. Set it to true. |
+| `download_minimax_image` | false | Downloads MiniMax H3 Image and installs ComfyUI's two stock workflows for it, text to image and image edit, under `MiniMax H3 Image`. Follows `minimax_quant`. Works independently of `download_minimax_h3`. |
 | `download_viggle_animate` | false | Downloads the pruned BF16 Viggle-Animate model, original full DMD LoRA, frozen conditioning, video VAE and RIFE 4.26 interpolation weights (`models/frame_interpolation`). No workflows ship for it, and this template does not install the Viggle node pack. Works independently of `download_minimax_h3`. |
 | `minimax_quant` | int8 | Which build to download: int8, fp8, nvfp4, or bf16 (also accepted as false) for the full base. You can leave this alone. |
 | `LLM_KEY` | empty | Optional fallback when the OpenRouter API Key box is blank. I2V/T2V use OpenRouter Simple: box value, then `OPENROUTER_API_KEY`, then `LLM_KEY`. R2V keeps its Reference Pack key box. |
@@ -68,6 +69,28 @@ The same download also fetches Comfy-Org's int8 Sol video decoder,
 workflows stay on `minimax_h3_video_vae_fp16.safetensors`, because image-to-video and RefMod still
 encode with that VAE. Select the Sol file in the VAE dropdown when you want the faster decoder.
 The default 8-step turbo LoRAs are the LightX2V v1.1 768p builds.
+
+## MiniMax H3 Image
+
+Set `download_minimax_image` to true to add MiniMax H3 Image, the still-image model in the H3
+family. One checkpoint does both text to image and image editing. You get ComfyUI's two stock
+workflows for it under `MiniMax H3 Image` in the Workflows tab. Both include an optional local
+prompt enhancer (Qwen3.5 9B) that needs no API key. The edit workflow needs you to upload the
+image you want to change before you run it.
+
+It follows `minimax_quant`. int8, fp8 and nvfp4 all download
+`minimax_h3_image_pruned_int8_convrot.safetensors` (about 21 GB), since there is no fp8 or nvfp4
+build of this model. bf16 (or false) downloads the full `minimax_h3_image_pruned_bf16.safetensors`
+(about 40 GB) instead. The text encoder is the same int8 Qwen3-VL file the video workflows use, so
+it is downloaded once if you turn on both. On its own, the image download is about 57 GB on int8 and
+76 GB on bf16. With `download_minimax_h3` also on, add about 30 GB to the video sizes above (about 49 GB on
+bf16).
+
+MiniMax H3 Image has its own license, which is different from MiniMax H3's: if your annual revenue
+is above 1 million USD, or you offer it as a hosted service to others, you need written permission
+from MiniMax first. Read the
+[license](https://huggingface.co/MiniMaxAI/MiniMax-H3-Image/blob/main/LICENSE) before you use it
+commercially.
 
 ## Once it is up
 

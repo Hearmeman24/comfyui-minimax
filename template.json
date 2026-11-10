@@ -15,6 +15,12 @@
         "minimax_h3_sol_vae_int8_convrot.safetensors"
       ]
     },
+    "download_minimax_image": {
+      "default": false,
+      "folders": [
+        "MiniMax H3 Image"
+      ]
+    },
     "download_viggle_animate": {
       "default": false,
       "folders": [],
@@ -70,6 +76,35 @@
         "bf16": {
           "fl2va": "minimax_h3_fl2va_bf16.safetensors",
           "ref2va": "minimax_h3_ref2va_bf16.safetensors",
+          "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
+        }
+      }
+    },
+    {
+      "env": "minimax_quant",
+      "default": "int8",
+      "flags": [
+        "download_minimax_image"
+      ],
+      "profiles": {
+        "int8": {
+          "image_dit": "minimax_h3_image_pruned_int8_convrot.safetensors",
+          "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
+        },
+        "fp8": {
+          "image_dit": "minimax_h3_image_pruned_int8_convrot.safetensors",
+          "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
+        },
+        "nvfp4": {
+          "image_dit": "minimax_h3_image_pruned_int8_convrot.safetensors",
+          "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
+        },
+        "false": {
+          "image_dit": "minimax_h3_image_pruned_bf16.safetensors",
+          "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
+        },
+        "bf16": {
+          "image_dit": "minimax_h3_image_pruned_bf16.safetensors",
           "text_encoder": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors"
         }
       }

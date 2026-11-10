@@ -905,6 +905,100 @@
         "Image",
         "Text"
       ]
+    },
+    {
+      "id": "minimax-h3-image-text-to-image",
+      "file": "workflows/MiniMax H3 Image/MiniMax H3 Image - Text to Image.json",
+      "title": "MiniMax H3 Image text to image",
+      "description": "Generate a photoreal or graphic image from a text prompt with MiniMax H3 Image in ComfyUI.",
+      "model": "MiniMax H3 Image",
+      "output": "Image",
+      "status": "published",
+      "publishedAt": "2026-11-10T17:00:00Z",
+      "difficulty": "Beginner",
+      "outputs": [
+        "Image"
+      ],
+      "tags": [
+        "MiniMax H3 Image",
+        "text-to-image",
+        "ComfyUI"
+      ],
+      "notes": [
+        "Enable download_minimax_image to install the workflow and models.",
+        "Requires ComfyUI 0.45.0 or newer.",
+        "The prompt enhancer runs locally and does not require API credentials.",
+        "MiniMax H3 Image has its own license: commercial use above 1M USD annual revenue, or as a hosted service, needs MiniMax's written permission."
+      ],
+      "inputs": [
+        "Text"
+      ],
+      "settings": [
+        {
+          "label": "Steps",
+          "value": "6"
+        },
+        {
+          "label": "CFG",
+          "value": "1"
+        },
+        {
+          "label": "Sampler",
+          "value": "euler"
+        },
+        {
+          "label": "Scheduler",
+          "value": "simple"
+        }
+      ]
+    },
+    {
+      "id": "minimax-h3-image-editing",
+      "file": "workflows/MiniMax H3 Image/MiniMax H3 Image - Image Edit.json",
+      "title": "MiniMax H3 Image editing",
+      "description": "Edit a picture by describing the change with MiniMax H3 Image, keeping the rest of the frame intact.",
+      "model": "MiniMax H3 Image",
+      "output": "Image",
+      "status": "published",
+      "publishedAt": "2026-11-10T17:00:00Z",
+      "difficulty": "Beginner",
+      "outputs": [
+        "Image"
+      ],
+      "tags": [
+        "MiniMax H3 Image",
+        "image-editing",
+        "ComfyUI"
+      ],
+      "notes": [
+        "Enable download_minimax_image to install the workflow and models.",
+        "Requires ComfyUI 0.45.0 or newer.",
+        "Upload the image to edit before running.",
+        "The prompt enhancer runs locally and does not require API credentials.",
+        "MiniMax H3 Image has its own license: commercial use above 1M USD annual revenue, or as a hosted service, needs MiniMax's written permission."
+      ],
+      "inputs": [
+        "Image",
+        "Text"
+      ],
+      "settings": [
+        {
+          "label": "Steps",
+          "value": "6"
+        },
+        {
+          "label": "CFG",
+          "value": "1"
+        },
+        {
+          "label": "Sampler",
+          "value": "euler"
+        },
+        {
+          "label": "Scheduler",
+          "value": "simple"
+        }
+      ]
     }
   ]
 }

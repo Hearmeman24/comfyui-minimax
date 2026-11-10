@@ -73,7 +73,7 @@ class PH3Provisioning(unittest.TestCase):
                              for group in template.get('swap_groups', [])))
 
     def test_base_image_is_inherited(self):
-        expected_base = 'hearmeman/comfyui-base:cu130-comfy0.44.0-2c75dc1b-torch2.11.0'
+        expected_base = 'hearmeman/comfyui-base:cu130-comfy0.45.0-989d93d0-torch2.11.0'
         pins = json.loads((REPO / 'pins.json').read_text())
         dockerfile = (REPO / 'Dockerfile').read_text()
         self.assertEqual(pins['base_image'], expected_base)
