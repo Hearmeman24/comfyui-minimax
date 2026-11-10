@@ -403,8 +403,13 @@ def main() -> int:
     assert_source_workflows(registry)
 
     groups = template.get("swap_groups") or []
-    assert len(groups) == 1, f"expected exactly one swap group, got {len(groups)}"
-    group = groups[0]
+    # Two groups share minimax_quant: video (download_minimax_h3) and
+    # MiniMax H3 Image (download_minimax_image, tools/test_minimax_image_provisioner.py).
+    # Each is scoped to its own flag so enabling one never pulls the other's DiT.
+    assert sorted(tuple(g.get("flags", [])) for g in groups) == [
+        ("download_minimax_h3",), ("download_minimax_image",)
+    ], [g.get("flags") for g in groups]
+    group = next(g for g in groups if g["flags"] == ["download_minimax_h3"])
     assert group["env"] == "minimax_quant", group["env"]
     assert group["default"] == "int8", group["default"]
     profiles = group["profiles"]
@@ -698,6 +703,7 @@ def main() -> int:
     assert manifests["bf16"] == manifests["BF16"] == manifests["false"], (
         "bf16 and false must queue identical model URLs")
     subprocess.run([sys.executable, str(REPO / "tools" / "test_ph3_provisioner.py")], check=True)
+    subprocess.run([sys.executable, str(REPO / "tools" / "test_minimax_image_provisioner.py")], check=True)
     subprocess.run([sys.executable, str(REPO / "tools" / "test_auto_prompt.py")], check=True)
     print("✅ all minimax_quant profiles consistent; fallbacks are safe")
     return 0

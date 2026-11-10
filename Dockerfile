@@ -6,7 +6,7 @@
 # The base owns: python 3.12 + /opt/venv (on PATH), the pinned torch trio +
 # /torch-constraint.txt applied via ENV PIP_CONSTRAINT, pip tooling, pyyaml/
 # gdown/triton/jupyterlab, huggingface_hub + hf_xet, opencv-python, ComfyUI
-# v0.44.0 (2c75dc1b) with /comfyui-approved-ref, ComfyUI-Manager, both
+# v0.45.0 (989d93d0) with /comfyui-approved-ref, ComfyUI-Manager, both
 # SageAttention wheels under /opt/sage/, the CivitAI downloader, and ENV
 # ORT_INDEX_ARGS (the per-CUDA-variant onnxruntime index nuance).
 #
@@ -16,7 +16,7 @@
 # the entrypoint. BASE_IMAGE is passed by CI from pins.json's "base_image";
 # the default below mirrors that pin so a plain build stays coherent.
 # ============================================================================
-ARG BASE_IMAGE=hearmeman/comfyui-base:cu130-comfy0.44.0-2c75dc1b-torch2.11.0
+ARG BASE_IMAGE=hearmeman/comfyui-base:cu130-comfy0.45.0-989d93d0-torch2.11.0
 FROM ${BASE_IMAGE}
 
 # The minimax node set, culled 2026-08-13 to the packs the shipped workflows
