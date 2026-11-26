@@ -130,18 +130,12 @@ class MiniMaxImageProvisioning(unittest.TestCase):
                 self.assertIn('SamplerCustomAdvanced', types)
                 self.assertNotIn('KSampler', types)
                 self.assertEqual({g['title'] for g in doc['groups']},
-                                 {'Models', 'LoRAs And Settings', 'Sampling', 'Decoding and save image',
-                                  'Prompt Enhancer'})
+                                 {'Models', 'LoRAs And Settings', 'Sampling', 'Decoding and save image'})
                 for name in ('OpenRouterSimple', 'PrimitiveString', 'Display Any (rgthree)'):
                     self.assertNotIn(name, types)
-                self.assertNotIn('definitions', doc)
                 encoders = [n['widgets_values'][0] for n in all_nodes(doc) if n.get('type') == 'CLIPLoader']
                 self.assertEqual(sorted(encoders), sorted([TEXT_ENCODER, ENHANCER]))
-                for name in ('TextGenerateV2', 'StringReplace', 'JsonExtractString', 'ComfySwitchNode',
-                             'PreviewAny', 'PrimitiveBoolean'):
-                    self.assertIn(name, types)
-                toggle = next(n for n in all_nodes(doc) if n.get('type') == 'PrimitiveBoolean')
-                self.assertEqual((toggle['title'], toggle['widgets_values']), ('Boolean (Enable PE?)', [True]))
+                self.assert_enhancer_subgraph(doc, path)
                 vaes = [n['widgets_values'][0] for n in all_nodes(doc) if n.get('type') == 'VAELoader']
                 self.assertEqual(vaes, [VAE])
                 refs = [n for n in all_nodes(doc) if n.get('type') == REFS]
@@ -155,6 +149,40 @@ class MiniMaxImageProvisioning(unittest.TestCase):
                 self.assertNotIn(BF16, json.dumps(doc))
                 for name in RETIRED:
                     self.assertNotIn(name, json.dumps(doc))
+
+    def assert_enhancer_subgraph(self, doc, path):
+        """The stock Qwen3.5 enhancer lives in one "Prompt Enhancer" subgraph; the main screen
+        carries only its instance and a Prompt Enhancer (on/off) toggle wired to `enable`."""
+        from test_provisioner import assert_graph_integrity
+        subgraphs = doc['definitions']['subgraphs']
+        self.assertEqual([sg['name'] for sg in subgraphs], ['Prompt Enhancer'])
+        sg = subgraphs[0]
+        assert_graph_integrity(sg, f'{path}/Prompt Enhancer')
+        inner = sorted(n['type'] for n in sg['nodes'])
+        self.assertEqual(inner, sorted(['CLIPLoader', 'PrimitiveStringMultiline', 'PrimitiveStringMultiline',
+                                        'StringReplace', 'TextGenerateV2', 'JsonExtractString',
+                                        'ComfySwitchNode', 'PreviewAny', 'MarkdownNote']))
+        clip = next(n for n in sg['nodes'] if n['type'] == 'CLIPLoader')
+        self.assertEqual(clip['widgets_values'][0], ENHANCER)
+        edit = path.endswith('Image Edit.json')
+        expected = ['prompt', 'enable'] + ([f'image{i}' for i in range(1, 10)] if edit else [])
+        self.assertEqual([i['name'] for i in sg['inputs']], expected)
+        self.assertEqual([(o['name'], o['type']) for o in sg['outputs']], [('prompt', 'STRING')])
+        root = {n['id']: n for n in doc['nodes']}
+        for node in doc['nodes']:
+            self.assertNotIn(node['type'], ('TextGenerateV2', 'ComfySwitchNode', 'PreviewAny', 'StringReplace'))
+            if node['type'] == 'CLIPLoader':
+                self.assertEqual(node['widgets_values'][0], TEXT_ENCODER)
+        instance = next(n for n in doc['nodes'] if n['type'] == sg['id'])
+        self.assertEqual(instance['title'], 'Prompt Enhancer')
+        links = {l[0]: l for l in doc['links']}
+        enable = next(i for i in instance['inputs'] if i['name'] == 'enable')
+        toggle = root[links[enable['link']][1]]
+        self.assertEqual((toggle['type'], toggle['title'], toggle['widgets_values']),
+                         ('PrimitiveBoolean', 'Prompt Enhancer (on/off)', [True]))
+        out = instance['outputs'][0]['links']
+        targets = {root[links[l][3]]['type'] for l in out}
+        self.assertEqual(targets, {'MiniMaxH3ImageConditioning'})
 
     def test_disabled(self):
         for flag in (None, 'false', ' FALSE ', '0'):

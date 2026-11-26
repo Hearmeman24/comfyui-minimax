@@ -76,7 +76,7 @@ Set `download_minimax_image` to true to add MiniMax H3 Image, the still-image mo
 family. One checkpoint does both text to image and image editing. Two workflows land under
 `MiniMax H3 Image` in the Workflows tab, Text to Image and Image Edit, laid out like the video ones.
 Both include ComfyUI's optional local prompt enhancer (Qwen3.5 9B) that needs no API key; turn it off
-with the Enable PE? switch. The edit workflow uses the MiniMax Image References Manager node: add
+with the Prompt Enhancer (on/off) switch. The edit workflow uses the MiniMax Image References Manager node: add
 the picture you want to change first, it becomes `<Picture 1>`, and up to eight more pictures can
 ride along as references. Both start at 4 megapixels, the low end of what this model handles well.
 
