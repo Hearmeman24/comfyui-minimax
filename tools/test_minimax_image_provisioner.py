@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Exercise the optional MiniMax H3 Image bundle through the real runtime, offline.
 
-download_minimax_image installs four MiniMax H3 Image workflows laid out like the
-video family (T2I and Edit, each as Custom Prompt and Auto Prompt; Auto writes the
-prompt through OpenRouter) and follows minimax_quant through its own swap group: int8, fp8 and nvfp4 all
+download_minimax_image installs two MiniMax H3 Image workflows laid out like the
+video family, Text to Image and Image Edit, each carrying ComfyUI's stock local
+prompt enhancer (Qwen3.5 9B through TextGenerateV2, no API key), and follows
+minimax_quant through its own swap group: int8, fp8 and nvfp4 all
 load the int8 DiT (there is no fp8 or nvfp4 build), bf16 and false load the
 full bf16 DiT. The text encoder is the video template's int8 Qwen3-VL in every
 profile, so turning on both flags never puts a second encoder on the volume.
@@ -20,11 +21,12 @@ from validate_models import runtime_dir
 
 REPO = Path(__file__).resolve().parents[1]
 FOLDER = 'MiniMax H3 Image'
-WORKFLOWS = {f'{FOLDER}/MiniMax H3 Image - {kind} - {variant} Prompt.json'
-             for kind in ('T2I', 'Edit') for variant in ('Custom', 'Auto')}
+WORKFLOWS = {f'{FOLDER}/MiniMax H3 Image - Text to Image.json',
+             f'{FOLDER}/MiniMax H3 Image - Image Edit.json'}
+ENHANCER = 'qwen3.5_9b_w4a8_gptq.safetensors'
 VAE = 'ostris_h3_image_vae_fp16.safetensors'
 REFS = 'MiniMaxH3ImageReferencePack'
-RETIRED = {'minimax_h3_image_vae_fp16.safetensors', 'qwen3.5_9b_w4a8_gptq.safetensors'}
+RETIRED = {'minimax_h3_image_vae_fp16.safetensors'}
 IMAGE = 'https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/main'
 INT8 = 'minimax_h3_image_pruned_int8_convrot.safetensors'
 BF16 = 'minimax_h3_image_pruned_bf16.safetensors'
@@ -33,6 +35,8 @@ SHARED = {
     TEXT_ENCODER: ('https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/'
                    f'text_encoders/{TEXT_ENCODER}', 'text_encoders'),
     VAE: (f'https://huggingface.co/ostris/ostris_h3_image_vae/resolve/main/{VAE}', 'vae'),
+    ENHANCER: ('https://huggingface.co/Comfy-Org/Qwen3.5/resolve/main/text_encoders/'
+               f'{ENHANCER}', 'text_encoders'),
 }
 DITS = {INT8, BF16}
 QUANTS = {None: INT8, 'int8': INT8, 'fp8': INT8, 'nvfp4': INT8, ' FP8 ': INT8,
@@ -126,19 +130,28 @@ class MiniMaxImageProvisioning(unittest.TestCase):
                 self.assertIn('SamplerCustomAdvanced', types)
                 self.assertNotIn('KSampler', types)
                 self.assertEqual({g['title'] for g in doc['groups']},
-                                 {'Models', 'LoRAs And Settings', 'Sampling', 'Decoding and save image'})
+                                 {'Models', 'LoRAs And Settings', 'Sampling', 'Decoding and save image',
+                                  'Prompt Enhancer'})
+                for name in ('OpenRouterSimple', 'PrimitiveString', 'Display Any (rgthree)'):
+                    self.assertNotIn(name, types)
+                self.assertNotIn('definitions', doc)
+                encoders = [n['widgets_values'][0] for n in all_nodes(doc) if n.get('type') == 'CLIPLoader']
+                self.assertEqual(sorted(encoders), sorted([TEXT_ENCODER, ENHANCER]))
+                for name in ('TextGenerateV2', 'StringReplace', 'JsonExtractString', 'ComfySwitchNode',
+                             'PreviewAny', 'PrimitiveBoolean'):
+                    self.assertIn(name, types)
+                toggle = next(n for n in all_nodes(doc) if n.get('type') == 'PrimitiveBoolean')
+                self.assertEqual((toggle['title'], toggle['widgets_values']), ('Boolean (Enable PE?)', [True]))
                 vaes = [n['widgets_values'][0] for n in all_nodes(doc) if n.get('type') == 'VAELoader']
                 self.assertEqual(vaes, [VAE])
-                auto = path.endswith('Auto Prompt.json')
                 refs = [n for n in all_nodes(doc) if n.get('type') == REFS]
-                if ' - Edit - ' in path:
+                if path.endswith('Image Edit.json'):
                     self.assertEqual(len(refs), 1)
                     self.assertEqual(len(refs[0]['widgets_values']), 10)
-                    self.assertEqual(refs[0]['widgets_values'][3], 'openrouter' if auto else 'none')
+                    self.assertEqual(refs[0]['widgets_values'][3], 'none')
                     self.assertEqual(len(refs[0]['outputs']), 11)
                 else:
                     self.assertFalse(refs)
-                    self.assertEqual('OpenRouterSimple' in types, auto)
                 self.assertNotIn(BF16, json.dumps(doc))
                 for name in RETIRED:
                     self.assertNotIn(name, json.dumps(doc))

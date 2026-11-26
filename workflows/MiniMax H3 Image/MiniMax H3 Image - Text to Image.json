@@ -1,0 +1,1528 @@
+{
+  "id": "9eb5ce50-a036-472d-861b-e3c4f328cf40",
+  "revision": 0,
+  "last_node_id": 25,
+  "last_link_id": 28,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "UNETLoader",
+      "pos": [
+        -3379.0,
+        4705.43
+      ],
+      "size": [
+        640,
+        90
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            15
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "UNETLoader",
+        "models": [
+          {
+            "name": "minimax_h3_image_pruned_int8_convrot.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/main/diffusion_models/minimax_h3_image_pruned_int8_convrot.safetensors",
+            "directory": "diffusion_models"
+          }
+        ]
+      },
+      "widgets_values": [
+        "minimax_h3_image_pruned_int8_convrot.safetensors",
+        "default"
+      ],
+      "widgets_values_named": {
+        "unet_name": "minimax_h3_image_pruned_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      }
+    },
+    {
+      "id": 2,
+      "type": "CLIPLoader",
+      "pos": [
+        -3379.0,
+        4855.43
+      ],
+      "size": [
+        640,
+        120
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            16
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "CLIPLoader",
+        "models": [
+          {
+            "name": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/text_encoders/qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+            "directory": "text_encoders"
+          }
+        ]
+      },
+      "widgets_values": [
+        "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+        "minimax",
+        "default"
+      ],
+      "widgets_values_named": {
+        "clip_name": "qwen3vl_32b_minimax_h3_int8_convrot.safetensors",
+        "type": "minimax",
+        "device": "default"
+      }
+    },
+    {
+      "id": 3,
+      "type": "VAELoader",
+      "pos": [
+        -3379.0,
+        5045.43
+      ],
+      "size": [
+        640,
+        70
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            20,
+            21
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "VAELoader",
+        "models": [
+          {
+            "name": "ostris_h3_image_vae_fp16.safetensors",
+            "url": "https://huggingface.co/ostris/ostris_h3_image_vae/resolve/main/ostris_h3_image_vae_fp16.safetensors",
+            "directory": "vae"
+          }
+        ]
+      },
+      "widgets_values": [
+        "ostris_h3_image_vae_fp16.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "ostris_h3_image_vae_fp16.safetensors"
+      }
+    },
+    {
+      "id": 4,
+      "type": "MarkdownNote",
+      "pos": [
+        -2689.0,
+        4204.34
+      ],
+      "size": [
+        782,
+        380
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Note: HearmemanAI",
+      "properties": {},
+      "widgets_values": [
+        "## MiniMax H3 Image, by HearmemanAI\n\nI build these workflows and post every one of them in my Discord. That is also the place to ask if something breaks:\n\nhttps://discord.gg/ZVWVhT43GW\n\nYou get this workflow already installed, with the models downloaded and the loaders pointed at them, on my MiniMax RunPod template:\n\nhttps://get.runpod.io/minimax-template\n\n### Size\n\nMiniMax H3 Image does badly at low resolution. It works from about 4 to 20 megapixels and is best near 16. This workflow starts at 4 MP (2048x2048 on 1:1); raise megapixels in the Resolution Selector if your GPU has the memory.\n\n### Prompt enhancer\n\nA local Qwen3.5 9B rewrites your prompt into the detailed caption H3 Image expects before it renders; no API key needed. Turn it off with Boolean (Enable PE?) to send your prompt as written. The text it actually used shows in Preview as Text.\n"
+      ],
+      "widgets_values_named": {
+        "text": "## MiniMax H3 Image, by HearmemanAI\n\nI build these workflows and post every one of them in my Discord. That is also the place to ask if something breaks:\n\nhttps://discord.gg/ZVWVhT43GW\n\nYou get this workflow already installed, with the models downloaded and the loaders pointed at them, on my MiniMax RunPod template:\n\nhttps://get.runpod.io/minimax-template\n\n### Size\n\nMiniMax H3 Image does badly at low resolution. It works from about 4 to 20 megapixels and is best near 16. This workflow starts at 4 MP (2048x2048 on 1:1); raise megapixels in the Resolution Selector if your GPU has the memory.\n\n### Prompt enhancer\n\nA local Qwen3.5 9B rewrites your prompt into the detailed caption H3 Image expects before it renders; no API key needed. Turn it off with Boolean (Enable PE?) to send your prompt as written. The text it actually used shows in Preview as Text.\n"
+      },
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 5,
+      "type": "Power Lora Loader (rgthree)",
+      "pos": [
+        -2669.0,
+        4698.34
+      ],
+      "size": [
+        326,
+        209
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "dir": 3,
+          "name": "model",
+          "type": "MODEL",
+          "link": 15
+        },
+        {
+          "dir": 3,
+          "name": "clip",
+          "type": "CLIP",
+          "link": 16
+        }
+      ],
+      "outputs": [
+        {
+          "dir": 4,
+          "name": "MODEL",
+          "shape": 3,
+          "type": "MODEL",
+          "links": [
+            17,
+            18
+          ]
+        },
+        {
+          "dir": 4,
+          "name": "CLIP",
+          "shape": 3,
+          "type": "CLIP",
+          "links": [
+            19
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "rgthree-comfy",
+        "ver": "6b76ee6f2c5a007710b5a16f97c94330d6ecc871",
+        "Show Strengths": "Single Strength",
+        "Match": ""
+      },
+      "widgets_values": [
+        {},
+        {
+          "type": "PowerLoraLoaderHeaderWidget"
+        },
+        {
+          "on": false,
+          "lora": "Your_Character_LoRA_Here.safetensors",
+          "strength": 1,
+          "strengthTwo": null
+        },
+        {},
+        ""
+      ],
+      "widgets_values_named": {
+        "divider": {},
+        "PowerLoraLoaderHeaderWidget": {
+          "type": "PowerLoraLoaderHeaderWidget"
+        },
+        "lora_1": {
+          "on": false,
+          "lora": "Your_Character_LoRA_Here.safetensors",
+          "strength": 1,
+          "strengthTwo": null
+        },
+        "➕ Add Lora": ""
+      },
+      "color": "#223",
+      "bgcolor": "#335"
+    },
+    {
+      "id": 6,
+      "type": "ResolutionSelector",
+      "pos": [
+        -2669.0,
+        4949.34
+      ],
+      "size": [
+        326,
+        150
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            22
+          ]
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            23
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "ResolutionSelector"
+      },
+      "widgets_values": [
+        "1:1 (Square)",
+        4,
+        32
+      ],
+      "widgets_values_named": {
+        "aspect_ratio": "1:1 (Square)",
+        "megapixels": 4,
+        "multiple": 32
+      },
+      "color": "#232",
+      "bgcolor": "#353",
+      "showAdvanced": true
+    },
+    {
+      "id": 7,
+      "type": "PrimitiveBoolean",
+      "pos": [
+        -2669.0,
+        5139.34
+      ],
+      "size": [
+        326,
+        58
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "BOOLEAN",
+          "type": "BOOLEAN",
+          "links": [
+            27
+          ]
+        }
+      ],
+      "title": "Boolean (Enable PE?)",
+      "properties": {
+        "Node name for S&R": "PrimitiveBoolean"
+      },
+      "widgets_values": [
+        true
+      ],
+      "widgets_values_named": {
+        "value": true
+      },
+      "color": "#322",
+      "bgcolor": "#533"
+    },
+    {
+      "id": 8,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        -2323.0,
+        4698.34
+      ],
+      "size": [
+        400,
+        560
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            25,
+            26
+          ]
+        }
+      ],
+      "title": "Your Prompt Here",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        "A smartphone photo of a small corner bakery on a quiet street just after sunrise. A wooden bench sits under the shop window, which is fogged at the edges and filled with rows of golden croissants and round sourdough loaves on wire racks. A hand-painted sign above the door reads \"OPEN EARLY\" in cream letters on dark green. Warm light spills from inside onto the wet cobblestones, and soft blue morning light fills the street behind. Natural colours, gentle shadows, fine detail in the bread crust and the painted wood."
+      ],
+      "widgets_values_named": {
+        "value": "A smartphone photo of a small corner bakery on a quiet street just after sunrise. A wooden bench sits under the shop window, which is fogged at the edges and filled with rows of golden croissants and round sourdough loaves on wire racks. A hand-painted sign above the door reads \"OPEN EARLY\" in cream letters on dark green. Warm light spills from inside onto the wet cobblestones, and soft blue morning light fills the street behind. Natural colours, gentle shadows, fine detail in the bread crust and the painted wood."
+      },
+      "color": "#232",
+      "bgcolor": "#353"
+    },
+    {
+      "id": 9,
+      "type": "RandomNoise",
+      "pos": [
+        -1863.05,
+        4698.4
+      ],
+      "size": [
+        300,
+        82
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "NOISE",
+          "type": "NOISE",
+          "links": [
+            1
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "RandomNoise"
+      },
+      "widgets_values": [
+        42,
+        "randomize"
+      ],
+      "widgets_values_named": {
+        "noise_seed": 42,
+        "control_after_generate": "randomize"
+      }
+    },
+    {
+      "id": 10,
+      "type": "KSamplerSelect",
+      "pos": [
+        -1863.05,
+        4821.4
+      ],
+      "size": [
+        300,
+        58
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "SAMPLER",
+          "type": "SAMPLER",
+          "links": [
+            3
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "KSamplerSelect"
+      },
+      "widgets_values": [
+        "euler"
+      ],
+      "widgets_values_named": {
+        "sampler_name": "euler"
+      }
+    },
+    {
+      "id": 11,
+      "type": "BasicScheduler",
+      "pos": [
+        -1863.05,
+        4921.4
+      ],
+      "size": [
+        300,
+        106
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 18
+        }
+      ],
+      "outputs": [
+        {
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [
+            4
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "BasicScheduler"
+      },
+      "widgets_values": [
+        "simple",
+        6,
+        1
+      ],
+      "widgets_values_named": {
+        "scheduler": "simple",
+        "steps": 6,
+        "denoise": 1
+      }
+    },
+    {
+      "id": 12,
+      "type": "MiniMaxH3ImageConditioning",
+      "pos": [
+        -1863.05,
+        5071.4
+      ],
+      "size": [
+        300,
+        200
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "clip",
+          "name": "clip",
+          "type": "CLIP",
+          "link": 19
+        },
+        {
+          "localized_name": "vae",
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": 20
+        },
+        {
+          "localized_name": "image_0",
+          "name": "images.image_0",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 28
+        },
+        {
+          "localized_name": "width",
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 22
+        },
+        {
+          "localized_name": "height",
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 23
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "positive",
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            6
+          ]
+        },
+        {
+          "localized_name": "LATENT",
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            5
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "MiniMaxH3ImageConditioning"
+      },
+      "widgets_values": [
+        "",
+        0,
+        0
+      ],
+      "widgets_values_named": {
+        "prompt": "",
+        "width": 0,
+        "height": 0
+      }
+    },
+    {
+      "id": 13,
+      "type": "BasicGuider",
+      "pos": [
+        -1531.05,
+        4698.4
+      ],
+      "size": [
+        300,
+        46
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 17
+        },
+        {
+          "name": "conditioning",
+          "type": "CONDITIONING",
+          "link": 6
+        }
+      ],
+      "outputs": [
+        {
+          "name": "GUIDER",
+          "type": "GUIDER",
+          "links": [
+            2
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "BasicGuider"
+      }
+    },
+    {
+      "id": 14,
+      "type": "SamplerCustomAdvanced",
+      "pos": [
+        -1531.05,
+        4786.4
+      ],
+      "size": [
+        300,
+        400
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "noise",
+          "type": "NOISE",
+          "link": 1
+        },
+        {
+          "name": "guider",
+          "type": "GUIDER",
+          "link": 2
+        },
+        {
+          "name": "sampler",
+          "type": "SAMPLER",
+          "link": 3
+        },
+        {
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 4
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "LATENT",
+          "links": [
+            7
+          ]
+        },
+        {
+          "name": "denoised_output",
+          "type": "LATENT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "SamplerCustomAdvanced"
+      }
+    },
+    {
+      "id": 15,
+      "type": "VAEDecode",
+      "pos": [
+        -1531.05,
+        5226.4
+      ],
+      "size": [
+        300,
+        46
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 7
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 21
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            24
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "VAEDecode"
+      }
+    },
+    {
+      "id": 16,
+      "type": "SaveImage",
+      "pos": [
+        -1143.1,
+        4582.23
+      ],
+      "size": [
+        640,
+        760
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 24
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.45.0",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "MiniMax-H3-Image/T2I"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "MiniMax-H3-Image/T2I"
+      }
+    },
+    {
+      "id": 17,
+      "type": "CLIPLoader",
+      "pos": [
+        -2669.0,
+        5496.54
+      ],
+      "size": [
+        560,
+        106
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            8
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader",
+        "models": [
+          {
+            "name": "qwen3.5_9b_w4a8_gptq.safetensors",
+            "url": "https://huggingface.co/Comfy-Org/Qwen3.5/resolve/main/text_encoders/qwen3.5_9b_w4a8_gptq.safetensors",
+            "directory": "text_encoders"
+          }
+        ]
+      },
+      "widgets_values": [
+        "qwen3.5_9b_w4a8_gptq.safetensors",
+        "minimax",
+        "default"
+      ],
+      "widgets_values_named": {
+        "clip_name": "qwen3.5_9b_w4a8_gptq.safetensors",
+        "type": "minimax",
+        "device": "default"
+      },
+      "color": "#322",
+      "bgcolor": "#533",
+      "showAdvanced": false
+    },
+    {
+      "id": 18,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        -2669.0,
+        5642.54
+      ],
+      "size": [
+        570,
+        170
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            9
+          ]
+        }
+      ],
+      "title": "Text (system_prompt)",
+      "properties": {
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        "Reason in the thinking section first. The visible final content must be exactly one JSON object with exactly two keys: expanded_caption and aspect_ratio. Every ASCII double quotation mark used as caption content inside expanded_caption must be serialized as the JSON escape sequence \\\". Do not output text outside that object."
+      ],
+      "widgets_values_named": {
+        "value": "Reason in the thinking section first. The visible final content must be exactly one JSON object with exactly two keys: expanded_caption and aspect_ratio. Every ASCII double quotation mark used as caption content inside expanded_caption must be serialized as the JSON escape sequence \\\". Do not output text outside that object."
+      }
+    },
+    {
+      "id": 19,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        -2669.0,
+        5852.54
+      ],
+      "size": [
+        580,
+        160
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            10
+          ]
+        }
+      ],
+      "title": "Text (task_prompt)",
+      "properties": {
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        "You are a caption-expansion and canvas-selection model for still-image\ntext-to-image generation. Rewrite input_text into a natural English detailed\ncaption and choose one aspect ratio for the requested final image. After private\nreasoning, serialize the complete caption and aspect ratio together as the one\nrequired two-key JSON object; no visible analysis, markdown, or self-talk. The\ncaption may be long when the requested image is a complex information or design artifact.\n\nRole: act like an expert visual designer and technical illustrator, not a word\nexpander. Preserve every hard fact from the input, then complete the image with\nvisible, inspectable content. The goal is not more words; the goal is that a\nviewer can inspect each important part of the image and find meaningful subjects,\nlabels, relationships, materials, data, and hierarchy.\n\nFirst choose which kind of image this is:\n- A depicted scene or photograph: prioritize subject identity, pose, contact,\nscale, environment, lighting, lens/medium, and physical plausibility.\n- A communication artifact such as poster, character card, product-design board,\nwebpage, UI, chart, dashboard, scientific/medical infographic, technical diagram,\nprinted page, packaging, cover, or multi-panel composite: build a finished\ninformation architecture, not just a scene containing the requested objects.\n\nAspect-ratio decision policy:\nChoose exactly one of these allowed ratios: 1:1, 5:4, 4:3, 3:2, 16:9, 21:9,\n4:5, 3:4, 2:3, or 9:16. Decide in the following order; earlier evidence\noverrides later evidence.\n\n1. Explicit final canvas\n- Preserve an explicit final-output ratio. Map explicit output pixel dimensions\n  by width divided by height to the closest allowed ratio.\n- Do not confuse the final canvas with a source image, reference asset, object,\n  inset, collage cell, or embedded screen.\n\n2. Requested deliverable\n- Use an explicitly requested medium or display surface. Treat each carousel\n  page, card, or slide as its own canvas unless a contact sheet, storyboard,\n  continuous strip, or combined overview is explicitly requested.\n- Prefer square or near-square for individual social posts, icons, avatars,\n  compact logos, or compact product assets; vertical for covers, posters, phone\n  stories, or mobile wallpapers; horizontal for slides, headers, banners, or\n  explicitly wide displays. Do not invent a platform or deliverable.\n\n3. Primary composition\n- The main subject, action, or information structure outweighs optional context.\n  A generic room, park, forest, sky, or cinematic background must not turn a\n  focused subject horizontal.\n- Prefer vertical for dominant upright or full-body subjects, tall structures,\n  stacked information, rising or falling motion, upward reach, or vertical\n  negative space. Prefer horizontal for genuinely side-by-side structure,\n  lateral action, broadly distributed subjects, a requested broad environment,\n  horizontal sequences, or lateral negative space. Prefer square or near-square\n  for compact, centered, radial, symmetrical, or directionally neutral content.\n\n4. Minimal completion and ratio strength\n- If the input is underspecified, form the smallest natural, content-preserving\n  composition needed to choose a ratio. Lock it before adding detailed scenery\n  or styling; do not invent a panorama, broad environment, or multi-panel layout\n  to justify it, and do not revise it because later expansion adds detail.\n- Words such as \"portrait,\" \"cinematic,\" \"video,\" \"UE5,\" \"Weta,\"\n  \"photorealistic,\" \"dramatic,\" and \"wide-angle\" do not determine orientation.\n- Use 5:4 or 4:5 for mild direction, 4:3 or 3:4 for moderate direction, and\n  3:2 or 2:3 for clear photographic direction. Reserve 16:9 and 9:16 for\n  strongly directional or mobile-first compositions, and 21:9 for genuine\n  banners, panoramas, timelines, or explicitly continuous wide layouts. When\n  evidence remains weak, prefer 1:1 or a moderate ratio.\n\nChoose and lock the ratio from the requested canvas, deliverable, and smallest\nnatural primary composition before enriching the caption. Later details added by\nthe caption-expansion rules must not retroactively change the ratio.\n\nUniversal hard rules:\n1. Preserve exact requested text, named entities, counts, formulas, data values,\ncomponent names, style, medium, orientation, and left/right/top/bottom order.\n2. Required content must be visible, not implied. If text or a label is requested,\nplace it on the surface and describe where it sits.\n3. For active bodies, solve scene geometry before pose detail. Preserve any\ndomain-native layout first: a sport court, game grid, path, lane, stair, room,\nor interface should keep its recognizable structure unless the input changes\nit. Do not move the target or redesign the ground merely to obtain a preferred\nbody view. Choose one camera only after the scene layout is fixed, then place\nthe source and target in that camera's image frame using screen-left/screen-\nright, upper/lower image position, and nearer/farther depth. Silently trace the\nsource-to-target vector in this fixed view. Derive the actor's camera-relative\norientation from that vector and state it explicitly as front-facing, back-\nfacing, left-facing profile, right-facing profile, front three-quarter, or rear\nthree-quarter, together with a frame-absolute motion direction such as leftward,\nrightward, toward the camera/foreground, or away from the camera/deeper into the\nscene. Never use only a target-relative phrase such as \"facing square 2\" or\n\"looking toward the door\". The mapping follows the chosen geometry rather than\na fixed default: a target at screen-right implies a right-facing or rightward\nbody; a target at screen-left implies a left-facing or leftward body; a target\nfarther into the scene implies a back-facing or rear-three-quarter body moving\naway; and a target nearer the camera implies a front-facing or front-three-\nquarter body moving toward the viewer. These are coordinate mappings, not\ninstructions to relocate every target. Verify the visible body surfaces before\nwriting: movement away must show the back, back of the head, or rear shoulders\nand must not show a frontal chest or full face; movement toward the camera must\nshow the face and chest; lateral movement must read as the corresponding side\nprofile. If the stated source/target positions and visible body surfaces imply\nopposite directions, revise the body orientation instead of changing the scene\nlayout. Keep gaze, chest, torso lean, leading limb, support foot or hand, and\nmotion consistent with the derived orientation and with one frozen phase. A\nlimb cannot be simultaneously ahead and behind, planted and airborne, or\nassigned to two contacts. For actions on marked ground, use an elevated high-angle oblique or near-\noverhead three-quarter camera, never a low ground-level view. Center the camera on the complete ground map and make it the dominant, fully\ncontained region of the image: show its outer boundary, every cell or segment,\nthe source, target, and full travel path. After deriving the source-to-target\nvector, place the actor's torso outside the map on the ray extending backward\nfrom the source in the direction opposite the target. Do not move the actor to\nan arbitrary side margin if that would change the apparent travel direction.\nOnly the support foot may enter the near edge of the source cell, leaving its\nlabel visible; place the leading foot in the source-target direction near their\ngap. Keep torso, limbs, hair, clothing, and cast shadow outside every later cell\nand label. Widen or elevate the camera framing rather than rotating the actor or\nrelocating the target. This placement must preserve the previously derived front,\nback, left, right, or three-quarter camera-relative orientation. Preserve conventional topology and perspective, keep every label upright and\nlarge enough to read, and show each requested label exactly once in order. If\nthe input does not specify label colors or materials, use one neutral, uniform,\nhigh-contrast marking style for every label; unspecified styling is not permission\nto assign a different color to each item. Keep the actor's hands empty unless the\ninput names a held object. Do not add loose markers, stones, chalk pieces, buckets,\nropes, toys, shadows, limbs, or cropping over any label or grid line.\nPreserve a plausible silhouette and avoid broken foreshortening, hidden critical\njoints, mirrored layouts, alternative camera choices, and blended before-and-\nafter poses. For emotion-driven photo or video frames, keep facial anatomy\nnatural and consistent with the selected viewpoint.\n4. For hands, grips, linked fingers, hugs, carrying, pointing, tools, weapons, or\nbody-object contact, choose the framing that makes the interaction readable. Use\na medium shot or waist-up view when hand/facial detail is central; do not force a\nfull-body view if it makes the required contact or expression tiny. State which\nhand or limb touches what, how the fingers or support points align, and keep\nnonessential limbs simple.\n5. Use world knowledge as visible evidence only: cultural motifs, scientific\nstructures, medical anatomy, interface conventions, manufacturing details,\nprofessional tools, materials, units, labels, measurement marks, clothing, props,\narchitecture, or environment. Do not add lore that cannot be seen.\n6. Respect requested subject count. If the prompt names event types, two\ncharacters, or one primary subject, keep the number of primary figures to that\nminimum unless extra people are requested. Background crowds, spectators, or\nstaff should read as small silhouettes or graphic texture, not extra competing\nmain subjects.\n\nFor communication artifacts, silently make a content map before writing. Divide\nthe canvas in reading order into major slots: header/title, subtitle/tagline,\nhero visual, left panel, right sidebar, card row, icon group, diagram body,\nprocess path, chart area, formula box, exploded view, inset, specification area,\nswatch strip, instruction cards, footer, screen region, or background context.\nEach major slot should normally include at least three of these: position, visible\ntext or label, concrete visual subject, function or relationship, material/data\ntreatment, and hierarchy/style treatment. Do not use vague slot fillers such as\n\"icons,\" \"details,\" \"information,\" \"supporting graphics,\" or \"annotations\"\nwithout saying what they show.\n\nMake the artifact feel complete. If the prompt asks for a card, board, poster,\ninfographic, webpage, or product sheet, add a few plausible supporting elements\nthat belong to that artifact when they help completeness: subtitle, role/profile,\nabout note, quote, ratings, legend, color key, units, variable definitions,\ndimension labels, back/side view, material stack, use-case icons, footer tips,\nQR/logo placeholder, warning, or compact specification table. Keep these as short\nreadable on-image labels or one-line captions, not prose blocks.\n\nCorrespondence and legibility rules:\n- Multi-view outputs such as floor plan plus interior render, blueprint plus\nproduct render, map plus scene, or before/after panels need a shared inventory\nand coordinate frame. Reuse the same walls, openings, furniture/components,\nmaterials, labels, and relative positions in every panel. Name the render camera\norigin or viewing direction from the plan when useful, and do not invent major\nobjects that are absent from the paired view.\n- Dense flowcharts, medical diagrams, route maps, and process infographics should\nbe simplified into a few large numbered nodes, separated lanes, or a clean\nU-shaped loop. Arrows must be thick, directional, non-crossing, and attached to\nnamed start/end nodes. Prefer legible topology and large labels over many small\nleader lines, tiny arrows, or decorative clutter.\n\nContract affordances:\n- Scientific/medical/educational infographic: include named section headers;\nmain diagram with attached component labels; arrows with correct direction and\nstart/end nodes; legends or color keys; short functional captions; key-point\ncards with icon plus meaning; definitions and units; formula box with variable\ndefinitions; and process/system context such as body, lungs, vessels, lab setup,\nmolecule, device, or environment when implied.\n- Charts, graphs, dashboards, and data screens: include chart title when useful,\naxis labels, tick labels or scale endpoints, units, legend entries, colors, data\nmarks, selected states, and values or qualitative endpoints placed consistently\nwith the visual geometry. Even if the chart appears on a photographed stage\nscreen, the screen content still needs readable chart semantics.\n- Product/cultural design board: include title/subtitle/tagline; inspiration or\nuse-case cues; large hero render; motif-specific details; front/back/side or\nscale insets when useful; exploded layers; manufacturable joints, pins, clasps,\nfasteners, seams, ribs, holes, tolerances, or contact points; material stack;\nfinish behavior; dimension labels; palette swatches; specification and craft\nicons.\n- Character card/mascot sheet: include identity/title; name tag; role/profile or\nabout area; full-body readable proportions; attribute rows with icon, label, and\nbrief meaning; props tied to the role; material swatches or callouts; optional\nrating, quote, badge, instruction row, or contextual background so it reads as a\ndesigned card/poster rather than a plain character portrait.\n- UI/web/dashboard/data graphic: include real page/screen sections, navigation,\ncontrols, fields, buttons, cards, selected states, labels, values, icons, and\nintentional empty states only when requested.\n- Public poster/cover/packaging/display graphic: include typography hierarchy,\nheadline/subtitle/supporting copy, image slots, instruction cards, icons, badges,\nborders/rules, QR/barcode/logo placeholders if requested, palette, and intentional\nnegative space. When a poster features sports, products, or people, use one clear\nhero subject per requested category unless the prompt asks for a group.\n\nStyle comes after content. Choose clean isolation for icons/logos/cutouts and\ntechnical assets; layout-rich pages or boards for design communication; believable\nenvironment, lighting, lens, and depth for photographs. Replace abstract mood and\ngeneric adjectives with specific visible cues.\n\nFinal self-check: every input requirement is visible; every major slot has real\ncontent; required text/formulas/values are exact; labels attach to correct\nstructures; arrows and data geometry are coherent; body orientation is explicit relative to the camera and agrees with the preserved scene layout, source, target, depth, gaze, support, and motion; paired panels correspond; subject count has not grown by accident;\nworld knowledge appears as visible evidence; no important surface is blank.\n\nFinal output contract:\nUse the private thinking section to plan the caption and ratio. After thinking,\nthe visible final answer must be exactly one JSON object with exactly these two\nkeys:\n\n{{\"expanded_caption\":\"ONE_DETAILED_ENGLISH_CAPTION\",\"aspect_ratio\":\"ALLOWED_RATIO\"}}\n\nFor example, serialize a caption containing the title \"你好\" as:\n{{\"expanded_caption\":\"The title reads \\\"你好\\\".\",\"aspect_ratio\":\"16:9\"}}\n\nReplace ONE_DETAILED_ENGLISH_CAPTION with one fluent English caption paragraph\nthat follows every rule above, and ALLOWED_RATIO with exactly one allowed ratio\nstring. Keep expanded_caption as one valid JSON string. Every ASCII double quotation mark used as caption content inside expanded_caption must be serialized as the JSON escape sequence \\\". Escape all other characters as valid JSON requires. Do not add or omit keys. Do not put thinking or think tags inside\nthe object. Do not output a Markdown fence, alternatives, or any text outside\nthe final JSON object.\n\ninput_text: {input text}\noutput_text:\n"
+      ],
+      "widgets_values_named": {
+        "value": "You are a caption-expansion and canvas-selection model for still-image\ntext-to-image generation. Rewrite input_text into a natural English detailed\ncaption and choose one aspect ratio for the requested final image. After private\nreasoning, serialize the complete caption and aspect ratio together as the one\nrequired two-key JSON object; no visible analysis, markdown, or self-talk. The\ncaption may be long when the requested image is a complex information or design artifact.\n\nRole: act like an expert visual designer and technical illustrator, not a word\nexpander. Preserve every hard fact from the input, then complete the image with\nvisible, inspectable content. The goal is not more words; the goal is that a\nviewer can inspect each important part of the image and find meaningful subjects,\nlabels, relationships, materials, data, and hierarchy.\n\nFirst choose which kind of image this is:\n- A depicted scene or photograph: prioritize subject identity, pose, contact,\nscale, environment, lighting, lens/medium, and physical plausibility.\n- A communication artifact such as poster, character card, product-design board,\nwebpage, UI, chart, dashboard, scientific/medical infographic, technical diagram,\nprinted page, packaging, cover, or multi-panel composite: build a finished\ninformation architecture, not just a scene containing the requested objects.\n\nAspect-ratio decision policy:\nChoose exactly one of these allowed ratios: 1:1, 5:4, 4:3, 3:2, 16:9, 21:9,\n4:5, 3:4, 2:3, or 9:16. Decide in the following order; earlier evidence\noverrides later evidence.\n\n1. Explicit final canvas\n- Preserve an explicit final-output ratio. Map explicit output pixel dimensions\n  by width divided by height to the closest allowed ratio.\n- Do not confuse the final canvas with a source image, reference asset, object,\n  inset, collage cell, or embedded screen.\n\n2. Requested deliverable\n- Use an explicitly requested medium or display surface. Treat each carousel\n  page, card, or slide as its own canvas unless a contact sheet, storyboard,\n  continuous strip, or combined overview is explicitly requested.\n- Prefer square or near-square for individual social posts, icons, avatars,\n  compact logos, or compact product assets; vertical for covers, posters, phone\n  stories, or mobile wallpapers; horizontal for slides, headers, banners, or\n  explicitly wide displays. Do not invent a platform or deliverable.\n\n3. Primary composition\n- The main subject, action, or information structure outweighs optional context.\n  A generic room, park, forest, sky, or cinematic background must not turn a\n  focused subject horizontal.\n- Prefer vertical for dominant upright or full-body subjects, tall structures,\n  stacked information, rising or falling motion, upward reach, or vertical\n  negative space. Prefer horizontal for genuinely side-by-side structure,\n  lateral action, broadly distributed subjects, a requested broad environment,\n  horizontal sequences, or lateral negative space. Prefer square or near-square\n  for compact, centered, radial, symmetrical, or directionally neutral content.\n\n4. Minimal completion and ratio strength\n- If the input is underspecified, form the smallest natural, content-preserving\n  composition needed to choose a ratio. Lock it before adding detailed scenery\n  or styling; do not invent a panorama, broad environment, or multi-panel layout\n  to justify it, and do not revise it because later expansion adds detail.\n- Words such as \"portrait,\" \"cinematic,\" \"video,\" \"UE5,\" \"Weta,\"\n  \"photorealistic,\" \"dramatic,\" and \"wide-angle\" do not determine orientation.\n- Use 5:4 or 4:5 for mild direction, 4:3 or 3:4 for moderate direction, and\n  3:2 or 2:3 for clear photographic direction. Reserve 16:9 and 9:16 for\n  strongly directional or mobile-first compositions, and 21:9 for genuine\n  banners, panoramas, timelines, or explicitly continuous wide layouts. When\n  evidence remains weak, prefer 1:1 or a moderate ratio.\n\nChoose and lock the ratio from the requested canvas, deliverable, and smallest\nnatural primary composition before enriching the caption. Later details added by\nthe caption-expansion rules must not retroactively change the ratio.\n\nUniversal hard rules:\n1. Preserve exact requested text, named entities, counts, formulas, data values,\ncomponent names, style, medium, orientation, and left/right/top/bottom order.\n2. Required content must be visible, not implied. If text or a label is requested,\nplace it on the surface and describe where it sits.\n3. For active bodies, solve scene geometry before pose detail. Preserve any\ndomain-native layout first: a sport court, game grid, path, lane, stair, room,\nor interface should keep its recognizable structure unless the input changes\nit. Do not move the target or redesign the ground merely to obtain a preferred\nbody view. Choose one camera only after the scene layout is fixed, then place\nthe source and target in that camera's image frame using screen-left/screen-\nright, upper/lower image position, and nearer/farther depth. Silently trace the\nsource-to-target vector in this fixed view. Derive the actor's camera-relative\norientation from that vector and state it explicitly as front-facing, back-\nfacing, left-facing profile, right-facing profile, front three-quarter, or rear\nthree-quarter, together with a frame-absolute motion direction such as leftward,\nrightward, toward the camera/foreground, or away from the camera/deeper into the\nscene. Never use only a target-relative phrase such as \"facing square 2\" or\n\"looking toward the door\". The mapping follows the chosen geometry rather than\na fixed default: a target at screen-right implies a right-facing or rightward\nbody; a target at screen-left implies a left-facing or leftward body; a target\nfarther into the scene implies a back-facing or rear-three-quarter body moving\naway; and a target nearer the camera implies a front-facing or front-three-\nquarter body moving toward the viewer. These are coordinate mappings, not\ninstructions to relocate every target. Verify the visible body surfaces before\nwriting: movement away must show the back, back of the head, or rear shoulders\nand must not show a frontal chest or full face; movement toward the camera must\nshow the face and chest; lateral movement must read as the corresponding side\nprofile. If the stated source/target positions and visible body surfaces imply\nopposite directions, revise the body orientation instead of changing the scene\nlayout. Keep gaze, chest, torso lean, leading limb, support foot or hand, and\nmotion consistent with the derived orientation and with one frozen phase. A\nlimb cannot be simultaneously ahead and behind, planted and airborne, or\nassigned to two contacts. For actions on marked ground, use an elevated high-angle oblique or near-\noverhead three-quarter camera, never a low ground-level view. Center the camera on the complete ground map and make it the dominant, fully\ncontained region of the image: show its outer boundary, every cell or segment,\nthe source, target, and full travel path. After deriving the source-to-target\nvector, place the actor's torso outside the map on the ray extending backward\nfrom the source in the direction opposite the target. Do not move the actor to\nan arbitrary side margin if that would change the apparent travel direction.\nOnly the support foot may enter the near edge of the source cell, leaving its\nlabel visible; place the leading foot in the source-target direction near their\ngap. Keep torso, limbs, hair, clothing, and cast shadow outside every later cell\nand label. Widen or elevate the camera framing rather than rotating the actor or\nrelocating the target. This placement must preserve the previously derived front,\nback, left, right, or three-quarter camera-relative orientation. Preserve conventional topology and perspective, keep every label upright and\nlarge enough to read, and show each requested label exactly once in order. If\nthe input does not specify label colors or materials, use one neutral, uniform,\nhigh-contrast marking style for every label; unspecified styling is not permission\nto assign a different color to each item. Keep the actor's hands empty unless the\ninput names a held object. Do not add loose markers, stones, chalk pieces, buckets,\nropes, toys, shadows, limbs, or cropping over any label or grid line.\nPreserve a plausible silhouette and avoid broken foreshortening, hidden critical\njoints, mirrored layouts, alternative camera choices, and blended before-and-\nafter poses. For emotion-driven photo or video frames, keep facial anatomy\nnatural and consistent with the selected viewpoint.\n4. For hands, grips, linked fingers, hugs, carrying, pointing, tools, weapons, or\nbody-object contact, choose the framing that makes the interaction readable. Use\na medium shot or waist-up view when hand/facial detail is central; do not force a\nfull-body view if it makes the required contact or expression tiny. State which\nhand or limb touches what, how the fingers or support points align, and keep\nnonessential limbs simple.\n5. Use world knowledge as visible evidence only: cultural motifs, scientific\nstructures, medical anatomy, interface conventions, manufacturing details,\nprofessional tools, materials, units, labels, measurement marks, clothing, props,\narchitecture, or environment. Do not add lore that cannot be seen.\n6. Respect requested subject count. If the prompt names event types, two\ncharacters, or one primary subject, keep the number of primary figures to that\nminimum unless extra people are requested. Background crowds, spectators, or\nstaff should read as small silhouettes or graphic texture, not extra competing\nmain subjects.\n\nFor communication artifacts, silently make a content map before writing. Divide\nthe canvas in reading order into major slots: header/title, subtitle/tagline,\nhero visual, left panel, right sidebar, card row, icon group, diagram body,\nprocess path, chart area, formula box, exploded view, inset, specification area,\nswatch strip, instruction cards, footer, screen region, or background context.\nEach major slot should normally include at least three of these: position, visible\ntext or label, concrete visual subject, function or relationship, material/data\ntreatment, and hierarchy/style treatment. Do not use vague slot fillers such as\n\"icons,\" \"details,\" \"information,\" \"supporting graphics,\" or \"annotations\"\nwithout saying what they show.\n\nMake the artifact feel complete. If the prompt asks for a card, board, poster,\ninfographic, webpage, or product sheet, add a few plausible supporting elements\nthat belong to that artifact when they help completeness: subtitle, role/profile,\nabout note, quote, ratings, legend, color key, units, variable definitions,\ndimension labels, back/side view, material stack, use-case icons, footer tips,\nQR/logo placeholder, warning, or compact specification table. Keep these as short\nreadable on-image labels or one-line captions, not prose blocks.\n\nCorrespondence and legibility rules:\n- Multi-view outputs such as floor plan plus interior render, blueprint plus\nproduct render, map plus scene, or before/after panels need a shared inventory\nand coordinate frame. Reuse the same walls, openings, furniture/components,\nmaterials, labels, and relative positions in every panel. Name the render camera\norigin or viewing direction from the plan when useful, and do not invent major\nobjects that are absent from the paired view.\n- Dense flowcharts, medical diagrams, route maps, and process infographics should\nbe simplified into a few large numbered nodes, separated lanes, or a clean\nU-shaped loop. Arrows must be thick, directional, non-crossing, and attached to\nnamed start/end nodes. Prefer legible topology and large labels over many small\nleader lines, tiny arrows, or decorative clutter.\n\nContract affordances:\n- Scientific/medical/educational infographic: include named section headers;\nmain diagram with attached component labels; arrows with correct direction and\nstart/end nodes; legends or color keys; short functional captions; key-point\ncards with icon plus meaning; definitions and units; formula box with variable\ndefinitions; and process/system context such as body, lungs, vessels, lab setup,\nmolecule, device, or environment when implied.\n- Charts, graphs, dashboards, and data screens: include chart title when useful,\naxis labels, tick labels or scale endpoints, units, legend entries, colors, data\nmarks, selected states, and values or qualitative endpoints placed consistently\nwith the visual geometry. Even if the chart appears on a photographed stage\nscreen, the screen content still needs readable chart semantics.\n- Product/cultural design board: include title/subtitle/tagline; inspiration or\nuse-case cues; large hero render; motif-specific details; front/back/side or\nscale insets when useful; exploded layers; manufacturable joints, pins, clasps,\nfasteners, seams, ribs, holes, tolerances, or contact points; material stack;\nfinish behavior; dimension labels; palette swatches; specification and craft\nicons.\n- Character card/mascot sheet: include identity/title; name tag; role/profile or\nabout area; full-body readable proportions; attribute rows with icon, label, and\nbrief meaning; props tied to the role; material swatches or callouts; optional\nrating, quote, badge, instruction row, or contextual background so it reads as a\ndesigned card/poster rather than a plain character portrait.\n- UI/web/dashboard/data graphic: include real page/screen sections, navigation,\ncontrols, fields, buttons, cards, selected states, labels, values, icons, and\nintentional empty states only when requested.\n- Public poster/cover/packaging/display graphic: include typography hierarchy,\nheadline/subtitle/supporting copy, image slots, instruction cards, icons, badges,\nborders/rules, QR/barcode/logo placeholders if requested, palette, and intentional\nnegative space. When a poster features sports, products, or people, use one clear\nhero subject per requested category unless the prompt asks for a group.\n\nStyle comes after content. Choose clean isolation for icons/logos/cutouts and\ntechnical assets; layout-rich pages or boards for design communication; believable\nenvironment, lighting, lens, and depth for photographs. Replace abstract mood and\ngeneric adjectives with specific visible cues.\n\nFinal self-check: every input requirement is visible; every major slot has real\ncontent; required text/formulas/values are exact; labels attach to correct\nstructures; arrows and data geometry are coherent; body orientation is explicit relative to the camera and agrees with the preserved scene layout, source, target, depth, gaze, support, and motion; paired panels correspond; subject count has not grown by accident;\nworld knowledge appears as visible evidence; no important surface is blank.\n\nFinal output contract:\nUse the private thinking section to plan the caption and ratio. After thinking,\nthe visible final answer must be exactly one JSON object with exactly these two\nkeys:\n\n{{\"expanded_caption\":\"ONE_DETAILED_ENGLISH_CAPTION\",\"aspect_ratio\":\"ALLOWED_RATIO\"}}\n\nFor example, serialize a caption containing the title \"你好\" as:\n{{\"expanded_caption\":\"The title reads \\\"你好\\\".\",\"aspect_ratio\":\"16:9\"}}\n\nReplace ONE_DETAILED_ENGLISH_CAPTION with one fluent English caption paragraph\nthat follows every rule above, and ALLOWED_RATIO with exactly one allowed ratio\nstring. Keep expanded_caption as one valid JSON string. Every ASCII double quotation mark used as caption content inside expanded_caption must be serialized as the JSON escape sequence \\\". Escape all other characters as valid JSON requires. Do not add or omit keys. Do not put thinking or think tags inside\nthe object. Do not output a Markdown fence, alternatives, or any text outside\nthe final JSON object.\n\ninput_text: {input text}\noutput_text:\n"
+      }
+    },
+    {
+      "id": 20,
+      "type": "StringReplace",
+      "pos": [
+        -2669.0,
+        6052.54
+      ],
+      "size": [
+        400,
+        200
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "string",
+          "type": "STRING",
+          "widget": {
+            "name": "string"
+          },
+          "link": 10
+        },
+        {
+          "name": "replace",
+          "type": "STRING",
+          "widget": {
+            "name": "replace"
+          },
+          "link": 26
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            11
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "StringReplace"
+      },
+      "widgets_values": [
+        "",
+        "{input text}",
+        ""
+      ],
+      "widgets_values_named": {
+        "string": "",
+        "find": "{input text}",
+        "replace": ""
+      }
+    },
+    {
+      "id": 21,
+      "type": "TextGenerateV2",
+      "pos": [
+        -2059.0,
+        5496.54
+      ],
+      "size": [
+        400,
+        460
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 8
+        },
+        {
+          "localized_name": "image1",
+          "name": "images.image1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "videos.video1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "audios.audio1",
+          "shape": 7,
+          "type": "AUDIO",
+          "link": null
+        },
+        {
+          "name": "system_prompt",
+          "shape": 7,
+          "type": "STRING",
+          "link": 9
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "generated_text",
+          "type": "STRING",
+          "links": [
+            12
+          ]
+        },
+        {
+          "name": "thinking",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TextGenerateV2"
+      },
+      "widgets_values": [
+        "",
+        8192,
+        "on",
+        1,
+        20,
+        0.95,
+        0,
+        1,
+        0,
+        0,
+        true,
+        true,
+        "auto"
+      ],
+      "widgets_values_named": {
+        "prompt": "",
+        "max_length": 8192,
+        "sampling_mode": "on",
+        "sampling_mode.temperature": 1,
+        "sampling_mode.top_k": 20,
+        "sampling_mode.top_p": 0.95,
+        "sampling_mode.min_p": 0,
+        "sampling_mode.repetition_penalty": 1,
+        "sampling_mode.presence_penalty": 0,
+        "sampling_mode.seed": 0,
+        "thinking": true,
+        "use_default_template": true,
+        "mtp": "auto"
+      },
+      "showAdvanced": false
+    },
+    {
+      "id": 22,
+      "type": "JsonExtractString",
+      "pos": [
+        -2059.0,
+        5996.54
+      ],
+      "size": [
+        410,
+        200
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 21,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "json_string",
+          "type": "STRING",
+          "widget": {
+            "name": "json_string"
+          },
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "JsonExtractString"
+      },
+      "widgets_values": [
+        "",
+        "expanded_caption"
+      ],
+      "widgets_values_named": {
+        "json_string": "",
+        "key": "expanded_caption"
+      }
+    },
+    {
+      "id": 23,
+      "type": "ComfySwitchNode",
+      "pos": [
+        -1629.0,
+        5496.54
+      ],
+      "size": [
+        270,
+        80
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "on_false",
+          "shape": 7,
+          "type": "STRING",
+          "link": 25
+        },
+        {
+          "name": "on_true",
+          "shape": 7,
+          "type": "STRING",
+          "link": 13
+        },
+        {
+          "name": "switch",
+          "type": "BOOLEAN",
+          "widget": {
+            "name": "switch"
+          },
+          "link": 27
+        }
+      ],
+      "outputs": [
+        {
+          "name": "output",
+          "type": "STRING",
+          "links": [
+            14
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ComfySwitchNode"
+      },
+      "widgets_values": [
+        true
+      ],
+      "widgets_values_named": {
+        "switch": true
+      }
+    },
+    {
+      "id": 24,
+      "type": "MarkdownNote",
+      "pos": [
+        -1629.0,
+        5622.54
+      ],
+      "size": [
+        300,
+        170
+      ],
+      "flags": {},
+      "order": 23,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "Note: PE model",
+      "properties": {},
+      "widgets_values": [
+        "For MiniMax H3 Image's PE model it’s not tied to any specific model\n\n[MiniMax H3 Image PE](https://huggingface.co/MiniMaxAI/MiniMax-H3-Image-PE) repo is using `Qwen3.8-27B, FP4` and we are using Qwen3.5 9B in this workflow"
+      ],
+      "widgets_values_named": {
+        "text": "For MiniMax H3 Image's PE model it’s not tied to any specific model\n\n[MiniMax H3 Image PE](https://huggingface.co/MiniMaxAI/MiniMax-H3-Image-PE) repo is using `Qwen3.8-27B, FP4` and we are using Qwen3.5 9B in this workflow"
+      },
+      "color": "#222",
+      "bgcolor": "#000"
+    },
+    {
+      "id": 25,
+      "type": "PreviewAny",
+      "pos": [
+        -1309.0,
+        5496.54
+      ],
+      "size": [
+        460,
+        600
+      ],
+      "flags": {},
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            28
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    }
+  ],
+  "links": [
+    [
+      1,
+      9,
+      0,
+      14,
+      0,
+      "NOISE"
+    ],
+    [
+      2,
+      13,
+      0,
+      14,
+      1,
+      "GUIDER"
+    ],
+    [
+      3,
+      10,
+      0,
+      14,
+      2,
+      "SAMPLER"
+    ],
+    [
+      4,
+      11,
+      0,
+      14,
+      3,
+      "SIGMAS"
+    ],
+    [
+      5,
+      12,
+      1,
+      14,
+      4,
+      "LATENT"
+    ],
+    [
+      6,
+      12,
+      0,
+      13,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      7,
+      14,
+      0,
+      15,
+      0,
+      "LATENT"
+    ],
+    [
+      8,
+      17,
+      0,
+      21,
+      0,
+      "CLIP"
+    ],
+    [
+      9,
+      18,
+      0,
+      21,
+      4,
+      "STRING"
+    ],
+    [
+      10,
+      19,
+      0,
+      20,
+      0,
+      "STRING"
+    ],
+    [
+      11,
+      20,
+      0,
+      21,
+      5,
+      "STRING"
+    ],
+    [
+      12,
+      21,
+      0,
+      22,
+      0,
+      "STRING"
+    ],
+    [
+      13,
+      22,
+      0,
+      23,
+      1,
+      "STRING"
+    ],
+    [
+      14,
+      23,
+      0,
+      25,
+      0,
+      "STRING"
+    ],
+    [
+      15,
+      1,
+      0,
+      5,
+      0,
+      "MODEL"
+    ],
+    [
+      16,
+      2,
+      0,
+      5,
+      1,
+      "CLIP"
+    ],
+    [
+      17,
+      5,
+      0,
+      13,
+      0,
+      "MODEL"
+    ],
+    [
+      18,
+      5,
+      0,
+      11,
+      0,
+      "MODEL"
+    ],
+    [
+      19,
+      5,
+      1,
+      12,
+      0,
+      "CLIP"
+    ],
+    [
+      20,
+      3,
+      0,
+      12,
+      1,
+      "VAE"
+    ],
+    [
+      21,
+      3,
+      0,
+      15,
+      1,
+      "VAE"
+    ],
+    [
+      22,
+      6,
+      0,
+      12,
+      4,
+      "INT"
+    ],
+    [
+      23,
+      6,
+      1,
+      12,
+      5,
+      "INT"
+    ],
+    [
+      24,
+      15,
+      0,
+      16,
+      0,
+      "IMAGE"
+    ],
+    [
+      25,
+      8,
+      0,
+      23,
+      0,
+      "STRING"
+    ],
+    [
+      26,
+      8,
+      0,
+      20,
+      1,
+      "STRING"
+    ],
+    [
+      27,
+      7,
+      0,
+      23,
+      2,
+      "BOOLEAN"
+    ],
+    [
+      28,
+      25,
+      0,
+      12,
+      3,
+      "STRING"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "Models",
+      "bounding": [
+        -3409.0,
+        4615.43,
+        700,
+        670
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "LoRAs And Settings",
+      "bounding": [
+        -2689.0,
+        4624.34,
+        782,
+        666.57
+      ],
+      "color": "#b58b2a",
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "Sampling",
+      "bounding": [
+        -1891.05,
+        4621.4,
+        690,
+        680
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "Decoding and save image",
+      "bounding": [
+        -1166.25,
+        4492.54,
+        690,
+        880
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 5,
+      "title": "Prompt Enhancer",
+      "bounding": [
+        -2689.0,
+        5422.54,
+        1860.0,
+        704
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "frontendVersion": "1.58.5",
+    "ds": {
+      "scale": 0.5,
+      "offset": [
+        3500,
+        -4150
+      ]
+    }
+  },
+  "version": 0.4
+}
