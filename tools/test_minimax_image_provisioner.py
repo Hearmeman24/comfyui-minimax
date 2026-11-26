@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Exercise the optional MiniMax H3 Image bundle through the real runtime, offline.
 
-download_minimax_image installs ComfyUI's two stock MiniMax H3 Image workflows
-(Comfy-Org/workflow_templates image_minimax_h3_image_t2i / _edit at 0.11.105)
-and follows minimax_quant through its own swap group: int8, fp8 and nvfp4 all
+download_minimax_image installs four MiniMax H3 Image workflows laid out like the
+video family (T2I and Edit, each as Custom Prompt and Auto Prompt; Auto writes the
+prompt through OpenRouter) and follows minimax_quant through its own swap group: int8, fp8 and nvfp4 all
 load the int8 DiT (there is no fp8 or nvfp4 build), bf16 and false load the
 full bf16 DiT. The text encoder is the video template's int8 Qwen3-VL in every
 profile, so turning on both flags never puts a second encoder on the volume.
@@ -20,8 +20,11 @@ from validate_models import runtime_dir
 
 REPO = Path(__file__).resolve().parents[1]
 FOLDER = 'MiniMax H3 Image'
-WORKFLOWS = {f'{FOLDER}/MiniMax H3 Image - Text to Image.json',
-             f'{FOLDER}/MiniMax H3 Image - Image Edit.json'}
+WORKFLOWS = {f'{FOLDER}/MiniMax H3 Image - {kind} - {variant} Prompt.json'
+             for kind in ('T2I', 'Edit') for variant in ('Custom', 'Auto')}
+VAE = 'ostris_h3_image_vae_fp16.safetensors'
+REFS = 'MiniMaxH3ImageReferencePack'
+RETIRED = {'minimax_h3_image_vae_fp16.safetensors', 'qwen3.5_9b_w4a8_gptq.safetensors'}
 IMAGE = 'https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/main'
 INT8 = 'minimax_h3_image_pruned_int8_convrot.safetensors'
 BF16 = 'minimax_h3_image_pruned_bf16.safetensors'
@@ -29,11 +32,7 @@ TEXT_ENCODER = 'qwen3vl_32b_minimax_h3_int8_convrot.safetensors'
 SHARED = {
     TEXT_ENCODER: ('https://huggingface.co/Comfy-Org/MiniMax-H3/resolve/main/'
                    f'text_encoders/{TEXT_ENCODER}', 'text_encoders'),
-    'minimax_h3_image_vae_fp16.safetensors': (
-        f'{IMAGE}/vae/minimax_h3_image_vae_fp16.safetensors', 'vae'),
-    'qwen3.5_9b_w4a8_gptq.safetensors': (
-        'https://huggingface.co/Comfy-Org/Qwen3.5/resolve/main/text_encoders/'
-        'qwen3.5_9b_w4a8_gptq.safetensors', 'text_encoders'),
+    VAE: (f'https://huggingface.co/ostris/ostris_h3_image_vae/resolve/main/{VAE}', 'vae'),
 }
 DITS = {INT8, BF16}
 QUANTS = {None: INT8, 'int8': INT8, 'fp8': INT8, 'nvfp4': INT8, ' FP8 ': INT8,
@@ -104,6 +103,7 @@ class MiniMaxImageProvisioning(unittest.TestCase):
             }, quant)
         for name, (url, sub) in bundle(INT8).items() | bundle(BF16).items():
             self.assertEqual(registry[name], {'url': url, 'subdir': sub.split('/')[0]})
+        self.assertFalse(RETIRED & set(registry))
         on_disk = {p.relative_to(REPO / 'workflows').as_posix()
                    for p in (REPO / 'workflows' / FOLDER).glob('*.json')}
         self.assertEqual(on_disk, WORKFLOWS)
@@ -122,13 +122,26 @@ class MiniMaxImageProvisioning(unittest.TestCase):
                         self.assertIn(model['name'], registry, path)
                         self.assertEqual(model['url'], registry[model['name']]['url'])
                         self.assertEqual(model['directory'], registry[model['name']]['subdir'])
-                images = [n for n in all_nodes(doc) if n.get('type') == 'LoadImage']
-                self.assertEqual(len(images), 1 if path.endswith('Image Edit.json') else 0)
-                for image in images:
-                    self.assertEqual(image['widgets_values'][0], '')
-                    self.assertEqual(image['widgets_values_named']['image'], '')
-                    self.assertEqual(image['title'], 'Image to edit (required)')
+                self.assertNotIn('LoadImage', types)
+                self.assertIn('SamplerCustomAdvanced', types)
+                self.assertNotIn('KSampler', types)
+                self.assertEqual({g['title'] for g in doc['groups']},
+                                 {'Models', 'LoRAs And Settings', 'Sampling', 'Decoding and save image'})
+                vaes = [n['widgets_values'][0] for n in all_nodes(doc) if n.get('type') == 'VAELoader']
+                self.assertEqual(vaes, [VAE])
+                auto = path.endswith('Auto Prompt.json')
+                refs = [n for n in all_nodes(doc) if n.get('type') == REFS]
+                if ' - Edit - ' in path:
+                    self.assertEqual(len(refs), 1)
+                    self.assertEqual(len(refs[0]['widgets_values']), 10)
+                    self.assertEqual(refs[0]['widgets_values'][3], 'openrouter' if auto else 'none')
+                    self.assertEqual(len(refs[0]['outputs']), 11)
+                else:
+                    self.assertFalse(refs)
+                    self.assertEqual('OpenRouterSimple' in types, auto)
                 self.assertNotIn(BF16, json.dumps(doc))
+                for name in RETIRED:
+                    self.assertNotIn(name, json.dumps(doc))
 
     def test_disabled(self):
         for flag in (None, 'false', ' FALSE ', '0'):
@@ -136,7 +149,7 @@ class MiniMaxImageProvisioning(unittest.TestCase):
                 with self.subTest(flag=flag, minimax=minimax):
                     queued, copied = self.provision(flag, minimax=minimax)
                     self.assertFalse(DITS & set(queued))
-                    self.assertNotIn('minimax_h3_image_vae_fp16.safetensors', queued)
+                    self.assertNotIn(VAE, queued)
                     self.assertFalse(any(p.startswith(f'{FOLDER}/') for p in copied))
 
     def test_follows_minimax_quant(self):

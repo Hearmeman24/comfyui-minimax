@@ -107,12 +107,8 @@
   "url": "https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/main/diffusion_models/minimax_h3_image_pruned_bf16.safetensors",
   "subdir": "diffusion_models"
  },
- "minimax_h3_image_vae_fp16.safetensors": {
-  "url": "https://huggingface.co/Comfy-Org/MiniMax-H3-Image/resolve/main/vae/minimax_h3_image_vae_fp16.safetensors",
+ "ostris_h3_image_vae_fp16.safetensors": {
+  "url": "https://huggingface.co/ostris/ostris_h3_image_vae/resolve/main/ostris_h3_image_vae_fp16.safetensors",
   "subdir": "vae"
- },
- "qwen3.5_9b_w4a8_gptq.safetensors": {
-  "url": "https://huggingface.co/Comfy-Org/Qwen3.5/resolve/main/text_encoders/qwen3.5_9b_w4a8_gptq.safetensors",
-  "subdir": "text_encoders"
  }
 }
