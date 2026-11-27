@@ -1,8 +1,8 @@
 {
   "id": "f2c401be-8cad-4b93-83f5-8b3307974678",
   "revision": 0,
-  "last_node_id": 220,
-  "last_link_id": 452,
+  "last_node_id": 224,
+  "last_link_id": 465,
   "nodes": [
     {
       "id": 122,
@@ -334,7 +334,8 @@
           "shape": 3,
           "type": "CLIP",
           "links": [
-            259
+            259,
+            458
           ]
         }
       ],
@@ -495,8 +496,7 @@
           "name": "positive",
           "type": "CONDITIONING",
           "links": [
-            289,
-            449
+            289
           ]
         },
         {
@@ -585,7 +585,8 @@
           "type": "IMAGE",
           "links": [
             346,
-            348
+            348,
+            460
           ]
         },
         {
@@ -844,7 +845,8 @@
           "type": "STRING",
           "links": [
             342,
-            343
+            343,
+            461
           ]
         },
         {
@@ -852,7 +854,8 @@
           "type": "INT",
           "links": [
             344,
-            345
+            345,
+            462
           ]
         }
       ],
@@ -929,7 +932,8 @@
           "type": "INT",
           "links": [
             248,
-            340
+            340,
+            454
           ]
         },
         {
@@ -937,7 +941,8 @@
           "type": "INT",
           "links": [
             249,
-            341
+            341,
+            456
           ]
         }
       ],
@@ -1071,7 +1076,8 @@
           "links": [
             236,
             246,
-            450
+            450,
+            459
           ]
         }
       ],
@@ -1484,7 +1490,7 @@
         {
           "name": "conditioning",
           "type": "CONDITIONING",
-          "link": 449
+          "link": 465
         },
         {
           "label": "upscale_by",
@@ -1493,7 +1499,7 @@
           "widget": {
             "name": "mode.scale"
           },
-          "link": null
+          "link": 453
         },
         {
           "label": "video_vae",
@@ -1587,6 +1593,263 @@
       },
       "color": "#232",
       "bgcolor": "#353"
+    },
+    {
+      "type": "PrimitiveFloat",
+      "pos": [
+        -745.9083670194619,
+        5182.072947850527
+      ],
+      "size": [
+        270,
+        58
+      ],
+      "flags": {},
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [
+            453,
+            455,
+            457
+          ]
+        }
+      ],
+      "title": "Upscale factor",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.1",
+        "Node name for S&R": "PrimitiveFloat"
+      },
+      "widgets_values": [
+        2
+      ],
+      "color": "#232",
+      "bgcolor": "#353",
+      "id": 221,
+      "order": 29
+    },
+    {
+      "type": "ComfyMathExpression",
+      "pos": [
+        -745.9083670194619,
+        5272.072947850527
+      ],
+      "size": [
+        360,
+        74
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "mode": 0,
+      "title": "Upscaled width",
+      "inputs": [
+        {
+          "label": "a",
+          "name": "values.a",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 454
+        },
+        {
+          "label": "b",
+          "name": "values.b",
+          "shape": 7,
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 455
+        }
+      ],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            463
+          ]
+        },
+        {
+          "name": "BOOL",
+          "type": "BOOLEAN",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.1",
+        "Node name for S&R": "ComfyMathExpression"
+      },
+      "widgets_values": [
+        "round(a * b / 32) * 32"
+      ],
+      "id": 222,
+      "order": 30
+    },
+    {
+      "type": "ComfyMathExpression",
+      "pos": [
+        -745.9083670194619,
+        5312.072947850527
+      ],
+      "size": [
+        360,
+        74
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "mode": 0,
+      "title": "Upscaled height",
+      "inputs": [
+        {
+          "label": "a",
+          "name": "values.a",
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 456
+        },
+        {
+          "label": "b",
+          "name": "values.b",
+          "shape": 7,
+          "type": "FLOAT,INT,BOOLEAN",
+          "link": 457
+        }
+      ],
+      "outputs": [
+        {
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "INT",
+          "type": "INT",
+          "links": [
+            464
+          ]
+        },
+        {
+          "name": "BOOL",
+          "type": "BOOLEAN",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.1",
+        "Node name for S&R": "ComfyMathExpression"
+      },
+      "widgets_values": [
+        "round(a * b / 32) * 32"
+      ],
+      "id": 223,
+      "order": 31
+    },
+    {
+      "id": 224,
+      "type": "MiniMaxH3ImageToVideo",
+      "pos": [
+        -745.9083670194619,
+        5362.072947850527
+      ],
+      "size": [
+        360,
+        100
+      ],
+      "flags": {
+        "collapsed": true
+      },
+      "order": 32,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 458
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 459
+        },
+        {
+          "name": "first_frame",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 460
+        },
+        {
+          "name": "last_frame",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 461
+        },
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 463
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 464
+        },
+        {
+          "name": "length",
+          "type": "INT",
+          "widget": {
+            "name": "length"
+          },
+          "link": 462
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [
+            465
+          ]
+        },
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": []
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.30.1",
+        "Node name for S&R": "MiniMaxH3ImageToVideo"
+      },
+      "widgets_values": [
+        "cowgirl, fast, medium shot, eye-level camera viewpoint, a pale-skinned woman with blonde hair in a single braid sits nude atop a man. Her torso and large breasts occupy the upper and center frame, while her spread thighs and the point of penetration are centered in the lower third. The man's torso is partially visible at the very bottom, mostly occluded by the woman's legs. The woman’s vulva features shaved skin and pink, slightly parted labia majora that stretch as she moves. The penis is thick and firm with visible veins running vertically along the shaft; the glans is a darker pink than the shaft with a prominent corona ridge and a visible urethral opening. The motion is fast and forceful as the woman bounces vertically, causing her breasts to sway and jiggle violently while the penis slides rapidly in and out of the vaginal opening. Her skin has a noticeable sheen of sweat, catching the light on her chest and stomach. The audio contains the rhythmic, wet slapping sounds of skin-on-skin contact and the woman’s heavy, breathless moaning. A low male voice says, \"You deserve everything,\" followed by \"You deserve this,\" in a steady, rhythmic tone. The setting is a dimly lit indoor room with warm, directional lighting from the front.\n",
+        1344,
+        768,
+        73
+      ],
+      "title": "MiniMax H3 Image to Video (upscale pass)"
     }
   ],
   "links": [
@@ -1887,14 +2150,6 @@
       "MODEL"
     ],
     [
-      449,
-      130,
-      0,
-      219,
-      2,
-      "CONDITIONING"
-    ],
-    [
       450,
       121,
       0,
@@ -1917,6 +2172,110 @@
       174,
       5,
       "STRING"
+    ],
+    [
+      453,
+      221,
+      0,
+      219,
+      3,
+      "FLOAT"
+    ],
+    [
+      454,
+      115,
+      0,
+      222,
+      0,
+      "INT"
+    ],
+    [
+      455,
+      221,
+      0,
+      222,
+      1,
+      "FLOAT"
+    ],
+    [
+      456,
+      115,
+      1,
+      223,
+      0,
+      "INT"
+    ],
+    [
+      457,
+      221,
+      0,
+      223,
+      1,
+      "FLOAT"
+    ],
+    [
+      458,
+      137,
+      1,
+      224,
+      0,
+      "CLIP"
+    ],
+    [
+      459,
+      121,
+      0,
+      224,
+      1,
+      "VAE"
+    ],
+    [
+      460,
+      175,
+      0,
+      224,
+      2,
+      "IMAGE"
+    ],
+    [
+      461,
+      174,
+      0,
+      224,
+      4,
+      "STRING"
+    ],
+    [
+      462,
+      174,
+      1,
+      224,
+      7,
+      "INT"
+    ],
+    [
+      463,
+      222,
+      1,
+      224,
+      5,
+      "INT"
+    ],
+    [
+      464,
+      223,
+      1,
+      224,
+      6,
+      "INT"
+    ],
+    [
+      465,
+      224,
+      0,
+      219,
+      2,
+      "CONDITIONING"
     ]
   ],
   "groups": [
